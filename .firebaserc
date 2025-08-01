@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "conectimed-9d22c",
+    "prod": "conectimed-production"
+  },
+  "targets": {},
+  "etags": {}
+}

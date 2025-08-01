@@ -1,0 +1,11 @@
+{
+  "name": "conectimed-functions-v2",
+  "version": "1.0.0",
+  "description": "Cloud functions for Conectimed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
