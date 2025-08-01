@@ -16,6 +16,22 @@ This project utilizes Cloud Functions for Firebase (2nd gen) to extend the funct
 2.  Navigate to the `functions` directory: `cd functions`
 3.  Install dependencies: `npm install`
 
+## 📁 Project Structure
+
+```
+functions/
+├── .gitignore            # Ignored files in Git
+├── index.js              # Main entry point that exports all cloud functions
+├── package-lock.json     # Lock file for npm
+├── package.json          # Function-specific dependencies and scripts
+.firebaserc           # Firebase project configuration
+.gitignore            # Root-level ignore rules
+firebase-debug.log    # Emulator debug logs
+firebase.json         # Firebase services configuration
+package.json          # Root dependencies (if used)
+README.md             # Project documentation (this file)
+```
+
 # 🧑‍💻 Writing Functions
 
 Here's an example of an HTTP function written in JavaScript using Firebase Functions v2:
