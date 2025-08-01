@@ -1,6 +1,6 @@
 # Conectimed Functions
 
-This project utilizes Cloud Functions for Firebase (2nd gen) to extend the functionality of our Firebase application, leveraging the power of Cloud Run and Eventarc for enhanced performance and scalability.
+Este proyecto utiliza Cloud Functions para Firebase (segunda generación) para ampliar la funcionalidad de nuestra aplicación Firebase, aprovechando el poder de Cloud Run para mejorar el rendimiento y la escalabilidad.
 
 ## Getting Started
 
