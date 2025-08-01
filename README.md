@@ -1,4 +1,4 @@
-# Conectimed Functions
+# Conectimed Functions V2
 
 Este proyecto utiliza Cloud Functions para Firebase (segunda generación) para ampliar la funcionalidad de nuestra aplicación Firebase, aprovechando el poder de Cloud Run para mejorar el rendimiento y la escalabilidad.
 
