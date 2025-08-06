@@ -5,9 +5,9 @@ const { defineSecret } = require('firebase-functions/params');
 //Stripe
 const stripeSecretKey = defineSecret('STRIPE_SECRET_KEY');
 //Stripe
-// const clickMeetingApi = defineSecret('CLICK_MEETING_API');
-// const clickMeetingURLAccount = defineSecret('CLICK_MEETING_URL_ACCOUNT');
-// const clickMeetingXApiKey = defineSecret('CLICK_MEETING_X_API_KEY');
+const clickMeetingApi = defineSecret('CLICK_MEETING_API');
+const clickMeetingURLAccount = defineSecret('CLICK_MEETING_URL_ACCOUNT');
+const clickMeetingXApiKey = defineSecret('CLICK_MEETING_X_API_KEY');
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
 const { getAuth } = require('firebase-admin/auth');
@@ -44,7 +44,7 @@ function isRateLimited(key) {
     return false;
 }
 
-var serviceAccount = require("./account/conectimed-9d22c-firebase-adminsdk-b27ow-02e6691ac6.json");
+// var serviceAccount = require("./account/conectimed-9d22c-firebase-adminsdk-b27ow-02e6691ac6.json");
 
 initializeApp(
     //     {
@@ -346,11 +346,16 @@ exports.clickMeeting = onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Headers", "Content-Type");
 
+    const _clickMeetingApi = clickMeetingApi.value();
+    const _clickMeetingURLAccount = clickMeetingURLAccount.value();
+    const _clickMeetingXApiKey = clickMeetingXApiKey.value();
+    let callsToCMApi = 0;
+
     if (req.method === "OPTIONS") {
         return res.status(204).send("");
     }
 
-    let url_alternative_webinar = "https://conectimed721.clickmeeting.com/";
+    let url_alternative_webinar = _clickMeetingURLAccount;
 
     try {
         let { room } = req.body;
@@ -380,10 +385,11 @@ exports.clickMeeting = onRequest(async (req, res) => {
     }
 
     try {
-        let { room, email, nickname } = req.body;
+        let { room, email, nickname, forceUpdate } = req.body;
 
         room = String(room || "").trim();
         email = String(email || "").trim().toLowerCase();
+        forceUpdate = Boolean(forceUpdate) || false;
 
         if (!room || !email) {
             console.warn("Faltan parámetros requeridos");
@@ -396,75 +402,60 @@ exports.clickMeeting = onRequest(async (req, res) => {
 
         const userNickname = nickname || "Usuario de Conectimed";
 
+        let roomInfo;
+
         const headers = {
             "Content-Type": "application/json",
-            "X-Api-Key": "usd7a6b6b319b8978f1d9ed5a78ebcc811564174b4"
+            "X-Api-Key": _clickMeetingXApiKey
         };
 
-        const roomInfoResponse = await fetch(`https://api.clickmeeting.com/v1/conferences/${room}`, {
-            method: "GET",
-            headers
-        });
+        const firebaseRoom = await db.doc(`clickMeetingRoomInfo/${room}`).get();
 
-        console.info("====== Info Sala ======", roomInfoResponse);
-
-        let roomInfoText = await roomInfoResponse.text();
-
-        let roomInfo;
-        try {
-            roomInfo = JSON.parse(roomInfoText);
-        } catch (e) {
-            const headers1 = {
-                "Content-Type": "application/json"
-            };
-            const roomInfoResponse1 = await fetch(`https://us-central1-conectimed-production.cloudfunctions.net/clickMeetingSave1?room=${room}`, {
+        if (firebaseRoom.exists === true && forceUpdate !== true) {
+            roomInfo = firebaseRoom.data() || {};
+        } else {
+            const roomInfoResponse = await fetch(`${_clickMeetingApi}conferences/${room}`, {
                 method: "GET",
-                headers1
+                headers
             });
-            let roomInfoText1 = await roomInfoResponse1.text();
+            callsToCMApi++;
+
+            let roomInfoText = await roomInfoResponse.text();
+
             try {
-                roomInfo = JSON.parse(roomInfoText1);
-                roomInfo = roomInfo.roomInfo;
-                console.info("====== Info Sala (1) ======", roomInfo);
-            } catch (e) {
-                const headers2 = {
-                    "Content-Type": "application/json"
+                roomInfo = JSON.parse(roomInfoText)?.conference || {};
+                let _data = {
+                    autologin_hash: roomInfo?.autologin_hash || "",
+                    id: roomInfo?.id || "",
+                    name: roomInfo?.name || "",
+                    name_url: roomInfo?.name_url || "",
+                    room_type: roomInfo?.room_type || "",
+                    room_pin: roomInfo?.room_pin || "",
+                    status: roomInfo?.status || "",
+                    timezone: roomInfo?.timezone || "",
+                    // DATE STRING
+                    created_at: roomInfo?.created_at || "",
+                    updated_at: roomInfo?.updated_at || "",
+                    starts_at: roomInfo?.starts_at || "",
+                    ends_at: roomInfo?.ends_at || "",
+                    // DATE TIMESTAMP
+                    _created_at: new Date(roomInfo?.created_at || ""),
+                    _updated_at: new Date(roomInfo?.updated_at || ""),
+                    _starts_at: new Date(roomInfo?.starts_at || ""),
+                    _ends_at: new Date(roomInfo?.ends_at || ""),
                 };
-                const roomInfoResponse2 = await fetch(`https://us-central1-conectimed-production.cloudfunctions.net/clickMeetingSave2?room=${room}`, {
-                    method: "GET",
-                    headers2
+                await db.doc(`clickMeetingRoomInfo/${room}`).set(_data);
+            } catch (e) {
+                console.error("Respuesta inválida del servidor (room info no es JSON)", e);
+                return res.status(200).json({
+                    message: "Respuesta inválida del servidor (room info no es JSON) ",
+                    url: url_alternative_webinar,
+                    status: "error"
                 });
-                let roomInfoText2 = await roomInfoResponse2.text();
-                try {
-                    roomInfo = JSON.parse(roomInfoText2);
-                    roomInfo = roomInfo.roomInfo;
-                    console.info("====== Info Sala (2) ======", roomInfo);
-                } catch (e) {
-                    const headers3 = {
-                        "Content-Type": "application/json"
-                    };
-                    const roomInfoResponse3 = await fetch(`https://us-central1-conectimed-production.cloudfunctions.net/clickMeetingSave3?room=${room}`, {
-                        method: "GET",
-                        headers3
-                    });
-                    let roomInfoText3 = await roomInfoResponse3.text();
-                    try {
-                        roomInfo = JSON.parse(roomInfoText3);
-                        roomInfo = roomInfo.roomInfo;
-                        console.info("====== Info Sala (3) ======", roomInfo);
-                    } catch (e) {
-                        console.error("Respuesta inválida del servidor (room info no es JSON) (3)", e);
-                        return res.status(200).json({
-                            message: "Respuesta inválida del servidor (room info no es JSON) (3)",
-                            url: url_alternative_webinar,
-                            status: "error"
-                        });
-                    }
-                }
             }
         }
 
-        if (!roomInfo?.conference?.name_url) {
+        if (!roomInfo?.name_url) {
             console.warn("No se encontró la sala o falta name_url");
             return res.status(200).json({
                 message: "No se encontró la sala o falta name_url",
@@ -473,13 +464,15 @@ exports.clickMeeting = onRequest(async (req, res) => {
             });
         }
 
-        const name_url = roomInfo.conference.name_url;
+        const name_url = roomInfo.name_url;
 
-        const autologinUrl = `https://api.clickmeeting.com/v1/conferences/${room}/room/autologin_hash?email=${encodeURIComponent(email)}&nickname=${encodeURIComponent(userNickname)}`;
+        const autologinUrl = `${_clickMeetingApi}conferences/${room}/room/autologin_hash?email=${encodeURIComponent(email)}&nickname=${encodeURIComponent(userNickname)}`;
         const autologinResponse = await fetch(autologinUrl, {
             method: "POST",
             headers
         });
+
+        callsToCMApi++;
 
         console.info("====== Response autologin_hash ======", autologinResponse);
 
@@ -507,7 +500,7 @@ exports.clickMeeting = onRequest(async (req, res) => {
         }
 
         const autologin_hash = autologinData.autologin_hash;
-        const finalUrl = `https://conectimed721.clickmeeting.com/${name_url}?l=${autologin_hash}&skipPlatformChoice=1`;
+        const finalUrl = `${_clickMeetingURLAccount}${name_url}?l=${autologin_hash}&skipPlatformChoice=1`;
 
         console.log("*** Correcto ***", JSON.stringify({ finalUrl, room, email, nickname }));
 
@@ -515,204 +508,7 @@ exports.clickMeeting = onRequest(async (req, res) => {
             message: "Acceso exitoso",
             url: finalUrl,
             url_alternative: url_alternative_webinar,
-            status: "success"
-        });
-
-    } catch (e) {
-        console.error("Error en clickMeeting:", e);
-        return res.status(200).json({
-            message: e.message || "Error desconocido",
-            url: url_alternative_webinar,
-            status: "error"
-        });
-    }
-});
-
-exports.clickMeetingSave1 = onRequest(async (req, res) => {
-    res.set("Content-Type", "application/json");
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "GET") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    try {
-
-        let { room } = req.query;
-
-        room = String(room || "").trim();
-
-        if (!room) {
-            console.warn("Faltan parámetros requeridos");
-            return res.status(200).json({
-                message: "Faltan parámetros requeridos",
-                status: "error"
-            });
-        }
-
-        const headers = {
-            "Content-Type": "application/json",
-            "X-Api-Key": "usd7a6b6b319b8978f1d9ed5a78ebcc811564174b4"
-        };
-
-        const roomInfoResponse = await fetch(`https://api.clickmeeting.com/v1/conferences/${room}`, {
-            method: "GET",
-            headers
-        });
-        console.info("====== Info Sala ======", roomInfoResponse);
-
-        let roomInfoText = await roomInfoResponse.text();
-
-        try {
-            roomInfo = JSON.parse(roomInfoText);
-        } catch (e) {
-            console.error("Respuesta inválida del servidor (room info no es JSON)", e);
-            return res.status(200).json({
-                message: "Acceso exitoso",
-                status: "error"
-            });
-        }
-
-        return res.status(200).json({
-            message: "Acceso exitoso",
-            roomInfo: roomInfo,
-            status: "success"
-        });
-
-    } catch (e) {
-        console.error("Error en clickMeeting:", e);
-        return res.status(200).json({
-            message: e.message || "Error desconocido",
-            url: url_alternative_webinar,
-            status: "error"
-        });
-    }
-});
-
-exports.clickMeetingSave2 = onRequest(async (req, res) => {
-    res.set("Content-Type", "application/json");
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "GET") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    try {
-
-        let { room } = req.query;
-
-        room = String(room || "").trim();
-
-        if (!room) {
-            console.warn("Faltan parámetros requeridos");
-            return res.status(200).json({
-                message: "Faltan parámetros requeridos",
-                status: "error"
-            });
-        }
-
-        const headers = {
-            "Content-Type": "application/json",
-            "X-Api-Key": "usd7a6b6b319b8978f1d9ed5a78ebcc811564174b4"
-        };
-
-        const roomInfoResponse = await fetch(`https://api.clickmeeting.com/v1/conferences/${room}`, {
-            method: "GET",
-            headers
-        });
-        console.info("====== Info Sala ======", roomInfoResponse);
-
-        let roomInfoText = await roomInfoResponse.text();
-
-        try {
-            roomInfo = JSON.parse(roomInfoText);
-        } catch (e) {
-            console.error("Respuesta inválida del servidor (room info no es JSON)", e);
-            return res.status(200).json({
-                message: "Acceso exitoso",
-                status: "error"
-            });
-        }
-
-        return res.status(200).json({
-            message: "Acceso exitoso",
-            roomInfo: roomInfo,
-            status: "success"
-        });
-
-    } catch (e) {
-        console.error("Error en clickMeeting:", e);
-        return res.status(200).json({
-            message: e.message || "Error desconocido",
-            url: url_alternative_webinar,
-            status: "error"
-        });
-    }
-});
-
-exports.clickMeetingSave3 = onRequest(async (req, res) => {
-    res.set("Content-Type", "application/json");
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "GET") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    try {
-
-        let { room } = req.query;
-
-        room = String(room || "").trim();
-
-        if (!room) {
-            console.warn("Faltan parámetros requeridos");
-            return res.status(200).json({
-                message: "Faltan parámetros requeridos",
-                status: "error"
-            });
-        }
-
-        const headers = {
-            "Content-Type": "application/json",
-            "X-Api-Key": "usd7a6b6b319b8978f1d9ed5a78ebcc811564174b4"
-        };
-
-        const roomInfoResponse = await fetch(`https://api.clickmeeting.com/v1/conferences/${room}`, {
-            method: "GET",
-            headers
-        });
-        console.info("====== Info Sala ======", roomInfoResponse);
-
-        let roomInfoText = await roomInfoResponse.text();
-
-        try {
-            roomInfo = JSON.parse(roomInfoText);
-        } catch (e) {
-            console.error("Respuesta inválida del servidor (room info no es JSON)", e);
-            return res.status(200).json({
-                message: "Acceso exitoso",
-                status: "error"
-            });
-        }
-
-        return res.status(200).json({
-            message: "Acceso exitoso",
-            roomInfo: roomInfo,
+            callsToCMApi,
             status: "success"
         });
 
