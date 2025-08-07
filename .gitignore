@@ -67,5 +67,7 @@ node_modules/
 
 # Ignorar archivos sensibles
 functions/account/conectimed-9d22c-firebase-adminsdk-b27ow-02e6691ac6.json
+functions/keys/
+functions/account/
 functions/.env.prod
 functions/.env

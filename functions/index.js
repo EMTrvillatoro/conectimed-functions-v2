@@ -44,13 +44,13 @@ function isRateLimited(key) {
     return false;
 }
 
-////// var serviceAccount = require("./account/conectimed-9d22c-firebase-adminsdk-b27ow-02e6691ac6.json");
+// var serviceAccount = require("./keys/conectimed-9d22c-firebase-adminsdk-b27ow-1d7dbc7c36.json");
 
 initializeApp(
-    //     {
-    //     credential: admin.credential.cert(serviceAccount),
-    //     databaseURL: "https://conectimed-9d22c.firebaseio.com"
-    // }
+    //      {
+    //      credential: admin.credential.cert(serviceAccount),
+    //      databaseURL: "https://conectimed-9d22c.firebaseio.com"
+    //  }
 );
 
 const db = getFirestore();
@@ -1056,4 +1056,34 @@ function stringSearch(str, whiteSpaces) {
 
 function removeAccents(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+/******Sección de Miguel******/
+
+//funcion getAllAuthUsers
+exports.getAllAuthUsers = onRequest(runtimeOpts, async (req, res) => {
+    res.header('Content-Type', 'application/json');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
+    }
+    try {
+        let { pageToken } = req.body;
+        console.log(`pageToken: ${pageToken}`)
+        const _resp = await listAllUsers(pageToken);
+        return res.status(200).json(_resp);
+    } catch (e) {
+        console.error('Error capturado', e);
+        return res.status(500).json(e);
+    }
+});
+
+//función listAllUsers
+async function listAllUsers(pageToken) {
+    try {
+        return await admin.auth().listUsers(500, pageToken);
+    } catch (e) {
+        console.log("***** ERROR ", e);
+        return [];
+    }
 }
