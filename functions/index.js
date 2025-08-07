@@ -44,7 +44,7 @@ function isRateLimited(key) {
     return false;
 }
 
-// var serviceAccount = require("./account/conectimed-9d22c-firebase-adminsdk-b27ow-02e6691ac6.json");
+////// var serviceAccount = require("./account/conectimed-9d22c-firebase-adminsdk-b27ow-02e6691ac6.json");
 
 initializeApp(
     //     {
