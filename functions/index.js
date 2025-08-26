@@ -20,6 +20,7 @@ const admin = require('firebase-admin');
 const XLSX = require('xlsx');
 const { parseISO, toDate, format: formatDate, isValid, getTime, format } = require('date-fns');
 const { toZonedTime } = require('date-fns-tz');
+const { decryptBack } = require("./Tools");
 
 
 const runtimeOpts = {
@@ -50,13 +51,13 @@ function isRateLimited(key) {
     return false;
 }
 
-// var serviceAccount = require("./keys/conectimed-9d22c-firebase-adminsdk-b27ow-1d7dbc7c36.json");
+var serviceAccount = require("./keys/conectimed-9d22c-firebase-adminsdk-b27ow-1d7dbc7c36.json");
 
 initializeApp(
-    //      {
-    //      credential: admin.credential.cert(serviceAccount),
-    //      databaseURL: "https://conectimed-9d22c.firebaseio.com"
-    //  }
+    {
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: "https://conectimed-9d22c.firebaseio.com"
+    }
 );
 
 const db = getFirestore();
@@ -974,7 +975,7 @@ exports.userAppRegister = onRequest(runtimeOpts, async (req, res) => {
 
         const resp = await getAuth().createUser({
             email,
-            password
+            password: decryptBack(password)
         });
 
         if (resp && resp.uid && resp.email) {
