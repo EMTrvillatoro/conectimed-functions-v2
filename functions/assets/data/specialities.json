@@ -1,0 +1,3000 @@
+[
+  {
+    "id": 3,
+    "count": 121,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/algologia/",
+    "name": "Algología",
+    "slug": "algologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/3"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=3"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=3"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=3"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=3"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=3"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 41,
+    "count": 379,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/anatomopatologia/",
+    "name": "Anatomopatología",
+    "slug": "anatomopatologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/41"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=41"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=41"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=41"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=41"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=41"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "count": 444,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/anestesiologia/",
+    "name": "Anestesiología",
+    "slug": "anestesiologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "count": 184,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/agiologia-cirugia-vascular-y-endovascular/",
+    "name": "Angiología, Cirugía Vascular y Endovascular",
+    "slug": "agiologia-cirugia-vascular-y-endovascular",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/5"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=5"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=5"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=5"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=5"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=5"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "count": 85,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/audiologia-comunicacion-otoneurologia-y-foniatria/",
+    "name": "Audiología, Comunicación, Otoneurología y Foniatría",
+    "slug": "audiologia-comunicacion-otoneurologia-y-foniatria",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/6"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=6"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=6"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=6"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=6"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=6"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "count": 90,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/ginecologia-y-obstetricia/biologia-de-la-reproduccion/",
+    "name": "Biología de la Reproducción",
+    "slug": "biologia-de-la-reproduccion",
+    "taxonomy": "speciality",
+    "parent": 19,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/7"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/19"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=7"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=7"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=7"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=7"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=7"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 1794,
+    "count": 191,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cardiologia/cardiolgia-intervencionista/",
+    "name": "Cardiolgía Intervencionista",
+    "slug": "cardiolgia-intervencionista",
+    "taxonomy": "speciality",
+    "parent": 8,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/1794"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/8"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=1794"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=1794"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=1794"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=1794"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=1794"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "count": 331,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cardiologia/",
+    "name": "Cardiología",
+    "slug": "cardiologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/8"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=8"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=8"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=8"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=8"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=8"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4812,
+    "count": 0,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cirugia-del-torax/",
+    "name": "Cirugía del Tórax",
+    "slug": "cirugia-del-torax",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4812"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4812"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4812"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4812"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4812"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4812"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "count": 337,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cirugia-general/",
+    "name": "Cirugía General",
+    "slug": "cirugia-general",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/10"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=10"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=10"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=10"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=10"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=10"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4933,
+    "count": 0,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cirugia-maxilofacial/",
+    "name": "Cirugía Maxilofacial",
+    "slug": "cirugia-maxilofacial",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4933"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4933"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4933"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4933"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4933"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4933"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 11,
+    "count": 184,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/oncologia/cirugia-oncologica/",
+    "name": "Cirugía Oncológica",
+    "slug": "cirugia-oncologica",
+    "taxonomy": "speciality",
+    "parent": 38,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/11"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/38"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=11"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=11"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=11"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=11"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=11"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4678,
+    "count": 0,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cirugia-ortopedica/",
+    "name": "Cirugía Ortopedica",
+    "slug": "cirugia-ortopedica",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4678"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4678"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4678"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4678"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4678"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4678"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4811,
+    "count": 36,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cirugia-pediatrica/",
+    "name": "Cirugía Pediátrica",
+    "slug": "cirugia-pediatrica",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4811"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4811"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4811"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4811"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4811"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4811"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12,
+    "count": 112,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/cirugia-plastica-estetica-y-reconstructiva/",
+    "name": "Cirugía Plástica, Estética y Reconstructiva",
+    "slug": "cirugia-plastica-estetica-y-reconstructiva",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/12"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=12"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=12"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=12"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=12"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=12"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 14,
+    "count": 146,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/coloproctologia/",
+    "name": "Coloproctología",
+    "slug": "coloproctologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/14"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=14"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=14"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=14"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=14"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=14"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 15,
+    "count": 184,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/dermatologia/",
+    "name": "Dermatología",
+    "slug": "dermatologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/15"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=15"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=15"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=15"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=15"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=15"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 16,
+    "count": 227,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/endocrinologia/",
+    "name": "Endocrinología",
+    "slug": "endocrinologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/16"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=16"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=16"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=16"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=16"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=16"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 3997,
+    "count": 517,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/epidemiologia/",
+    "name": "Epidemiología",
+    "slug": "epidemiologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/3997"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=3997"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=3997"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=3997"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=3997"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=3997"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 17,
+    "count": 242,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/gastroenterologia/",
+    "name": "Gastroenterología",
+    "slug": "gastroenterologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/17"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=17"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=17"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=17"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=17"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=17"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 1800,
+    "count": 285,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/genetica/",
+    "name": "Genética",
+    "slug": "genetica",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/1800"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=1800"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=1800"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=1800"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=1800"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=1800"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 18,
+    "count": 1093,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/geriatria/",
+    "name": "Geriatría",
+    "slug": "geriatria",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/18"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=18"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=18"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=18"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=18"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=18"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 19,
+    "count": 584,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/ginecologia-y-obstetricia/",
+    "name": "Ginecología y Obstetricia",
+    "slug": "ginecologia-y-obstetricia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/19"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=19"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=19"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=19"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=19"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=19"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 20,
+    "count": 264,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/hematologia/",
+    "name": "Hematología",
+    "slug": "hematologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/20"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=20"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=20"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=20"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=20"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=20"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 22,
+    "count": 589,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/infectologia/",
+    "name": "Infectología",
+    "slug": "infectologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/22"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=22"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=22"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=22"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=22"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=22"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "count": 633,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/inmunilogia-clinica-y-alergologia/",
+    "name": "Inmunología Clínica y Alergología",
+    "slug": "inmunilogia-clinica-y-alergologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/2"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=2"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=2"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=2"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=2"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=2"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 23,
+    "count": 840,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/medicina-critica/",
+    "name": "Medicina Crítica",
+    "slug": "medicina-critica",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/23"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=23"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=23"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=23"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=23"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=23"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 25,
+    "count": 166,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/medicina-de-rehabilitacion/",
+    "name": "Medicina de Rehabilitación",
+    "slug": "medicina-de-rehabilitacion",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/25"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=25"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=25"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=25"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=25"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=25"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4397,
+    "count": 189,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/medicina-de-urgencias/",
+    "name": "Medicina de Urgencias",
+    "slug": "medicina-de-urgencias",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4397"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4397"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4397"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4397"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4397"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4397"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 24,
+    "count": 111,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/medicina-del-deporte/",
+    "name": "Medicina del Deporte",
+    "slug": "medicina-del-deporte",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/24"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=24"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=24"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=24"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=24"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=24"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 26,
+    "count": 1273,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/medicina-general-familiar-integrada/",
+    "name": "Medicina General-Familiar-Integrada",
+    "slug": "medicina-general-familiar-integrada",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/26"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=26"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=26"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=26"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=26"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=26"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 28,
+    "count": 1185,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/medicina-interna/",
+    "name": "Medicina Interna",
+    "slug": "medicina-interna",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/28"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=28"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=28"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=28"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=28"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=28"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4831,
+    "count": 0,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/medicina-nuclear/",
+    "name": "Medicina Nuclear",
+    "slug": "medicina-nuclear",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4831"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4831"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4831"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4831"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4831"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4831"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 29,
+    "count": 168,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/nefrologia/",
+    "name": "Nefrología",
+    "slug": "nefrologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/29"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=29"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=29"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=29"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=29"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=29"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 30,
+    "count": 361,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/neonatologia/",
+    "name": "Neonatología",
+    "slug": "neonatologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/30"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=30"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=30"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=30"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=30"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=30"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 31,
+    "count": 490,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/neumologia/",
+    "name": "Neumología",
+    "slug": "neumologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/31"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=31"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=31"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=31"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=31"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=31"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 32,
+    "count": 278,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/neurocirugia/",
+    "name": "Neurocirugía",
+    "slug": "neurocirugia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/32"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=32"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=32"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=32"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=32"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=32"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 34,
+    "count": 258,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/neurofisiologia/",
+    "name": "Neurofisiología",
+    "slug": "neurofisiologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/34"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=34"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=34"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=34"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=34"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=34"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 33,
+    "count": 312,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/neurologia/",
+    "name": "Neurología",
+    "slug": "neurologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/33"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=33"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=33"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=33"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=33"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=33"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 35,
+    "count": 152,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/nutricion/",
+    "name": "Nutrición",
+    "slug": "nutricion",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/35"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=35"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=35"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=35"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=35"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=35"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 36,
+    "count": 120,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/odontologia/",
+    "name": "Odontología",
+    "slug": "odontologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/36"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=36"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=36"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=36"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=36"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=36"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 37,
+    "count": 123,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/oftalmologia/",
+    "name": "Oftalmología",
+    "slug": "oftalmologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/37"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=37"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=37"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=37"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=37"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=37"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 38,
+    "count": 210,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/oncologia/",
+    "name": "Oncología",
+    "slug": "oncologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/38"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=38"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=38"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=38"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=38"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=38"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 39,
+    "count": 207,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/ortopedia-y-traumatologia/",
+    "name": "Ortopedia y Traumatología",
+    "slug": "ortopedia-y-traumatologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/39"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=39"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=39"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=39"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=39"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=39"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 40,
+    "count": 412,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/otorrinolaringologia/",
+    "name": "Otorrinolaringología",
+    "slug": "otorrinolaringologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/40"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=40"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=40"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=40"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=40"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=40"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 3764,
+    "count": 1105,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/pasante-estudiante/",
+    "name": "Pasante-Estudiante",
+    "slug": "pasante-estudiante",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/3764"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=3764"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=3764"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=3764"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=3764"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=3764"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 42,
+    "count": 1093,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/pediatria/",
+    "name": "Pediatría",
+    "slug": "pediatria",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/42"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=42"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=42"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=42"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=42"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=42"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 43,
+    "count": 199,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/psicologia/",
+    "name": "Psicología",
+    "slug": "psicologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/43"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=43"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=43"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=43"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=43"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=43"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 44,
+    "count": 192,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/psiquiatria/",
+    "name": "Psiquiatría",
+    "slug": "psiquiatria",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/44"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=44"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=44"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=44"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=44"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=44"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4830,
+    "count": 0,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/psiquiatria/psiquiatria-infantil/",
+    "name": "Psiquiatría Infantil",
+    "slug": "psiquiatria-infantil",
+    "taxonomy": "speciality",
+    "parent": 44,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4830"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/44"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4830"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4830"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4830"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4830"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4830"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 21,
+    "count": 299,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/radiologia-imagenologia/",
+    "name": "Radiologia e Imagenología",
+    "slug": "radiologia-imagenologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/21"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=21"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=21"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=21"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=21"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=21"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4832,
+    "count": 0,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/radioterapia/",
+    "name": "Radioterapia",
+    "slug": "radioterapia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4832"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4832"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4832"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4832"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4832"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4832"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 46,
+    "count": 122,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/reumatologia/",
+    "name": "Reumatología",
+    "slug": "reumatologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/46"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=46"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=46"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=46"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=46"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=46"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4934,
+    "count": 0,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/terapia-fisica/",
+    "name": "Terapia Física",
+    "slug": "terapia-fisica",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4934"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4934"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4934"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4934"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4934"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4934"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 4829,
+    "count": 59,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/pediatria/terapia-intensiva-pediatrica/",
+    "name": "Terapia Intensiva Pediátrica",
+    "slug": "terapia-intensiva-pediatrica",
+    "taxonomy": "speciality",
+    "parent": 42,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/4829"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/42"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=4829"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=4829"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=4829"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=4829"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=4829"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 47,
+    "count": 147,
+    "description": "",
+    "link": "https://panel.conectimed.site/speciality/urologia/",
+    "name": "Urología",
+    "slug": "urologia",
+    "taxonomy": "speciality",
+    "parent": 0,
+    "meta": [],
+    "featured_image": false,
+    "_links": {
+      "self": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality/47"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/speciality"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/taxonomies/speciality"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/posts?speciality=47"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/pages?speciality=47"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/media?speciality=47"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/medicines?speciality=47"
+        },
+        {
+          "href": "https://panel.conectimed.site/wp-json/wp/v2/video?speciality=47"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  }
+]
