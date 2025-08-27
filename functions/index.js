@@ -20,7 +20,7 @@ const admin = require('firebase-admin');
 const XLSX = require('xlsx');
 const { parseISO, toDate, format: formatDate, isValid, getTime, format } = require('date-fns');
 const { toZonedTime } = require('date-fns-tz');
-const { decryptBack } = require("./Tools");
+const { decryptBack, updateUserSearch } = require("./Tools");
 
 
 const runtimeOpts = {
@@ -990,8 +990,19 @@ exports.userAppRegister = onRequest(runtimeOpts, async (req, res) => {
             const mobile = String(`${String(data?.mobileLada || '').trim()}${String(data?.mobile || '').trim()}`);
             // Guardar el usuario en Firestore usando una transacción
             const userRef = db.collection("users").doc(resp.uid);
+            const userMetaRef = db.collection("medico-meta").doc(resp.uid);
 
             await db.runTransaction(async (transaction) => {
+                let metadata = {
+                    specialty1: data?.specialty1 || null,
+                    specialty2: data?.specialty2 || null,
+                    specialty3: data?.specialty3 || null,
+                    specialty4: data?.specialty4 || null,
+                    specialty5: data?.specialty5 || null
+                }
+
+                const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
+
                 transaction.set(userRef, {
                     uid: resp.uid,
                     uuid: resp.uid,
@@ -1010,12 +1021,28 @@ exports.userAppRegister = onRequest(runtimeOpts, async (req, res) => {
                     nameStr,
                     firstCharacter: nameStr.charAt(0) || '',
                     phone: '',
-                    search: [],
+                    personalInterests: data?.personalInterests || [],
+                    newRegistration: true,
+                    search: search || [],
                     status: 'new',
                     type: type || 'medico',
                     updatedAt: FieldValue.serverTimestamp(),
                     newConditionsOfUseAccepted: true
+                }, { merge: true });
+
+                // Elimina todas las propiedades de metadata que sean === null
+                Object.keys(metadata).forEach(key => {
+                    if (metadata[key] == null) {
+                        delete metadata[key];
+                    }
                 });
+
+                transaction.set(userMetaRef, {
+                    ...metadata,
+                    cedulaProfesional: data?.cedula || '',
+                    address1: data?.address1 || {},
+                }, { merge: true });
+
             });
 
             // Obtener custom token para el usuario
