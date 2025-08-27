@@ -1,9 +1,10 @@
 const { onRequest } = require("firebase-functions/v2/https");
-const Stripe = require("stripe");
 const { defineSecret } = require('firebase-functions/params');
 const functions = require('firebase-functions');
 const Tools = require('./Tools');
 const html_to_pdf = require('html-pdf-node');
+const Stripe = require("stripe");
+
 // ************************* Vars ************************* 
 //Firebase api_url
 const apiUrl = defineSecret('CONFIGFB_API_URL');
@@ -13,21 +14,22 @@ const stripeSecretKey = defineSecret('STRIPE_SECRET_KEY');
 const clickMeetingApi = defineSecret('CLICK_MEETING_API');
 const clickMeetingURLAccount = defineSecret('CLICK_MEETING_URL_ACCOUNT');
 const clickMeetingXApiKey = defineSecret('CLICK_MEETING_X_API_KEY');
-const { initializeApp } = require('firebase-admin/app');
-const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
-const { getAuth } = require('firebase-admin/auth');
-const admin = require('firebase-admin');
+
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
+
 const XLSX = require('xlsx');
 const { parseISO, toDate, format: formatDate, isValid, getTime, format } = require('date-fns');
 const { toZonedTime } = require('date-fns-tz');
-const { decryptBack, updateUserSearch } = require("./Tools");
+const { decryptBack, updateUserSearch, getFBAdminInstance } = require("./Tools");
+
+const { registerHandler } = require("./user/register");
 
 
 const runtimeOpts = {
+    memory: "8GiB",
+    cpu: "gcf_gen1",
     timeoutSeconds: 540,
-    memory: '8GB',
-    cors: true
-};
+}
 
 // Rate limit en memoria
 const rateLimits = new Map();
@@ -50,17 +52,6 @@ function isRateLimited(key) {
     }
     return false;
 }
-
-var serviceAccount = require("./keys/conectimed-9d22c-firebase-adminsdk-b27ow-1d7dbc7c36.json");
-
-initializeApp(
-    {
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: "https://conectimed-9d22c.firebaseio.com"
-    }
-);
-
-const db = getFirestore();
 
 exports.infoDBF = onRequest(runtimeOpts, async (req, res) => {
     // 🔥 Configurar CORS manualmente
@@ -531,11 +522,7 @@ exports.clickMeeting = onRequest(async (req, res) => {
 
 /////////////////////////// Validated Users /////////////////////////////
 
-exports.getValidatedUsers = onRequest({
-    memory: "8GiB",
-    cpu: "gcf_gen1",
-    timeoutSeconds: 540,
-}, async (req, res) => {
+exports.getValidatedUsers = onRequest(runtimeOpts, async (req, res) => {
     res.set('Content-Type', 'application/json');
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Headers', 'Content-Type');
@@ -950,130 +937,7 @@ function mapRawUserDoc(e) {
 /// User Creation Function Auth and Firebase
 
 exports.userAppRegister = onRequest(runtimeOpts, async (req, res) => {
-    res.set("Content-Type", "application/json");
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "POST") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    try {
-
-        let { email, password, type, data } = req.body;
-
-        email = String(email || "").trim().toLowerCase();
-
-        if (!email || !password) {
-            console.warn("Faltan parámetros requeridos");
-            return res.status(400).json({ error: "Faltan parámetros requeridos" });
-        }
-
-        const resp = await getAuth().createUser({
-            email,
-            password: decryptBack(password)
-        });
-
-        if (resp && resp.uid && resp.email) {
-            //DATOS DEL USUARIO
-            const nameStr = stringSearch(`${data?.lastName1 || ''} ${data?.lastName2 || ''} ${data?.name || ''}`, true);
-            let name = String(data?.name || '').trim().replace(/\s{2,}/g, ' ');
-            let lastName1 = String(data?.lastName1 || '').trim().replace(/\s{2,}/g, ' ');
-            let lastName2 = String(data?.lastName2 || '').trim().replace(/\s{2,}/g, ' ');
-            name = String(name).toLocaleLowerCase().replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()));
-            lastName1 = String(lastName1).toLocaleLowerCase().replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()));
-            lastName2 = String(lastName2).toLocaleLowerCase().replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()));
-            const mobile = String(`${String(data?.mobileLada || '').trim()}${String(data?.mobile || '').trim()}`);
-            // Guardar el usuario en Firestore usando una transacción
-            const userRef = db.collection("users").doc(resp.uid);
-            const userMetaRef = db.collection("medico-meta").doc(resp.uid);
-
-            await db.runTransaction(async (transaction) => {
-                let metadata = {
-                    specialty1: data?.specialty1 || null,
-                    specialty2: data?.specialty2 || null,
-                    specialty3: data?.specialty3 || null,
-                    specialty4: data?.specialty4 || null,
-                    specialty5: data?.specialty5 || null
-                }
-
-                const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
-
-                transaction.set(userRef, {
-                    uid: resp.uid,
-                    uuid: resp.uid,
-                    avatar: {},
-                    createdAt: FieldValue.serverTimestamp(),
-                    email: resp.email,
-                    lastName1,
-                    lastName2,
-                    mobile,
-                    mobileLada: {
-                        number: String(data?.mobile || '').trim(),
-                        lada: String(data?.mobileLada || '').trim(),
-                        country: data?.phoneCountry || ''
-                    },
-                    name,
-                    nameStr,
-                    firstCharacter: nameStr.charAt(0) || '',
-                    phone: '',
-                    personalInterests: data?.personalInterests || [],
-                    newRegistration: true,
-                    search: search || [],
-                    status: 'new',
-                    type: type || 'medico',
-                    updatedAt: FieldValue.serverTimestamp(),
-                    newConditionsOfUseAccepted: true
-                }, { merge: true });
-
-                // Elimina todas las propiedades de metadata que sean === null
-                Object.keys(metadata).forEach(key => {
-                    if (metadata[key] == null) {
-                        delete metadata[key];
-                    }
-                });
-
-                transaction.set(userMetaRef, {
-                    ...metadata,
-                    cedulaProfesional: data?.cedula || '',
-                    address1: data?.address1 || {},
-                }, { merge: true });
-
-            });
-
-            // Obtener custom token para el usuario
-            const token = await getAuth().createCustomToken(resp.uid);
-
-            return res.status(200).json({
-                status: "success",
-                message: "Usuario creado exitosamente",
-                user: {
-                    uid: resp.uid,
-                    email: resp.email
-                },
-                token // Devuelve el token para que pueda logearse
-            });
-
-        } else {
-            return res.status(400).json({
-                status: "error",
-                message: "No se pudo crear el usuario",
-                error: resp
-            });
-        }
-
-    } catch (e) {
-        console.error("Error en userAppRegister:", e);
-        return res.status(200).json({
-            message: e.message || "Error desconocido",
-            code: e.code || "unknown_error",
-            status: "error"
-        });
-    }
+    await registerHandler(req, res);
 });
 
 function stringSearch(str, whiteSpaces) {
