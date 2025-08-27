@@ -17,6 +17,8 @@ const databaseName = defineSecret('CONFIGFB_DATABASE_NAME');
 function getFBAdminInstance() {
   if (!admin.apps.length) {
     admin.initializeApp({
+      credential: admin.credential.cert(JSON.parse(CERT.value())),
+      databaseURL: databaseURL.value(),
       serviceAccountId: clientEmail.value(),
       storageBucket: storageBucket.value(),
       projectId: databaseName.value()
@@ -245,8 +247,7 @@ function removeAccents(str) {
 }
 
 function removeAccents(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
-
 
 module.exports = { decryptBack, updateUserSearch, getFBAdminInstance, stringSearch, removeAccents };

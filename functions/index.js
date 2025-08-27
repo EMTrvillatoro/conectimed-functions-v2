@@ -936,9 +936,7 @@ function mapRawUserDoc(e) {
 
 /// User Creation Function Auth and Firebase
 
-exports.userAppRegister = onRequest(runtimeOpts, async (req, res) => {
-    await registerHandler(req, res);
-});
+exports.userAppRegister = onRequest(runtimeOpts, async (req, res) => await registerHandler(req, res));
 
 function stringSearch(str, whiteSpaces) {
     str = str.trim();
