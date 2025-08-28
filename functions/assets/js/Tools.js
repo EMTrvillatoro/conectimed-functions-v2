@@ -21,7 +21,7 @@ const cloudMessagingURL = defineSecret('CLOUD_MESSAGING_URL');
 
 const axios = require('axios');
 const { google } = require('googleapis');
-const specialities = require('./assets/data/specialities.json');
+const specialities = require('../data/specialities.json');
 
 // Rate limit en memoria
 const rateLimits = new Map();
