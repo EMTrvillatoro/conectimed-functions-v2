@@ -23,6 +23,11 @@ const axios = require('axios');
 const { google } = require('googleapis');
 const specialities = require('./assets/data/specialities.json');
 
+// Rate limit en memoria
+const rateLimits = new Map();
+const MAX_REQUESTS = 10;
+const WINDOW_MS = 60 * 1000; // 60 segundos
+
 function getFBAdminInstance() {
   if (!admin.apps.length) {
     admin.initializeApp({
@@ -54,6 +59,23 @@ function getAccessToken() {
       resolve({ success: true, token: tokens.access_token });
     });
   });
+}
+
+function isRateLimited(key) {
+  const now = Date.now();
+  const entry = rateLimits.get(key);
+
+  if (entry) {
+    if (now - entry.timestamp < WINDOW_MS) {
+      if (entry.count >= MAX_REQUESTS) return true;
+      entry.count += 1;
+    } else {
+      rateLimits.set(key, { count: 1, timestamp: now });
+    }
+  } else {
+    rateLimits.set(key, { count: 1, timestamp: now });
+  }
+  return false;
 }
 
 function utf8Encode(str) {
@@ -1192,4 +1214,40 @@ function cleanText(text) {
   return str;
 }
 
-module.exports = { decryptBack, updateUserSearch, getFBAdminInstance, stringSearch, removeAccents, cleanText, capitalizeText, arraySearch, stringSearch, excerpt, slugify, parserJSON, parser, getSpecialty, getSpecialties, arrayPaginator, cleanString, searchArrayHandler, unique, getFBAdminInstance, asyncForEach, sendEmail, sendRequest, sendNotificationHandler, notificationList, sendSMS, getAccessToken };
+const runtimeOpts = {
+  memory: "8GiB",
+  cpu: "gcf_gen1",
+  timeoutSeconds: 540,
+}
+
+module.exports = { 
+  decryptBack, 
+  updateUserSearch, 
+  getFBAdminInstance, 
+  stringSearch, 
+  removeAccents, 
+  cleanText, 
+  capitalizeText, 
+  arraySearch, 
+  stringSearch, 
+  excerpt, 
+  slugify, 
+  parserJSON, 
+  parser, 
+  getSpecialty, 
+  getSpecialties, 
+  arrayPaginator, 
+  cleanString, 
+  searchArrayHandler, 
+  unique, 
+  getFBAdminInstance, 
+  asyncForEach, 
+  sendEmail, 
+  sendRequest, 
+  sendNotificationHandler, 
+  notificationList, 
+  sendSMS, 
+  getAccessToken, 
+  isRateLimited,
+  runtimeOpts // <-- export runtimeOpts
+};
