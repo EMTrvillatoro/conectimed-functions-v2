@@ -938,22 +938,6 @@ function mapRawUserDoc(e) {
 
 exports.userAppRegister = onRequest(runtimeOpts, async (req, res) => await registerHandler(req, res));
 
-function stringSearch(str, whiteSpaces) {
-    str = str.trim();
-    var noTildes = removeAccents(str).replace(/[^\w\s]/gi, '');
-    let regexp = /[^a-zA-Z0-9]/g;
-    if (whiteSpaces === true) {
-        regexp = /[^a-zA-Z0-9 ]/g;
-    }
-    let search = noTildes.replace(regexp, '').toLocaleLowerCase();
-    search = search.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
-    return search;
-}
-
-function removeAccents(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
 /******Sección de Miguel******/
 
 /************función getAllAuthUsers*************/
