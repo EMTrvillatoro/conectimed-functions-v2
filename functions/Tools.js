@@ -8,11 +8,9 @@ const minLength = 3;
 const databaseURL = defineSecret('CONFIGFB_DATABASE_URL');
 const CERT = defineSecret('CONFIGFB_ADMIN_CREDENTIAL_CERT');
 
-// FIREBASE
 const clientEmail = defineSecret('CONFIGFB_CLIENT_EMAIL');
 const storageBucket = defineSecret('CONFIGFB_STORAGE_BUCKET');
 const databaseName = defineSecret('CONFIGFB_DATABASE_NAME');
-
 
 function getFBAdminInstance() {
   if (!admin.apps.length) {
@@ -229,21 +227,6 @@ function stringSearch(str, whiteSpaces) {
   let search = noTildes.replace(regexp, '').toLocaleLowerCase();
   search = search.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
   return search;
-}
-
-function removeAccents(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-    str = str.trim();
-    var noTildes = removeAccents(str).replace(/[^\w\s]/gi, '');
-    let regexp = /[^a-zA-Z0-9]/g;
-    if (whiteSpaces === true) {
-        regexp = /[^a-zA-Z0-9 ]/g;
-    }
-    let search = noTildes.replace(regexp, '').toLocaleLowerCase();
-    search = search.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
-    return search;
 }
 
 function removeAccents(str) {
