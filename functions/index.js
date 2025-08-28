@@ -1,12 +1,9 @@
 const { onRequest } = require("firebase-functions/v2/https");
-const Stripe = require("stripe");
 const { defineSecret } = require('firebase-functions/params');
 const functions = require('firebase-functions');
 const html_to_pdf = require('html-pdf-node');
 
 const apiUrl = defineSecret('CONFIGFB_API_URL');
-//Stripe
-const stripeSecretKey = defineSecret('STRIPE_SECRET_KEY');
 
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const admin = require('firebase-admin');
@@ -16,8 +13,9 @@ const { toZonedTime } = require('date-fns-tz');
 
 // files
 const { sendEmail, capitalizeText, cleanText, slugify, runtimeOpts } = require('./Tools');
-const { registerHandler } = require('./user/register');
+const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./stripe/stripe');
 const { clickMeetingHandler } = require('./click-meeting/click-meeting');
+const { registerHandler } = require('./user/register');
 
 exports.infoDBF = onRequest(runtimeOpts, async (req, res) => {
     // 🔥 Configurar CORS manualmente
@@ -88,220 +86,17 @@ exports.infoDBF = onRequest(runtimeOpts, async (req, res) => {
 
 /////////////////////////// STRIPE /////////////////////////////
 
-exports.stripe_customer_create = onRequest(runtimeOpts, async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-    res.set("Content-Type", "application/json");
+exports.stripe_customer_create = onRequest(async (req, res) => await stripeCustomerCreateHandler(req, res));
 
-    const { email, name, uid } = req.body;
+exports.stripe_customer_update = onRequest(runtimeOpts, async (req, res) => await stripeCustomerUpdateHandler(req, res));
 
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
+exports.stripe_customer_retrieve = onRequest(runtimeOpts, async (req, res) => await stripeCustomerRetrieveHandler(req, res));
 
-    if (req.method !== "POST") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
+exports.stripe_customer_delete = onRequest(runtimeOpts, async (req, res) => await stripeCustomerDeleteHandler(req, res));
 
-    if (!email || !name) {
-        return res.status(400).json({ error: "Faltan parámetros requeridos" });
-    }
+exports.stripe_payment_intent = onRequest(runtimeOpts, async (req, res) => await stripePaymentIntentHandler(req, res));
 
-    try {
-        // Crear la sesión de pago en Stripe
-        const stripe = Stripe(stripeSecretKey.value(), { apiVersion: '2024-04-10' });
-        const { id } = await stripe.customers.create({
-            email: email,
-            name: name,
-            metadata: {
-                uid: uid
-            },
-        });
-        return res.status(200).json({
-            customerId: id,
-            env: stripeSecretKey.value().substring(0, 7)
-        });
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
-
-exports.stripe_customer_update = onRequest(runtimeOpts, async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-    res.set("Content-Type", "application/json");
-
-    const { customerId, data } = req.body;
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "POST") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    if (!customerId) {
-        return res.status(400).json({ error: "Faltan parámetros requeridos" });
-    }
-
-    try {
-        // Crear la sesión de pago en Stripe
-        const stripe = Stripe(stripeSecretKey.value(), { apiVersion: '2024-04-10' });
-        const { id } = await stripe.customers.update(
-            customerId,
-            {
-                email: data.email,
-                name: data.name,
-                metadata: {
-                    uid: data.uid
-                },
-            });
-        return res.status(200).json({
-            customerId: id,
-            env: stripeSecretKey.value().substring(0, 7)
-        });
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
-
-exports.stripe_customer_retrieve = onRequest(runtimeOpts, async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-    res.set("Content-Type", "application/json");
-
-    const { customerId } = req.body;
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "POST") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    if (!customerId) {
-        return res.status(400).json({ error: "Faltan parámetros requeridos" });
-    }
-
-    try {
-        // Crear la sesión de pago en Stripe
-        const stripe = Stripe(stripeSecretKey.value(), { apiVersion: '2024-04-10' });
-        const { id } = await stripe.customers.retrieve(customerId);
-        return res.status(200).json({
-            customerId: id,
-            env: stripeSecretKey.value().substring(0, 7)
-        });
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
-
-exports.stripe_customer_delete = onRequest(runtimeOpts, async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-    res.set("Content-Type", "application/json");
-
-    const { customerId } = req.body;
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "POST") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    if (!customerId) {
-        return res.status(400).json({ error: "Faltan parámetros requeridos" });
-    }
-
-    try {
-        // Crear la sesión de pago en Stripe
-        const stripe = Stripe(stripeSecretKey.value(), { apiVersion: '2024-04-10' });
-        await stripe.customers.del(customerId);
-        return res.status(200).json({
-            deleted: "ok",
-            env: stripeSecretKey.value().substring(0, 7)
-        });
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
-
-exports.stripe_payment_intent = onRequest(runtimeOpts, async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-    res.set("Content-Type", "application/json");
-
-    const { currency, amount, customerId } = req.body;
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "POST") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    if (!amount) {
-        return res.status(400).json({ error: "Faltan parámetros requeridos" });
-    }
-
-    try {
-        // Crear la sesión de pago en Stripe
-        const stripe = Stripe(stripeSecretKey.value(), { apiVersion: '2024-04-10' });
-        const { id, client_secret } = await stripe.paymentIntents.create({
-            amount: amount * 100,  // El monto en centavos
-            currency: currency || 'usd', // Moneda, ajusta según corresponda,
-            customer: customerId
-        });
-        return res.status(200).json({
-            clientSecret: client_secret,
-            paymentIntentId: id,
-            env: stripeSecretKey.value().substring(0, 7)
-        });
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
-
-exports.stripe_payment_intent_update = onRequest(runtimeOpts, async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
-    res.set("Content-Type", "application/json");
-
-    const { currency, amount, paymentIntentId } = req.body;
-
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "POST") {
-        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
-    }
-
-    if (!amount || !paymentIntentId) {
-        return res.status(400).json({ error: "Faltan parámetros requeridos" });
-    }
-
-    try {
-        // Crear la sesión de pago en Stripe
-        const stripe = Stripe(stripeSecretKey.value(), { apiVersion: '2024-04-10' });
-        const { client_secret } = await stripe.paymentIntents.update(paymentIntentId,
-            {
-                amount: amount * 100,
-                currency
-            });
-        return res.status(200).json({
-            clientSecret: client_secret,
-            env: stripeSecretKey.value().substring(0, 7)
-        });
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
+exports.stripe_payment_intent_update = onRequest(runtimeOpts, async (req, res) => await stripePaymentIntentUpdateHandler(req, res));
 
 /////////////////////////// Click Meeting /////////////////////////////
 
