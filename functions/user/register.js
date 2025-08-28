@@ -2,6 +2,13 @@ const { stringSearch, getFBAdminInstance, decryptBack, updateUserSearch } = requ
 const { FieldValue } = require('firebase-admin/firestore');
 const { getAuth } = require('firebase-admin/auth');
 
+/**
+ * 
+ * @param { import('express').Request } req 
+ * @param { import('express').Response } res 
+ * @returns 
+ */
+
 async function registerHandler(req, res) {
     res.set("Content-Type", "application/json");
     res.set("Access-Control-Allow-Origin", "*");
