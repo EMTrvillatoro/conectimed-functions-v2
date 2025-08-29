@@ -56,6 +56,9 @@ async function registerHandler(req, res) {
             const userRef = db.collection("users").doc(resp.uid);
             const userMetaRef = db.collection("medico-meta").doc(resp.uid);
 
+            const estimatedGraduationTime = data?.estimatedGraduationTime || undefined;
+            const studentVerificationFileUrl = data?.studentVerificationFileUrl || undefined;
+
             await db.runTransaction(async (transaction) => {
                 let metadata = {
                     specialty1: data?.specialty1 || null,
@@ -67,7 +70,7 @@ async function registerHandler(req, res) {
 
                 const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
 
-                transaction.set(userRef, {
+                let _data = {
                     uid: resp.uid,
                     uuid: resp.uid,
                     avatar: {},
@@ -92,7 +95,14 @@ async function registerHandler(req, res) {
                     type: type || 'medico',
                     updatedAt: FieldValue.serverTimestamp(),
                     newConditionsOfUseAccepted: true
-                }, { merge: true });
+                }
+
+                if (estimatedGraduationTime !== undefined && studentVerificationFileUrl !== null) {
+                    _data.estimatedGraduationTime = estimatedGraduationTime;
+                    _data.studentVerificationFileUrl = studentVerificationFileUrl;
+                }
+
+                transaction.set(userRef, _data, { merge: true });
 
                 // Elimina todas las propiedades de metadata que sean === null
                 Object.keys(metadata).forEach(key => {
