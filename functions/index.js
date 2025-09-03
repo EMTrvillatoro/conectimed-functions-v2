@@ -9,7 +9,7 @@ const { registerHandler } = require('./assets/js/user/register');
 const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
 const { sendMailHandler } = require('./assets/js/utils/sendMail');
-const { getSpecialties } = require('./assets/js/specialties/specialties');
+const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 
 /* functions HTTP REQUEST */
 
@@ -27,6 +27,7 @@ const { getSpecialties } = require('./assets/js/specialties/specialties');
 /* DESC: GEN HTML CERT | AUTHOR: Miguel | TYPE: HTTP REQUEST */ exports.generateHtmlCertificate = onRequest(runtimeOpts, async (req, res) => await generateHtmlCertificateHandler(req, res));
 /* DESC: GEN PDF FILE | AUTHOR: Miguel | TYPE: HTTP REQUEST */ exports.generatePDF = onRequest(runtimeOpts, async (req, res) => await generatePDFHandler(req, res));
 /* DESC: GET ALL SPECIALTIES | AUTHOR: Rolando | TYPE: HTTP REQUEST */ exports.getSpecialties = onRequest(runtimeOpts, async (req, res) => await getSpecialties(req, res));
+/* DESC: GET SPECIALTY BY ID | AUTHOR: Rolando | TYPE: HTTP REQUEST */ exports.getSpecialty = onRequest(runtimeOpts, async (req, res) => await getSpecialty(req, res));
 
 /* functions CALLABLES */
 
