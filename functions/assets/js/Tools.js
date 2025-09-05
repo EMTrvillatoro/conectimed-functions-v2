@@ -1214,40 +1214,109 @@ function cleanText(text) {
   return str;
 }
 
+function filterMetaData(data) {
+  let filterMetaData = [];
+  let metaData = {
+    state1: '',
+    state2: '',
+    specialty1: '',
+    specialty2: '',
+    specialty3: '',
+    specialty4: '',
+    specialty5: ''
+  };
+  if (data && data.address1 && data.address1.state && data.address1.state !== '') {
+    filterMetaData.push(data.address1.state);
+    metaData.state1 = data.address1.state;
+  }
+  if (data && data.address2 && data.address2.state && data.address2.state !== '') {
+    filterMetaData.push(data.address2.state);
+    metaData.state2 = data.address2.state;
+  }
+  if (data && data.specialty1) {
+    const id = data.specialty1.id;
+    if (id) {
+      filterMetaData.push(String(id));
+      metaData.specialty1 = String(id);
+    }
+  }
+  if (data && data.specialty2) {
+    const id = data.specialty2.id;
+    if (id) {
+      filterMetaData.push(String(id));
+      metaData.specialty2 = String(id);
+    }
+  }
+  if (data && data.specialty3) {
+    const id = data.specialty3.id;
+    if (id) {
+      filterMetaData.push(String(id));
+      metaData.specialty3 = String(id);
+    }
+  }
+  if (data && data.specialty4) {
+    const id = data.specialty4.id;
+    if (id) {
+      filterMetaData.push(String(id));
+      metaData.specialty4 = String(id);
+    }
+  }
+  if (data && data.specialty5) {
+    const id = data.specialty5.id;
+    if (id) {
+      filterMetaData.push(String(id));
+      metaData.specialty5 = String(id);
+    }
+  }
+  filterMetaData.push(String(metaData.state1) + metaData.specialty1);
+  filterMetaData.push(String(metaData.state1) + metaData.specialty2);
+  filterMetaData.push(String(metaData.state1) + metaData.specialty3);
+  filterMetaData.push(String(metaData.state1) + metaData.specialty4);
+  filterMetaData.push(String(metaData.state1) + metaData.specialty5);
+  filterMetaData.push(String(metaData.state2) + metaData.specialty1);
+  filterMetaData.push(String(metaData.state2) + metaData.specialty2);
+  filterMetaData.push(String(metaData.state2) + metaData.specialty3);
+  filterMetaData.push(String(metaData.state2) + metaData.specialty4);
+  filterMetaData.push(String(metaData.state2) + metaData.specialty5);
+  filterMetaData = filterMetaData.filter(unique);
+  return filterMetaData;
+}
+
 const runtimeOpts = {
   memory: "8GiB",
   cpu: "gcf_gen1",
   timeoutSeconds: 540,
 }
 
-module.exports = { 
-  decryptBack, 
-  updateUserSearch, 
-  getFBAdminInstance, 
-  stringSearch, 
-  removeAccents, 
-  cleanText, 
-  capitalizeText, 
-  arraySearch, 
-  stringSearch, 
-  excerpt, 
-  slugify, 
-  parserJSON, 
-  parser, 
-  getSpecialty, 
-  getSpecialties, 
-  arrayPaginator, 
-  cleanString, 
-  searchArrayHandler, 
-  unique, 
-  getFBAdminInstance, 
-  asyncForEach, 
-  sendEmail, 
-  sendRequest, 
-  sendNotificationHandler, 
-  notificationList, 
-  sendSMS, 
-  getAccessToken, 
+module.exports = {
+  decryptBack,
+  updateUserSearch,
+  getFBAdminInstance,
+  stringSearch,
+  removeAccents,
+  cleanText,
+  capitalizeText,
+  arraySearch,
+  stringSearch,
+  excerpt,
+  slugify,
+  parserJSON,
+  parser,
+  getSpecialty,
+  getSpecialties,
+  arrayPaginator,
+  cleanString,
+  searchArrayHandler,
+  unique,
+  getFBAdminInstance,
+  asyncForEach,
+  sendEmail,
+  sendRequest,
+  sendNotificationHandler,
+  notificationList,
+  sendSMS,
+  getAccessToken,
   isRateLimited,
+  filterMetaData,
   runtimeOpts // <-- export runtimeOpts
 };
