@@ -72,4 +72,4 @@ exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, c
 /* functions ON WRITE */
 
 /* DESC: COLLECTION 'medico-meta' changes | AUTHOR: Rolando | TYPE: ON WRITE */
-exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => { return await onWriteDoctorsHandler(event.data, event.context); });
+exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => await onWriteDoctorsHandler(event.data, event.context));
