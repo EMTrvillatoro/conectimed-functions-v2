@@ -64,6 +64,36 @@ async function onWriteDoctorsHandler(change, context) {
 
                 await increaseItem(queryState, document.specialty2.id, 'specialties-in-use');
             }
+            // get specialty3
+            if (document.specialty3 && document.specialty3.id) {
+                // search specialty
+                const queryState = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(document.specialty3.id))
+                    .get();
+
+                await increaseItem(queryState, document.specialty3.id, 'specialties-in-use');
+            }
+            // get specialty4
+            if (document.specialty4 && document.specialty4.id) {
+                // search specialty
+                const queryState = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(document.specialty4.id))
+                    .get();
+
+                await increaseItem(queryState, document.specialty4.id, 'specialties-in-use');
+            }
+            // get specialty5
+            if (document.specialty5 && document.specialty5.id) {
+                // search specialty
+                const queryState = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(document.specialty5.id))
+                    .get();
+
+                await increaseItem(queryState, document.specialty5.id, 'specialties-in-use');
+            }
 
             // create meta-data
             await createMetaData(document, change.after.id);
@@ -104,6 +134,33 @@ async function onWriteDoctorsHandler(change, context) {
                 const queryState = await db
                     .collection('specialties-in-use')
                     .where('id', '==', Number(oldDocument.specialty2.id))
+                    .get();
+
+                await decreaseItem(queryState, 'specialties-in-use');
+            }
+            // get specialty3
+            if (oldDocument.specialty3 && oldDocument.specialty3.id) {
+                const queryState = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(oldDocument.specialty3.id))
+                    .get();
+
+                await decreaseItem(queryState, 'specialties-in-use');
+            }
+            // get specialty4
+            if (oldDocument.specialty4 && oldDocument.specialty4.id) {
+                const queryState = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(oldDocument.specialty4.id))
+                    .get();
+
+                await decreaseItem(queryState, 'specialties-in-use');
+            }
+            // get specialty5
+            if (oldDocument.specialty5 && oldDocument.specialty5.id) {
+                const queryState = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(oldDocument.specialty5.id))
                     .get();
 
                 await decreaseItem(queryState, 'specialties-in-use');
@@ -264,6 +321,132 @@ async function onWriteDoctorsHandler(change, context) {
                 await decreaseItem(queryStateOld, 'specialties-in-use');
             }
 
+            // if specialty3 is new
+            if (!oldDocument.specialty3 && document.specialty3 && document.specialty3.id) {
+                console.log('if specialty3 is new');
+                const queryStateNew = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(document.specialty3.id))
+                    .get();
+                // increase new
+                await increaseItem(queryStateNew, document.specialty3.id, 'specialties-in-use');
+            }
+            // specialty3 already exists
+            if (oldDocument.specialty3 && document.specialty3 && oldDocument.specialty3.id && document.specialty3.id) {
+                // make change if they are different
+                if (oldDocument.specialty3.id !== document.specialty3.id) {
+                    console.log('specialty3 already exists-make change if they are different');
+                    // search id
+                    const queryStateOld = await db
+                        .collection('specialties-in-use')
+                        .where('id', '==', Number(oldDocument.specialty3.id))
+                        .get();
+                    const queryStateNew = await db
+                        .collection('specialties-in-use')
+                        .where('id', '==', Number(document.specialty3.id))
+                        .get();
+
+                    // decrease old
+                    await decreaseItem(queryStateOld, 'specialties-in-use');
+                    // increase new
+                    await increaseItem(queryStateNew, document.specialty3.id, 'specialties-in-use');
+                }
+            }
+            // if specialty3 is gone
+            if (oldDocument.specialty3 && !document.specialty3 && oldDocument.specialty3.id) {
+                console.log('if specialty3 is gone');
+                const queryStateOld = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(oldDocument.specialty3.id))
+                    .get();
+                // decrease old
+                await decreaseItem(queryStateOld, 'specialties-in-use');
+            }
+
+            // if specialty4 is new
+            if (!oldDocument.specialty4 && document.specialty4 && document.specialty4.id) {
+                console.log('if specialty4 is new');
+                const queryStateNew = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(document.specialty4.id))
+                    .get();
+                // increase new
+                await increaseItem(queryStateNew, document.specialty4.id, 'specialties-in-use');
+            }
+            // specialty4 already exists
+            if (oldDocument.specialty4 && document.specialty4 && oldDocument.specialty4.id && document.specialty4.id) {
+                // make change if they are different
+                if (oldDocument.specialty4.id !== document.specialty4.id) {
+                    console.log('specialty4 already exists-make change if they are different');
+                    // search id
+                    const queryStateOld = await db
+                        .collection('specialties-in-use')
+                        .where('id', '==', Number(oldDocument.specialty4.id))
+                        .get();
+                    const queryStateNew = await db
+                        .collection('specialties-in-use')
+                        .where('id', '==', Number(document.specialty4.id))
+                        .get();
+
+                    // decrease old
+                    await decreaseItem(queryStateOld, 'specialties-in-use');
+                    // increase new
+                    await increaseItem(queryStateNew, document.specialty4.id, 'specialties-in-use');
+                }
+            }
+            // if specialty4 is gone
+            if (oldDocument.specialty4 && !document.specialty4 && oldDocument.specialty4.id) {
+                console.log('if specialty4 is gone');
+                const queryStateOld = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(oldDocument.specialty4.id))
+                    .get();
+                // decrease old
+                await decreaseItem(queryStateOld, 'specialties-in-use');
+            }
+
+            // if specialty5 is new
+            if (!oldDocument.specialty5 && document.specialty5 && document.specialty5.id) {
+                console.log('if specialty5 is new');
+                const queryStateNew = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(document.specialty5.id))
+                    .get();
+                // increase new
+                await increaseItem(queryStateNew, document.specialty5.id, 'specialties-in-use');
+            }
+            // specialty5 already exists
+            if (oldDocument.specialty5 && document.specialty5 && oldDocument.specialty5.id && document.specialty5.id) {
+                // make change if they are different
+                if (oldDocument.specialty5.id !== document.specialty5.id) {
+                    console.log('specialty5 already exists-make change if they are different');
+                    // search id
+                    const queryStateOld = await db
+                        .collection('specialties-in-use')
+                        .where('id', '==', Number(oldDocument.specialty5.id))
+                        .get();
+                    const queryStateNew = await db
+                        .collection('specialties-in-use')
+                        .where('id', '==', Number(document.specialty5.id))
+                        .get();
+
+                    // decrease old
+                    await decreaseItem(queryStateOld, 'specialties-in-use');
+                    // increase new
+                    await increaseItem(queryStateNew, document.specialty5.id, 'specialties-in-use');
+                }
+            }
+            // if specialty5 is gone
+            if (oldDocument.specialty5 && !document.specialty5 && oldDocument.specialty5.id) {
+                console.log('if specialty5 is gone');
+                const queryStateOld = await db
+                    .collection('specialties-in-use')
+                    .where('id', '==', Number(oldDocument.specialty5.id))
+                    .get();
+                // decrease old
+                await decreaseItem(queryStateOld, 'specialties-in-use');
+            }
+
             // create meta-data
             return await createMetaData(document, change.after.id);
         }
@@ -375,7 +558,10 @@ async function createMetaData(document, key) {
         state1: '',
         state2: '',
         specialty1: '',
-        specialty2: ''
+        specialty2: '',
+        specialty3: '',
+        specialty4: '',
+        specialty5: ''
     };
     if (user && user.address1 && user.address1.state && user.address1.state !== '') {
         filterMetaData.push(user.address1.state);
@@ -399,10 +585,37 @@ async function createMetaData(document, key) {
             metaData.specialty2 = String(num);
         }
     }
+    if (user && user.specialty3) {
+        const num = Number(user.specialty3.id);
+        if (num > 0) {
+            filterMetaData.push(String(num));
+            metaData.specialty3 = String(num);
+        }
+    }
+    if (user && user.specialty4) {
+        const num = Number(user.specialty4.id);
+        if (num > 0) {
+            filterMetaData.push(String(num));
+            metaData.specialty4 = String(num);
+        }
+    }
+    if (user && user.specialty5) {
+        const num = Number(user.specialty5.id);
+        if (num > 0) {
+            filterMetaData.push(String(num));
+            metaData.specialty5 = String(num);
+        }
+    }
     filterMetaData.push(String(metaData.state1) + metaData.specialty1);
     filterMetaData.push(String(metaData.state1) + metaData.specialty2);
+    filterMetaData.push(String(metaData.state1) + metaData.specialty3);
+    filterMetaData.push(String(metaData.state1) + metaData.specialty4);
+    filterMetaData.push(String(metaData.state1) + metaData.specialty5);
     filterMetaData.push(String(metaData.state2) + metaData.specialty1);
     filterMetaData.push(String(metaData.state2) + metaData.specialty2);
+    filterMetaData.push(String(metaData.state2) + metaData.specialty3);
+    filterMetaData.push(String(metaData.state2) + metaData.specialty4);
+    filterMetaData.push(String(metaData.state2) + metaData.specialty5);
     filterMetaData = filterMetaData.filter(unique);
 
     console.log(JSON.stringify(filterMetaData, key));
