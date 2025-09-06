@@ -1,4 +1,5 @@
 const { onRequest, onCall } = require("firebase-functions/v2/https");
+const { onDocumentWritten } = require('firebase-functions/v2/firestore');
 // files
 const { runtimeOpts } = require('./assets/js/Tools');
 const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./assets/js/stripe/stripe');
@@ -10,6 +11,7 @@ const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
 const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
+const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 
 /* functions HTTP REQUEST */
 
@@ -65,3 +67,9 @@ exports.getSpecialty = onRequest(runtimeOpts, async (req, res) => await getSpeci
 
 /* DESC: SEND MAIL | AUTHOR: Miguel | TYPE: CALLABLE */
 exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, context));
+
+
+/* functions ON WRITE */
+
+/* DESC: COLLECTION 'medico-meta' changes | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => { return await onWriteDoctorsHandler(event.data, event.context); });
