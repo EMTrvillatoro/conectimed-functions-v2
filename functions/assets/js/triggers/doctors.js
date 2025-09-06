@@ -96,7 +96,7 @@ async function onWriteDoctorsHandler(change, context) {
             }
 
             // create meta-data
-            await createMetaData(document, change.after.id);
+            // await createMetaData(document, change.after.id);
         } else if (!document) {
             console.log('delete');
             // get address1 state
@@ -448,7 +448,7 @@ async function onWriteDoctorsHandler(change, context) {
             }
 
             // create meta-data
-            return await createMetaData(document, change.after.id);
+            // return await createMetaData(document, change.after.id);
         }
     } catch (error) {
         console.log(error);
