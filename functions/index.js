@@ -74,12 +74,9 @@ exports.conectimed_landing = onRequest(runtimeOpts, async (req, res)=> await han
 
 /* DESC: SEND MAIL | AUTHOR: Miguel | TYPE: CALLABLE */
 exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, context));
-<<<<<<< HEAD
-=======
 
 
 /* functions ON WRITE */
 
 /* DESC: COLLECTION 'medico-meta' changes | AUTHOR: Rolando | TYPE: ON WRITE */
 exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => await onWriteDoctorsHandler(event.data, event.context));
->>>>>>> a362b18ede8949689876332e136ab523ca6ab765
