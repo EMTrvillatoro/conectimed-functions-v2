@@ -1,4 +1,4 @@
-const { stringSearch, getFBAdminInstance, decryptBack, updateUserSearch } = require('../Tools');
+const { stringSearch, getFBAdminInstance, decryptBack, updateUserSearch, filterMetaData } = require('../Tools');
 const { FieldValue } = require('firebase-admin/firestore');
 const { getAuth } = require('firebase-admin/auth');
 
@@ -69,6 +69,7 @@ async function registerHandler(req, res) {
                 }
 
                 const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
+                const _filterMetaData = filterMetaData(metadata);
 
                 let _data = {
                     uid: resp.uid,
@@ -91,6 +92,7 @@ async function registerHandler(req, res) {
                     personalInterests: data?.personalInterests || [],
                     newRegistration: true,
                     search: search || [],
+                    'filter-meta-data': _filterMetaData || [],
                     status: 'new',
                     type: type || 'medico',
                     updatedAt: FieldValue.serverTimestamp(),
@@ -193,7 +195,7 @@ async function updateHandler(req, res) {
             name = String(name).toLocaleLowerCase().replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()));
             lastName1 = String(lastName1).toLocaleLowerCase().replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()));
             lastName2 = String(lastName2).toLocaleLowerCase().replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()));
-     
+
             // Guardar el usuario en Firestore usando una transacción
             const userRef = db.collection("users").doc(resp.uid);
             const userMetaRef = db.collection("medico-meta").doc(resp.uid);
@@ -201,44 +203,44 @@ async function updateHandler(req, res) {
             const estimatedGraduationTime = data?.estimatedGraduationTime || undefined;
             const studentVerificationFileUrl = data?.studentVerificationFileUrl || undefined;
 
-           /*  await db.runTransaction(async (transaction) => {
-                let metadata = {
-                    specialty1: data?.specialty1 || null,
-                    specialty2: data?.specialty2 || null,
-                    specialty3: data?.specialty3 || null,
-                    specialty4: data?.specialty4 || null,
-                    specialty5: data?.specialty5 || null
-                }
-
-                const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
-
-                let _data = {                    
-                    personalInterests: data?.personalInterests || [],
-                    search: search || [],
-                    updatedAt: FieldValue.serverTimestamp(),
-                }
-
-                if (estimatedGraduationTime !== undefined && studentVerificationFileUrl !== null) {
-                    _data.estimatedGraduationTime = estimatedGraduationTime;
-                    _data.studentVerificationFileUrl = studentVerificationFileUrl;
-                }
-
-                transaction.set(userRef, _data, { merge: true });
-
-                // Elimina todas las propiedades de metadata que sean === null
-                Object.keys(metadata).forEach(key => {
-                    if (metadata[key] == null) {
-                        delete metadata[key];
-                    }
-                });
-
-                transaction.set(userMetaRef, {
-                    ...metadata,
-                    cedulaProfesional: data?.cedula || '',
-                    address1: data?.address1 || {},
-                }, { merge: true });
-
-            }); */
+            /*  await db.runTransaction(async (transaction) => {
+                 let metadata = {
+                     specialty1: data?.specialty1 || null,
+                     specialty2: data?.specialty2 || null,
+                     specialty3: data?.specialty3 || null,
+                     specialty4: data?.specialty4 || null,
+                     specialty5: data?.specialty5 || null
+                 }
+ 
+                 const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
+ 
+                 let _data = {                    
+                     personalInterests: data?.personalInterests || [],
+                     search: search || [],
+                     updatedAt: FieldValue.serverTimestamp(),
+                 }
+ 
+                 if (estimatedGraduationTime !== undefined && studentVerificationFileUrl !== null) {
+                     _data.estimatedGraduationTime = estimatedGraduationTime;
+                     _data.studentVerificationFileUrl = studentVerificationFileUrl;
+                 }
+ 
+                 transaction.set(userRef, _data, { merge: true });
+ 
+                 // Elimina todas las propiedades de metadata que sean === null
+                 Object.keys(metadata).forEach(key => {
+                     if (metadata[key] == null) {
+                         delete metadata[key];
+                     }
+                 });
+ 
+                 transaction.set(userMetaRef, {
+                     ...metadata,
+                     cedulaProfesional: data?.cedula || '',
+                     address1: data?.address1 || {},
+                 }, { merge: true });
+ 
+             }); */
 
             // Obtener custom token para el usuario
 
