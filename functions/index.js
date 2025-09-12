@@ -11,11 +11,9 @@ const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
 const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
-<<<<<<< HEAD
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
-=======
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
->>>>>>> a362b18ede8949689876332e136ab523ca6ab765
+
 
 /* functions HTTP REQUEST */
 
