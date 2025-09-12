@@ -65,7 +65,7 @@ exports.getSpecialties = onRequest(runtimeOpts, async (req, res) => await getSpe
 /* DESC: GET SPECIALTY BY ID | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getSpecialty = onRequest(runtimeOpts, async (req, res) => await getSpecialty(req, res));
 
-/*DESC: CONECTIMED LANDING | AUTHOR: MIGUEL | TYPE: CALLABLE */
+/*DESC: CONECTIMED LANDING | AUTHOR: MIGUEL | TYPE: HTTP REQUEST  */
 exports.conectimed_landing = onRequest(runtimeOpts, async (req, res)=> await handler_onRequest(req, res));
 
 /* functions CALLABLES */
