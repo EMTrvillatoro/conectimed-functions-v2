@@ -30,7 +30,7 @@ const WINDOW_MS = 60 * 1000; // 60 segundos
 
 function getFBAdminInstance() {
   if (!admin.apps.length) {
-    admin.initializeApp({
+   admin.initializeApp({
       credential: admin.credential.cert(JSON.parse(CERT.value())),
       databaseURL: databaseURL.value(),
       serviceAccountId: clientEmail.value(),

@@ -10,6 +10,7 @@ const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
 const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
+const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 
 /* functions HTTP REQUEST */
 
@@ -60,6 +61,9 @@ exports.getSpecialties = onRequest(runtimeOpts, async (req, res) => await getSpe
 
 /* DESC: GET SPECIALTY BY ID | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getSpecialty = onRequest(runtimeOpts, async (req, res) => await getSpecialty(req, res));
+
+/*DESC: CONECTIMED LANDING | AUTHOR: MIGUEL | TYPE: CALLABLE */
+exports.conectimed_landing = onRequest(runtimeOpts, async (req, res)=> await handler_onRequest(req, res));
 
 /* functions CALLABLES */
 

@@ -6,7 +6,7 @@ const { sendEmail } = require('../Tools');
  * @param { CallableRequest<any> } data 
  * @param { CallableResponse<unknown> | undefined } context 
  * @returns 
- */
+*/
 
 async function sendMailHandler(data, context) {
     // name, text!, subject!, recipient!, bcc, cc, attach, sender
