@@ -5,6 +5,7 @@ const { runtimeOpts } = require('./assets/js/Tools');
 const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./assets/js/stripe/stripe');
 const { infoDBFHandler } = require('./assets/js/experimental/experimental');
 const { getValidatedUsersHandler, getAllAuthUsersHandler } = require('./assets/js/members/createusers');
+const { handler } = require('./assets/js/members/lastForoPost');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
 const { generatePDFHandler } = require('./assets/js/pdf/pdf');
@@ -66,7 +67,10 @@ exports.getSpecialties = onRequest(runtimeOpts, async (req, res) => await getSpe
 exports.getSpecialty = onRequest(runtimeOpts, async (req, res) => await getSpecialty(req, res));
 
 /*DESC: CONECTIMED LANDING | AUTHOR: MIGUEL | TYPE: HTTP REQUEST  */
-exports.conectimed_landing = onRequest(runtimeOpts, async (req, res)=> await handler_onRequest(req, res));
+exports.conectimed_landing = onRequest(runtimeOpts, async (req, res) => await handler_onRequest(req, res));
+
+/*DESC: LASTFOROPOSTS | AUTHOR: MIGUEL | TYPE: HTTP REQUEST  */
+exports.lastForoPosts = onRequest(runtimeOpts, async (req, res) => await handler(req, res));
 
 /* functions CALLABLES */
 
