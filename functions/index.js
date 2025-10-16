@@ -1,5 +1,5 @@
 const { onRequest, onCall } = require("firebase-functions/v2/https");
-const { onDocumentWritten } = require('firebase-functions/v2/firestore');
+const { onDocumentWritten } = require("firebase-functions/v2/firestore");
 // files
 const { runtimeOpts } = require('./assets/js/Tools');
 const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./assets/js/stripe/stripe');
@@ -14,6 +14,7 @@ const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
+const { getUsersFromBigquery } = require('./assets/js/bigquery/zoho');
 
 
 /* functions HTTP REQUEST */
@@ -71,6 +72,9 @@ exports.conectimed_landing = onRequest(runtimeOpts, async (req, res) => await ha
 
 /*DESC: LASTFOROPOSTS | AUTHOR: MIGUEL | TYPE: HTTP REQUEST  */
 exports.lastForoPosts = onRequest(runtimeOpts, async (req, res) => await handler(req, res));
+
+/* DESC: USERS FROM BIGQUERY TO ZOHO | AUTHOR: Rolando | TYPE: HTTP REQUEST ===================== TEST, ON WORKING! =====================*/
+exports.getUsersFromBigquery = onRequest(runtimeOpts, async (req, res) => await getUsersFromBigquery(req, res));
 
 /* functions CALLABLES */
 
