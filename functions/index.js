@@ -1,4 +1,5 @@
 const { onRequest, onCall } = require("firebase-functions/v2/https");
+const { onSchedule } = require('firebase-functions/v2/scheduler');
 const { onDocumentWritten } = require("firebase-functions/v2/firestore");
 // files
 const { runtimeOpts } = require('./assets/js/Tools');
@@ -14,7 +15,7 @@ const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
-const { getUsersBQ } = require('./assets/js/bigquery/zoho');
+const { getUsersBQ, processUsersToZoho } = require('./assets/js/bigquery/zoho');
 
 
 /* functions HTTP REQUEST */
@@ -81,8 +82,12 @@ exports.getUsersBQ = onRequest(runtimeOpts, async (req, res) => await getUsersBQ
 /* DESC: SEND MAIL | AUTHOR: Miguel | TYPE: CALLABLE */
 exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, context));
 
-
 /* functions ON WRITE */
 
 /* DESC: COLLECTION 'medico-meta' changes | AUTHOR: Rolando | TYPE: ON WRITE */
 exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => await onWriteDoctorsHandler(event.data, event.context));
+
+/* functions SCHEDULED */
+
+/* DESC: DAILY UPDATE USERS FROM BIGQUERY TO ZOHO | AUTHOR: Rolando | TYPE: SCHEDULED */
+exports.dailyZohoUserSync = onSchedule("every day 14:00", async (event) => await processUsersToZoho());

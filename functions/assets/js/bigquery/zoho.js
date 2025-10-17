@@ -61,15 +61,7 @@ async function processUsersToZoho() {
     }
 
     // 4️⃣ Enviar resultados a Zoho
-    const response = await fetch(zohoIntegrationURL.value(), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: results }),
-    });
-
-    if (!response.ok) {
-        throw new Error(`Error al enviar datos a Zoho: ${response.statusText}`);
-    }
+    // const response = await saveToZoho(results);
 
     // 5️⃣ Guardar nuevo cursor en BigQuery
     const newCursor = results[results.length - 1].createdAtFB;
@@ -88,8 +80,9 @@ async function processUsersToZoho() {
     return {
         success: true,
         sent: results.length,
+        results,
         newCursor,
-        zohoStatus: response.status,
+        //  zohoStatus: response.status,
     };
 }
 
@@ -139,8 +132,22 @@ async function ensureCursorTableExists() {
             { name: 'updatedAt', type: 'TIMESTAMP', mode: 'NULLABLE' },
         ],
     });
-
     console.log(`✅ Tabla ${CURSOR_TABLE} creada exitosamente.`);
+}
+
+async function saveToZoho(results) {
+    const response = await fetch(zohoIntegrationURL.value(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: results }),
+    });
+
+    console.log(`Respuesta de Zoho: ${response.status} ${response.statusText}`);
+
+    if (!response.ok) {
+        throw new Error(`Error al enviar datos a Zoho: ${response.statusText}`);
+    }
+    return response;
 }
 
 module.exports = {
