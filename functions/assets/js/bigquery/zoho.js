@@ -216,5 +216,6 @@ async function ensureDestinationTableExists() {
 }
 
 module.exports = {
-    getUsersBQ
+    getUsersBQ,
+    processUsersToZoho
 };
