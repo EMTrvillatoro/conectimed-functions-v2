@@ -12,7 +12,7 @@ const zohoIntegrationURL = defineSecret('ZOHO_INTEGRATION_URL');
  * @returns 
  */
 
-async function getUsersFromBigquery(req, res) {
+async function getUsersBQ(req, res) {
     res.header('Content-Type', 'application/json');
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -23,7 +23,7 @@ async function getUsersFromBigquery(req, res) {
         try {
 
             const results = await bigqueryConection();
-            
+
             const headers = {
                 "Content-Type": "application/json"
             };
@@ -58,5 +58,5 @@ async function bigqueryConection() {
 }
 
 module.exports = {
-    getUsersFromBigquery
+    getUsersBQ
 };
