@@ -16,7 +16,7 @@ const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specia
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 const { getUsersBQ, processUsersToZoho } = require('./assets/js/bigquery/zoho');
-
+const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
 
 /* functions HTTP REQUEST */
 
@@ -90,4 +90,15 @@ exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event
 /* functions SCHEDULED */
 
 /* DESC: DAILY UPDATE USERS FROM BIGQUERY TO ZOHO | AUTHOR: Rolando | TYPE: SCHEDULED */
-exports.dailyZohoUserSync = onSchedule("every day 14:00", async (event) => await processUsersToZoho());
+exports.dailyZohoUserSync = onSchedule({
+    schedule: "0 */12 * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    retryCount: 3,
+}, async (event) => await processUsersToZoho());
+
+
+/** ONLY TEST */
+
+exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));

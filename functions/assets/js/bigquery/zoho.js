@@ -34,7 +34,7 @@ async function getUsersBQ(req, res) {
         const result = await processUsersToZoho();
         res.status(200).json(result);
     } catch (error) {
-        console.error("❌ Error ejecutando BigQuery:", error);
+        console.error(" Error ejecutando BigQuery:", error);
         res.status(500).json({ error: error.message });
     }
 }
@@ -44,28 +44,28 @@ async function getUsersBQ(req, res) {
  */
 
 async function processUsersToZoho() {
-    // 1️⃣ Asegurar que la tabla del cursor exista
+    // 1️ Asegurar que la tabla del cursor exista
     await ensureCursorTableExists();
 
-    // 2️⃣ Leer el cursor actual
+    // 2️ Leer el cursor actual
     const [cursorRows] = await bigquery.query(`
         SELECT COALESCE(MAX(lastCursor), TIMESTAMP("1970-01-01")) AS lastCursor
         FROM \`${CURSOR_TABLE}\``);
     const lastCursor = cursorRows[0].lastCursor;
     console.log(`Último cursor leído: ${lastCursor}`);
 
-    // 3️⃣ Obtener resultados desde BigQuery (respetando el cursor)
+    // 3️ Obtener resultados desde BigQuery (respetando el cursor)
     const results = await bigqueryConection(lastCursor);
 
     if (!results.length) {
         return { success: true, message: "No hay nuevos registros para enviar." };
     }
 
-    // 4️⃣ Enviar resultados a Zoho <========================== CAMBIAR EN EJERCICIO REAL
+    // 4️ Enviar resultados a Zoho <========================== CAMBIAR EN EJERCICIO REAL
     // const response = await saveToZoho(results);
     const response = await saveResultsToBigQuery(results);
 
-    // 5️⃣ Guardar nuevo cursor en BigQuery
+    // 5️ Guardar nuevo cursor en BigQuery
     const newCursor = results[results.length - 1].createdAtFB;
 
     const insertQuery = `
@@ -126,7 +126,7 @@ async function ensureCursorTableExists() {
     const [exists] = await table.exists();
     if (exists) return;
 
-    console.log(`⚙️ Tabla ${CURSOR_TABLE} no existe, creando...`);
+    console.log(` Tabla ${CURSOR_TABLE} no existe, creando...`);
 
     await table.create({
         schema: [
@@ -134,7 +134,7 @@ async function ensureCursorTableExists() {
             { name: 'updatedAt', type: 'TIMESTAMP', mode: 'NULLABLE' },
         ],
     });
-    console.log(`✅ Tabla ${CURSOR_TABLE} creada exitosamente.`);
+    console.log(` Tabla ${CURSOR_TABLE} creada exitosamente.`);
 }
 
 async function saveToZoho(results) {
@@ -159,15 +159,15 @@ async function saveToZoho(results) {
  */
 async function saveResultsToBigQuery(results) {
     if (!results || !results.length) {
-        console.log("⚠️ No hay datos para insertar en BigQuery");
+        console.log(" No hay datos para insertar en BigQuery");
         return { success: false, message: "No hay datos para insertar" };
     }
 
     try {
-        // 1️⃣ Asegurar que la tabla exista
+        // 1️ Asegurar que la tabla exista
         await ensureDestinationTableExists();
 
-        // 2️⃣ Mapear datos para que coincidan con las columnas de BigQuery
+        // 2️ Mapear datos para que coincidan con las columnas de BigQuery
         const rows = results.map(row => ({
             first_name: row.First_Name || '',
             last_name: row.Last_Name || '',
@@ -175,17 +175,17 @@ async function saveResultsToBigQuery(results) {
             created_at_fb: row.createdAtFB || null,
         }));
 
-        // 3️⃣ Insertar registros en BigQuery
+        // 3️ Insertar registros en BigQuery
         const [insertResponse] = await bigquery
             .dataset("Users")
             .table("zoho_users_results")
             .insert(rows);
 
-        console.log(`✅ Se insertaron ${rows.length} registros en BigQuery`);
+        console.log(` Se insertaron ${rows.length} registros en BigQuery`);
         return { success: true, inserted: rows.length, response: insertResponse };
 
     } catch (error) {
-        console.error("❌ Error insertando datos en BigQuery:", error);
+        console.error(" Error insertando datos en BigQuery:", error);
         throw error;
     }
 }
@@ -201,7 +201,7 @@ async function ensureDestinationTableExists() {
     const [exists] = await table.exists();
     if (exists) return;
 
-    console.log(`⚙️ Tabla ${DESTINATION_TABLE} no existe, creando...`);
+    console.log(` Tabla ${DESTINATION_TABLE} no existe, creando...`);
 
     await table.create({
         schema: [
@@ -212,7 +212,7 @@ async function ensureDestinationTableExists() {
         ],
     });
 
-    console.log(`✅ Tabla ${DESTINATION_TABLE} creada exitosamente.`);
+    console.log(` Tabla ${DESTINATION_TABLE} creada exitosamente.`);
 }
 
 module.exports = {
