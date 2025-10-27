@@ -1,6 +1,6 @@
 const { onRequest, onCall } = require("firebase-functions/v2/https");
 const { onSchedule } = require('firebase-functions/v2/scheduler');
-const { onDocumentWritten } = require("firebase-functions/v2/firestore");
+const { onDocumentWritten, onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require("firebase-functions/v2/firestore");
 // files
 const { runtimeOpts } = require('./assets/js/Tools');
 const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./assets/js/stripe/stripe');
@@ -17,6 +17,7 @@ const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 const { getUsersBQ, processUsersToZoho } = require('./assets/js/bigquery/zoho');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
+const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted } = require('./assets/js/triggers/virtualSessions');
 
 /* functions HTTP REQUEST */
 
@@ -86,6 +87,15 @@ exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, c
 
 /* DESC: COLLECTION 'medico-meta' changes | AUTHOR: Rolando | TYPE: ON WRITE */
 exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => await onWriteDoctorsHandler(event.data, event.context));
+
+/* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT CREATED */
+exports.sVSoho_onAssistanceCreated = onDocumentCreated("posts/{postId}/assistance/{userId}", async (event) => await handleAssistanceCreated(event));
+
+/* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT UPDATED */
+exports.sVSoho_onAssistanceUpdated = onDocumentUpdated("posts/{postId}/assistance/{userId}", async (event) => await handleAssistanceUpdated(event));
+
+/* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT DELETED */
+exports.sVSoho_onAssistanceDeleted = onDocumentDeleted("posts/{postId}/assistance/{userId}", async (event) => await handleAssistanceDeleted(event));
 
 /* functions SCHEDULED */
 
