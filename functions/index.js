@@ -15,9 +15,9 @@ const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
-const { getUsersBQ, processUsersToZoho } = require('./assets/js/bigquery/zoho');
+const { processUsersToZoho } = require('./assets/js/bigquery/zoho');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
-const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted } = require('./assets/js/triggers/virtualSessions');
+const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted /*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
 
 /* functions HTTP REQUEST */
 
@@ -75,8 +75,11 @@ exports.conectimed_landing = onRequest(runtimeOpts, async (req, res) => await ha
 /*DESC: LASTFOROPOSTS | AUTHOR: MIGUEL | TYPE: HTTP REQUEST  */
 exports.lastForoPosts = onRequest(runtimeOpts, async (req, res) => await handler(req, res));
 
-/* DESC: USERS FROM BIGQUERY TO ZOHO | AUTHOR: Rolando | TYPE: HTTP REQUEST ===================== TEST, ON WORKING! =====================*/
-exports.getUsersBQ = onRequest(runtimeOpts, async (req, res) => await getUsersBQ(req, res));
+/* DESC: GEN HTML CERT | AUTHOR: Miguel | TYPE: HTTP REQUEST */
+exports.generateHtmlCertificate = onRequest(runtimeOpts, async (req, res) => await generateHtmlCertificateHandler(req, res));
+
+/* DESC: VIRTUAL SESSIONS ASSISTANCE FROM FIRESTORE TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST ===================== TEST, ON WORKING! =====================*/
+// exports.exportAssistanceToBigQuery = onRequest(runtimeOpts, async (req, res) => await exportAssistanceToBigQuery(req, res));
 
 /* functions CALLABLES */
 
