@@ -253,10 +253,141 @@ async function exportAssistanceToBigQuery(req, res) {
     }
 }
 
+/**
+ * Corrige la cantidad de confirmaciones de asistencia a sesiones virtuales en BigQuery
+ * 
+ * @param { import('express').Request } req 
+ * @param { import('express').Response } res 
+ * @returns 
+ */
+
+async function virtualSessionsAttendanceConfirmationCountFix(req, res) {
+
+    const bigquery = new BigQuery({
+        projectId: databaseName.value()
+    });
+
+    res.set("Access-Control-Allow-Origin", "*");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Content-Type", "application/json");
+
+    if (req.method === "OPTIONS") {
+        return res.status(204).send("");
+    }
+
+    if (req.method !== "GET") {
+        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
+    }
+
+    try {
+        let { id } = req.query;
+        if (id) {
+            const admin = getFBAdminInstance();
+            const db = admin.firestore();
+            const resp = await db.collection("posts").doc(id).collection('assistance').get();
+
+            const fire = resp.docs.map(e => {
+                const id = e.id;
+                return id;
+            });
+
+            const queryGet = `
+                SELECT userId
+                FROM \`${datasetId}.${tableId}\`
+                WHERE postId = @postId
+            `;
+            const options = { query: queryGet, params: { postId: id } };
+            const [rows] = await bigquery.query(options);
+            const bq = rows.map(r => r.userId);
+
+            const uniqueItems = [...new Set([
+                ...fire.filter(item => !bq.includes(item)),
+                ...bq.filter(item => !fire.includes(item))
+            ])];
+
+            const finalDATA = uniqueItems.map(id => {
+                const doc = resp.docs.find(e => e.id === id);
+                const data = doc.data();
+                const assistance = data.assistance ?? null;
+                const date = data.date ? data.date.toDate().toISOString() : null;
+                const pathParts = doc.ref.path.split("/");
+                const postId = pathParts[1];
+                const userId = doc.id;
+
+                return {
+                    postId,
+                    userId,
+                    assistance,
+                    date,
+                    eventType: "migration",
+                    updatedAt: new Date().toISOString(),
+                }
+            });
+
+            for (const item of finalDATA) {
+                const {
+                    postId,
+                    userId,
+                    assistance,
+                    date,
+                    eventType,
+                    updatedAt
+                } = item;
+
+                // Verifica si existe el registro
+                const checkQuery = `
+                SELECT COUNT(*) as count
+                FROM \`${datasetId}.${tableId}\`
+                WHERE postId = @postId AND userId = @userId
+                `;
+
+                const checkOptions = {
+                    query: checkQuery,
+                    params: { postId, userId },
+                };
+
+                const [checkRows] = await bigquery.query(checkOptions);
+
+                if (checkRows[0].count === 0) {
+                    console.log(`Insertando registro para postId=${postId}, userId=${userId}`);
+
+                    const insertQuery = `
+                    INSERT INTO \`${datasetId}.${tableId}\`
+                    (postId, userId, assistance, date, eventType, updatedAt)
+                    VALUES (@postId, @userId, @assistance, @date, @eventType, @updatedAt) `;
+
+                    const insertOptions = {
+                        query: insertQuery,
+                        params: { postId, userId, assistance, date, eventType, updatedAt },
+                    };
+
+                    try {
+                        await bigquery.query(insertOptions);
+                        console.log(`Registro insertado correctamente para postId=${postId}, userId=${userId}`);
+                    } catch (error) {
+                        console.error("Error insertando en BigQuery:", error);
+                        throw error;
+                    }
+
+                } else {
+                    console.log(`Registro ya existente para postId=${postId}, userId=${userId}, no se insertó.`);
+                }
+            }
+
+            return res.status(200).json({ status: "success" });
+        } else {
+            return res.status(401).send({ message: 'missing parameters' });
+        }
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 module.exports = {
     handleAssistanceCreated,
     handleAssistanceUpdated,
     handleAssistanceDeleted,
-    exportAssistanceToBigQuery
+    exportAssistanceToBigQuery,
+    virtualSessionsAttendanceConfirmationCountFix
 };
 

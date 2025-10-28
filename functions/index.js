@@ -17,7 +17,7 @@ const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 const { processUsersToZoho } = require('./assets/js/bigquery/zoho');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
-const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted /*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
+const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted, virtualSessionsAttendanceConfirmationCountFix/*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
 
 /* functions HTTP REQUEST */
 
@@ -78,6 +78,9 @@ exports.lastForoPosts = onRequest(runtimeOpts, async (req, res) => await handler
 /* DESC: GEN HTML CERT | AUTHOR: Miguel | TYPE: HTTP REQUEST */
 exports.generateHtmlCertificate = onRequest(runtimeOpts, async (req, res) => await generateHtmlCertificateHandler(req, res));
 
+/* DESC: FIX THE AMOUNT OF VIRTUAL SESSIONS ASSISTANCE CONFIRMATIONS IN BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.virtualSessionsAttendanceConfirmationCountFix = onRequest(runtimeOpts, async (req, res) => await virtualSessionsAttendanceConfirmationCountFix(req, res));
+
 /* DESC: VIRTUAL SESSIONS ASSISTANCE FROM FIRESTORE TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST ===================== TEST, ON WORKING! =====================*/
 // exports.exportAssistanceToBigQuery = onRequest(runtimeOpts, async (req, res) => await exportAssistanceToBigQuery(req, res));
 
@@ -89,16 +92,32 @@ exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, c
 /* functions ON WRITE */
 
 /* DESC: COLLECTION 'medico-meta' changes | AUTHOR: Rolando | TYPE: ON WRITE */
-exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => await onWriteDoctorsHandler(event.data, event.context));
+exports.onDoctorWrite = onDocumentWritten({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "medico-meta/{medicoId}"
+}, async (event) => await onWriteDoctorsHandler(event.data, event.context));
 
 /* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT CREATED */
-exports.sVSoho_onAssistanceCreated = onDocumentCreated("posts/{postId}/assistance/{userId}", async (event) => await handleAssistanceCreated(event));
+exports.sVSoho_onAssistanceCreated = onDocumentCreated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "posts/{postId}/assistance/{userId}"
+}, async (event) => await handleAssistanceCreated(event));
 
 /* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT UPDATED */
-exports.sVSoho_onAssistanceUpdated = onDocumentUpdated("posts/{postId}/assistance/{userId}", async (event) => await handleAssistanceUpdated(event));
+exports.sVSoho_onAssistanceUpdated = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "posts/{postId}/assistance/{userId}"
+}, async (event) => await handleAssistanceUpdated(event));
 
 /* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT DELETED */
-exports.sVSoho_onAssistanceDeleted = onDocumentDeleted("posts/{postId}/assistance/{userId}", async (event) => await handleAssistanceDeleted(event));
+exports.sVSoho_onAssistanceDeleted = onDocumentDeleted({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "posts/{postId}/assistance/{userId}"
+}, async (event) => await handleAssistanceDeleted(event));
 
 /* functions SCHEDULED */
 
