@@ -122,7 +122,23 @@ async function processUsersToZohoHandler() {
     }
 
     // ============================================================
-    // 6. GUARDAR NUEVO PIVOTE
+    // 🔥 6. ACTUALIZAR DOCUMENTOS A "complete"
+    // ============================================================
+    try {
+        const batch = db.batch();
+
+        snapshot.docs.forEach(doc => {
+            batch.update(doc.ref, { zoho_migration_status: "complete" });
+        });
+
+        await batch.commit();
+        console.log("Batch actualizado: todos marcados como 'complete'.");
+    } catch (error) {
+        console.log("========= Error en batch =========", error);
+    }
+
+    // ============================================================
+    // 7. GUARDAR NUEVO PIVOTE
     // ============================================================
     const lastProcessedDoc = snapshot.docs[snapshot.docs.length - 1];
 
@@ -134,7 +150,7 @@ async function processUsersToZohoHandler() {
     });
 
     // ============================================================
-    // 7. ACTUALIZAR EL PIVOTE ANTERIOR A "complete"
+    // 8. ACTUALIZAR EL PIVOTE ANTERIOR A "complete"
     // ============================================================
     if (!pivotQuery.empty) {
         const previousPivotRef = pivotQuery.docs[0].ref;
