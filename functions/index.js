@@ -15,9 +15,9 @@ const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
-const { processUsersToZoho } = require('./assets/js/bigquery/zoho');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
 const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted, virtualSessionsAttendanceConfirmationCountFix/*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
+const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_2 } = require('./assets/js/zoho/zoho');
 
 /* functions HTTP REQUEST */
 
@@ -84,6 +84,15 @@ exports.virtualSessionsAttendanceConfirmationCountFix = onRequest(runtimeOpts, a
 /* DESC: VIRTUAL SESSIONS ASSISTANCE FROM FIRESTORE TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST ===================== TEST, ON WORKING! =====================*/
 // exports.exportAssistanceToBigQuery = onRequest(runtimeOpts, async (req, res) => await exportAssistanceToBigQuery(req, res));
 
+/* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.zohoExportRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest(req, res));
+
+/* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.zohoExportmarkAllUsersPendingRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_2(req, res));
+
+/* DESC: OBTAINING CONFIRMATION OF ATTENDANCE AT VIRTUAL SESSIONS | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));
+
 /* functions CALLABLES */
 
 /* DESC: SEND MAIL | AUTHOR: Miguel | TYPE: CALLABLE */
@@ -119,18 +128,23 @@ exports.sVSoho_onAssistanceDeleted = onDocumentDeleted({
     document: "posts/{postId}/assistance/{userId}"
 }, async (event) => await handleAssistanceDeleted(event));
 
+/* DESC: EXPORT TO ZOHO (PAGINATION) | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.zohoExportPaginationTrigger = onDocumentWritten({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "validated-user-data-pivot/{pivotId}"
+}, async (event) => await _onDocumentWritten(event));
+
 /* functions SCHEDULED */
 
-/* DESC: DAILY UPDATE USERS FROM BIGQUERY TO ZOHO | AUTHOR: Rolando | TYPE: SCHEDULED */
-exports.dailyZohoUserSync = onSchedule({
+/* DESC: EXPORT TO ZOHO (DAILY) | AUTHOR: Rolando | TYPE: SCHEDULED */
+exports.zohoExportScheduled = onSchedule({
     schedule: "0 */12 * * *",
     timeZone: "America/Mexico_City",
     memory: "1GiB",
     timeoutSeconds: 540,
     retryCount: 3,
-}, async (event) => await processUsersToZoho());
+}, async (event) => await _onSchedule(event));
 
 
 /** ONLY TEST */
-
-exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));

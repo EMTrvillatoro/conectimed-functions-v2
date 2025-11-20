@@ -18,7 +18,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.4.0",
+    "firebase-functions": "^6.6.0",
     "googleapis": "^159.0.0",
     "html-pdf-node": "^1.0.8",
     "moment": "^2.30.1",

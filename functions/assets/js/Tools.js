@@ -1282,6 +1282,21 @@ function filterMetaData(data) {
   return filterMetaData;
 }
 
+function normalizeMxMobile(number) {
+  if (!number) return "";
+
+  // Quitar espacios, guiones o símbolos
+  let clean = number.replace(/\D/g, "");
+
+  // Si empieza con "52" y NO tiene el "1" después, agregarlo
+  if (clean.startsWith("52") && clean[2] !== "1") {
+    clean = "521" + clean.slice(2);
+  }
+
+  // Asegurar el formato final con +
+  return "+" + clean;
+}
+
 const runtimeOpts = {
   memory: "8GiB",
   cpu: "gcf_gen1",
@@ -1318,5 +1333,6 @@ module.exports = {
   getAccessToken,
   isRateLimited,
   filterMetaData,
+  normalizeMxMobile,
   runtimeOpts // <-- export runtimeOpts
 };
