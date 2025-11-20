@@ -1,0 +1,367 @@
+// ------------------------------------------------------------
+// Conversión del request
+// ------------------------------------------------------------
+crmAPIRequestMap = crmAPIRequest.toMap();
+request_body = crmAPIRequestMap.get("body");
+registros = request_body.get("data");
+registros_A_Crear = List();
+registros_A_Actualizar = List();
+resultado_registros = List();
+hubo_error = false;
+// ------------------------------------------------------------
+// PROCESAR CADA REGISTRO
+// ------------------------------------------------------------
+try 
+{
+	if(registros.size() > 0)
+	{
+		for each  registro in registros
+		{
+			mapa_Contacto = Map();
+			campos = {"Last_Name","reas_de_inter_s","Medio_de_Registro","Tipo_de_usuario","ID_Usuario","Mailing_Country","Tipo_de_Contacto","Tipo_de_profesional_OPS","Verificado_para_distribuci_n","Mobile","First_Name","C_dula_profesional","C_dula_profesional_especialidad","Mailing_Zip","Mailing_City","Email","Description","Mailing_Street","Escuela","Especialidad","Mailing_State","URL_documento_validador_academico","Tiempo_restante_para_titulaci_n"};
+			for each  c in campos
+			{
+				if(!isNull(registro.get(c)))
+				{
+					mapa_Contacto.put(c,registro.get(c));
+				}
+			}
+			if(!isNull(registro.get("Matr_cula")))
+			{
+				mapa_Contacto.put("Matr_cula",registro.get("Matr_cula").toNumber());
+			}
+			if(!isNull(registro.get("Fecha_de_registro")))
+			{
+				mapa_Contacto.put("Fecha_de_registro",registro.get("Fecha_de_registro").toString("yyyy-MM-dd'T'HH:mm:ss"));
+			}
+			contactoExistente = zoho.crm.searchRecords("Contacts","(ID_Usuario:equals:" + registro.get("ID_Usuario") + ")");
+			if(!isNull(contactoExistente) && contactoExistente.size() > 0)
+			{
+				mapa_Contacto.put("id",contactoExistente.get(0).get("id"));
+				registros_A_Actualizar.add(mapa_Contacto);
+			}
+			else
+			{
+				registros_A_Crear.add(mapa_Contacto);
+			}
+			// ------------------------------------------------------------
+			// BLOQUE PUT (actualizar)
+			// ------------------------------------------------------------
+			if(registros_A_Actualizar.size() == 100)
+			{
+				mapa_Envio = Map();
+				mapa_Envio.put("data",registros_A_Actualizar);
+				respuesta = invokeurl
+				[
+					url :"https://www.zohoapis.com/crm/v8/Contacts"
+					type :PUT
+					parameters:mapa_Envio.toString()
+					connection:"zcrm"
+				];
+				listaEnvio = registros_A_Actualizar;
+				listaRetorno = List();
+				if(isNull(respuesta) || isNull(respuesta.get("data")))
+				{
+					for each  item in listaEnvio
+					{
+						email = item.get("Email");
+						itemRes = Map();
+						itemRes.put("email",email);
+						itemRes.put("status","error");
+						itemRes.put("error","Sin respuesta del API");
+						itemRes.put("message","request failed");
+						listaRetorno.add(itemRes);
+					}
+				}
+				else
+				{
+					idx = 0;
+					for each  resp in respuesta.get("data")
+					{
+						original = listaEnvio.get(idx);
+						email = original.get("Email");
+						itemRes = Map();
+						itemRes.put("email",email);
+						if(!isNull(resp.get("message")))
+						{
+							itemRes.put("message",resp.get("message"));
+						}
+						if(resp.get("status") == "success")
+						{
+							itemRes.put("status","success");
+							itemRes.put("id",original.get("ID_Usuario"));
+							// ← CAMBIO 1
+							if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
+							{
+								itemRes.put("id_zoho",resp.get("details").get("id"));
+							}
+						}
+						else
+						{
+							itemRes.put("status","error");
+							if(!isNull(resp.get("details")))
+							{
+								itemRes.put("error",resp.get("details"));
+								// ← CAMBIO 2
+							}
+							else
+							{
+								itemRes.put("error",resp.get("message"));
+							}
+						}
+						listaRetorno.add(itemRes);
+						idx = idx + 1;
+					}
+				}
+				resultado_registros.addAll(listaRetorno);
+				registros_A_Actualizar = List();
+			}
+			// ------------------------------------------------------------
+			// BLOQUE POST (crear)
+			// ------------------------------------------------------------
+			if(registros_A_Crear.size() == 100)
+			{
+				mapa_Envio = Map();
+				mapa_Envio.put("data",registros_A_Crear);
+				respuesta = invokeurl
+				[
+					url :"https://www.zohoapis.com/crm/v8/Contacts"
+					type :POST
+					parameters:mapa_Envio.toString()
+					connection:"zcrm"
+				];
+				listaEnvio = registros_A_Crear;
+				listaRetorno = List();
+				if(isNull(respuesta) || isNull(respuesta.get("data")))
+				{
+					for each  item in listaEnvio
+					{
+						email = item.get("Email");
+						itemRes = Map();
+						itemRes.put("email",email);
+						itemRes.put("status","error");
+						itemRes.put("error","Sin respuesta del API");
+						itemRes.put("message","request failed");
+						listaRetorno.add(itemRes);
+					}
+				}
+				else
+				{
+					idx = 0;
+					for each  resp in respuesta.get("data")
+					{
+						original = listaEnvio.get(idx);
+						email = original.get("Email");
+						itemRes = Map();
+						itemRes.put("email",email);
+						if(!isNull(resp.get("message")))
+						{
+							itemRes.put("message",resp.get("message"));
+						}
+						if(resp.get("status") == "success")
+						{
+							itemRes.put("status","success");
+							itemRes.put("id",original.get("ID_Usuario"));
+							// ← CAMBIO 1
+							if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
+							{
+								itemRes.put("id_zoho",resp.get("details").get("id"));
+							}
+						}
+						else
+						{
+							itemRes.put("status","error");
+							if(!isNull(resp.get("details")))
+							{
+								itemRes.put("error",resp.get("details"));
+								// ← CAMBIO 2
+							}
+							else
+							{
+								itemRes.put("error",resp.get("message"));
+							}
+						}
+						listaRetorno.add(itemRes);
+						idx = idx + 1;
+					}
+				}
+				resultado_registros.addAll(listaRetorno);
+				registros_A_Crear = List();
+			}
+		}
+		// ------------------------------------------------------------
+		// PROCESAR SOBRANTES POST
+		// ------------------------------------------------------------
+		if(registros_A_Crear.size() > 0)
+		{
+			mapa_Envio = Map();
+			mapa_Envio.put("data",registros_A_Crear);
+			respuesta = invokeurl
+			[
+				url :"https://www.zohoapis.com/crm/v8/Contacts"
+				type :POST
+				parameters:mapa_Envio.toString()
+				connection:"zcrm"
+			];
+			listaEnvio = registros_A_Crear;
+			listaRetorno = List();
+			if(isNull(respuesta) || isNull(respuesta.get("data")))
+			{
+				for each  item in listaEnvio
+				{
+					email = item.get("Email");
+					itemRes = Map();
+					itemRes.put("email",email);
+					itemRes.put("status","error");
+					itemRes.put("error","Sin respuesta del API");
+					itemRes.put("message","request failed");
+					listaRetorno.add(itemRes);
+				}
+			}
+			else
+			{
+				idx = 0;
+				for each  resp in respuesta.get("data")
+				{
+					original = listaEnvio.get(idx);
+					email = original.get("Email");
+					itemRes = Map();
+					itemRes.put("email",email);
+					if(!isNull(resp.get("message")))
+					{
+						itemRes.put("message",resp.get("message"));
+					}
+					if(resp.get("status") == "success")
+					{
+						itemRes.put("status","success");
+						itemRes.put("id",original.get("ID_Usuario"));
+						// ← CAMBIO 1
+						if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
+						{
+							itemRes.put("id_zoho",resp.get("details").get("id"));
+						}
+					}
+					else
+					{
+						itemRes.put("status","error");
+						if(!isNull(resp.get("details")))
+						{
+							itemRes.put("error",resp.get("details"));
+							// ← CAMBIO 2
+						}
+						else
+						{
+							itemRes.put("error",resp.get("message"));
+						}
+					}
+					listaRetorno.add(itemRes);
+					idx = idx + 1;
+				}
+			}
+			resultado_registros.addAll(listaRetorno);
+		}
+		// ------------------------------------------------------------
+		// PROCESAR SOBRANTES PUT
+		// ------------------------------------------------------------
+		if(registros_A_Actualizar.size() > 0)
+		{
+			mapa_Envio = Map();
+			mapa_Envio.put("data",registros_A_Actualizar);
+			respuesta = invokeurl
+			[
+				url :"https://www.zohoapis.com/crm/v8/Contacts"
+				type :PUT
+				parameters:mapa_Envio.toString()
+				connection:"zcrm"
+			];
+			listaEnvio = registros_A_Actualizar;
+			listaRetorno = List();
+			if(isNull(respuesta) || isNull(respuesta.get("data")))
+			{
+				for each  item in listaEnvio
+				{
+					email = item.get("Email");
+					itemRes = Map();
+					itemRes.put("email",email);
+					itemRes.put("status","error");
+					itemRes.put("error","Sin respuesta del API");
+					itemRes.put("message","request failed");
+					listaRetorno.add(itemRes);
+				}
+			}
+			else
+			{
+				idx = 0;
+				for each  resp in respuesta.get("data")
+				{
+					original = listaEnvio.get(idx);
+					email = original.get("Email");
+					itemRes = Map();
+					itemRes.put("email",email);
+					if(!isNull(resp.get("message")))
+					{
+						itemRes.put("message",resp.get("message"));
+					}
+					if(resp.get("status") == "success")
+					{
+						itemRes.put("status","success");
+						itemRes.put("id",original.get("ID_Usuario"));
+						// ← CAMBIO 1
+						if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
+						{
+							itemRes.put("id_zoho",resp.get("details").get("id"));
+						}
+					}
+					else
+					{
+						itemRes.put("status","error");
+						if(!isNull(resp.get("details")))
+						{
+							itemRes.put("error",resp.get("details"));
+							// ← CAMBIO 2
+						}
+						else
+						{
+							itemRes.put("error",resp.get("message"));
+						}
+					}
+					listaRetorno.add(itemRes);
+					idx = idx + 1;
+				}
+			}
+			resultado_registros.addAll(listaRetorno);
+		}
+	}
+	else
+	{
+		return {"status":"error","message":"No se enviaron registros","registros":List()};
+	}
+}
+catch (e)
+{
+	return {"status":"error","message":"Se produjo un error durante la ejecución","registros":resultado_registros,"error":e.toString()};
+}
+// ------------------------------------------------------------
+// STATUS GLOBAL
+// ------------------------------------------------------------
+errores = 0;
+for each  r in resultado_registros
+{
+	if(r.get("status") == "error")
+	{
+		errores = errores + 1;
+	}
+}
+estatusGlobal = "success";
+mensajeGlobal = "Procesado correctamente.";
+if(errores == resultado_registros.size())
+{
+	estatusGlobal = "error";
+	mensajeGlobal = "Todos los registros fallaron.";
+}
+else if(errores > 0)
+{
+	estatusGlobal = "parcial";
+	mensajeGlobal = "Procesado parcialmente. Algunos registros fallaron.";
+}
+return {"status":estatusGlobal,"message":mensajeGlobal,"registros":resultado_registros};
