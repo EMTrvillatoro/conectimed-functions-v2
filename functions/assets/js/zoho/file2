@@ -67,6 +67,7 @@ try
 						email = item.get("Email");
 						itemRes = Map();
 						itemRes.put("email",email);
+						itemRes.put("id",original.get("ID_Usuario"));
 						itemRes.put("status","error");
 						itemRes.put("error","Sin respuesta del API");
 						itemRes.put("message","request failed");
@@ -82,6 +83,7 @@ try
 						email = original.get("Email");
 						itemRes = Map();
 						itemRes.put("email",email);
+						itemRes.put("id",original.get("ID_Usuario"));
 						if(!isNull(resp.get("message")))
 						{
 							itemRes.put("message",resp.get("message"));
@@ -89,7 +91,7 @@ try
 						if(resp.get("status") == "success")
 						{
 							itemRes.put("status","success");
-							itemRes.put("id",original.get("ID_Usuario"));
+							
 							// ← CAMBIO 1
 							if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
 							{
@@ -139,6 +141,7 @@ try
 						email = item.get("Email");
 						itemRes = Map();
 						itemRes.put("email",email);
+						itemRes.put("id",original.get("ID_Usuario"));
 						itemRes.put("status","error");
 						itemRes.put("error","Sin respuesta del API");
 						itemRes.put("message","request failed");
@@ -154,6 +157,7 @@ try
 						email = original.get("Email");
 						itemRes = Map();
 						itemRes.put("email",email);
+						itemRes.put("id",original.get("ID_Usuario"));
 						if(!isNull(resp.get("message")))
 						{
 							itemRes.put("message",resp.get("message"));
@@ -161,7 +165,7 @@ try
 						if(resp.get("status") == "success")
 						{
 							itemRes.put("status","success");
-							itemRes.put("id",original.get("ID_Usuario"));
+							
 							// ← CAMBIO 1
 							if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
 							{
@@ -212,6 +216,7 @@ try
 					email = item.get("Email");
 					itemRes = Map();
 					itemRes.put("email",email);
+					itemRes.put("id",original.get("ID_Usuario"));
 					itemRes.put("status","error");
 					itemRes.put("error","Sin respuesta del API");
 					itemRes.put("message","request failed");
@@ -227,6 +232,7 @@ try
 					email = original.get("Email");
 					itemRes = Map();
 					itemRes.put("email",email);
+					itemRes.put("id",original.get("ID_Usuario"));
 					if(!isNull(resp.get("message")))
 					{
 						itemRes.put("message",resp.get("message"));
@@ -234,7 +240,7 @@ try
 					if(resp.get("status") == "success")
 					{
 						itemRes.put("status","success");
-						itemRes.put("id",original.get("ID_Usuario"));
+						
 						// ← CAMBIO 1
 						if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
 						{
@@ -283,6 +289,7 @@ try
 					email = item.get("Email");
 					itemRes = Map();
 					itemRes.put("email",email);
+					itemRes.put("id",original.get("ID_Usuario"));
 					itemRes.put("status","error");
 					itemRes.put("error","Sin respuesta del API");
 					itemRes.put("message","request failed");
@@ -298,6 +305,7 @@ try
 					email = original.get("Email");
 					itemRes = Map();
 					itemRes.put("email",email);
+					itemRes.put("id",original.get("ID_Usuario"));
 					if(!isNull(resp.get("message")))
 					{
 						itemRes.put("message",resp.get("message"));
@@ -305,7 +313,7 @@ try
 					if(resp.get("status") == "success")
 					{
 						itemRes.put("status","success");
-						itemRes.put("id",original.get("ID_Usuario"));
+						
 						// ← CAMBIO 1
 						if(!isNull(resp.get("details")) && !isNull(resp.get("details").get("id")))
 						{

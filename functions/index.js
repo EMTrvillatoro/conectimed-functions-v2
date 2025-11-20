@@ -17,7 +17,7 @@ const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
 const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted, virtualSessionsAttendanceConfirmationCountFix/*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
-const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_2 } = require('./assets/js/zoho/zoho');
+const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_setStatus } = require('./assets/js/zoho/zoho');
 
 /* functions HTTP REQUEST */
 
@@ -88,7 +88,7 @@ exports.virtualSessionsAttendanceConfirmationCountFix = onRequest(runtimeOpts, a
 exports.zohoExportRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest(req, res));
 
 /* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
-exports.zohoExportmarkAllUsersPendingRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_2(req, res));
+exports.zohoExportmarkAllUsersPendingRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_setStatus(req, res));
 
 /* DESC: OBTAINING CONFIRMATION OF ATTENDANCE AT VIRTUAL SESSIONS | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));

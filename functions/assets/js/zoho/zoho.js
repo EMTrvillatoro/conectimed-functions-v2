@@ -19,6 +19,7 @@ async function processUsersToZohoHandler() {
     const admin = getFBAdminInstance();
     const db = admin.firestore();
     let total = 0;
+    let userBatch = [];
 
     // ============================================================
     // 1. OBTENER EL ÚLTIMO PIVOTE (si existe)
@@ -82,7 +83,7 @@ async function processUsersToZohoHandler() {
 
         return {
             // IDENTIDAD
-            "First_Name": String(capitalizeText(String(DATA.firstName || '') + " " + String(DATA.secondName || ''))).trim(),
+            "First_Name": String(capitalizeText(String(DATA.firstName || '') + " " + String(DATA.secondName || ''))).trim().slice(0, 40),
             "Last_Name": String(capitalizeText(String(DATA.lastName1 || '') + " " + String(DATA.lastName2 || ''))).trim() || "-",
             "Email": DATA && DATA.email ? String(DATA.email).trim().toLocaleLowerCase() : '',
             "Mobile": DATA && DATA.mobile ? normalizeMxMobile(String(DATA.mobile).trim()) : '',
@@ -116,9 +117,31 @@ async function processUsersToZohoHandler() {
     // ============================================================
     // 5. ENVIAR A ZOHO
     // ============================================================
+
     try {
         users.forEach(u => console.log("Procesado:", u.ID_Usuario));
-        await saveToZoho(users);
+        const data = await saveToZoho(users);
+
+        if (data && data.details && data.details.output) {
+            try {
+                const _DATA = JSON.parse(data.details.output);
+
+                if (_DATA && _DATA.registros) {
+
+                    for (const item of Array.from(_DATA.registros)) {
+                        if (item && item.status && item.status === 'error') {
+                            userBatch.push({ id: item && item.id ? item.id : '', zoho_migration_status: 'error', error: item && item.error ? item.error : {} })
+                        } else {
+                            userBatch.push({ id: item && item.id ? item.id : '', zoho_migration_status: 'complete' })
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.error(error);
+                userBatch = data.details.output;
+            }
+        }
         console.log(`Exportadas ${users.length} filas.`);
         total += users.length;
 
@@ -133,9 +156,15 @@ async function processUsersToZohoHandler() {
     try {
         const batch = db.batch();
 
-        snapshot.docs.forEach(doc => {
-            batch.update(doc.ref, { zoho_migration_status: "complete" });
-        });
+        for (let user of Array.from(userBatch)) {
+            let newData = { zoho_migration_status: user && user.zoho_migration_status ? user.zoho_migration_status : 'error' }
+            if (user && user.error) {
+                newData.error = user.error;
+            }
+            if (user && user.id) {
+                batch.update(db.doc(`validated-user-data/${user.id}`), newData);
+            }
+        }
 
         await batch.commit();
         console.log("Batch actualizado: todos marcados como 'complete'.");
@@ -202,7 +231,7 @@ async function _onRequest(req, res) {
  * @returns 
  */
 
-async function _onRequest_2(req, res) {
+async function _onRequest_setStatus(req, res) {
     res.header('Content-Type', 'application/json');
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -276,7 +305,7 @@ async function _onDocumentWritten(event) {
 
 async function saveToZoho(results) {
     const response = await sendRequest(zohoIntegrationURL.value(), { "Content-Type": "application/json" }, 'POST', { data: results });
-    return { code: response && response.data && response.data.code ? response.data.code : 'undefined', data: response && response.data ? response.data : [] };
+    return response.data
 }
 
 /**
@@ -319,7 +348,7 @@ async function setZohoStatusForAllUsers(action) {
 
 module.exports = {
     _onRequest,
-    _onRequest_2,
+    _onRequest_setStatus,
     _onDocumentWritten,
     _onSchedule
 };
