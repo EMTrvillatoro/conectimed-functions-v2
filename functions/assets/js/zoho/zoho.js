@@ -204,8 +204,19 @@ async function _onRequest_2(req, res) {
     if (req.method === 'OPTIONS') {
         return res.status(204).send('');
     }
+
     if (req && req.method === 'GET') {
-        await markAllUsersPending();
+
+        // ================================
+        // 🔥 OBTENER action DEL QUERY
+        // ================================
+        const action = req.query.action;
+
+        // ================================
+        // PASAR action A setZohoStatusForAllUsers
+        // ================================
+        await setZohoStatusForAllUsers(action);
+
         return res.status(200).json({ status: 'Success' });
     } else {
         return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
@@ -277,9 +288,10 @@ async function _onSchedule(event) {
  * @returns void
  */
 
-async function markAllUsersPending() {
+async function setZohoStatusForAllUsers(action) {
     const admin = getFBAdminInstance();
     const db = admin.firestore();
+    const statusValue = action || "pending";
 
     const snapshot = await db.collection("validated-user-data").get();
     if (snapshot.empty) {
@@ -291,12 +303,12 @@ async function markAllUsersPending() {
 
     snapshot.forEach(doc => {
         batch.update(doc.ref, {
-            zoho_migration_status: "pending"
+            zoho_migration_status: statusValue
         });
     });
 
     await batch.commit();
-    console.log("Batch completado: todos los usuarios marcados como pending.");
+    console.log(`Batch completado: todos los usuarios marcados como ${statusValue}.`);
 }
 
 module.exports = {
