@@ -3,6 +3,12 @@ const { defineSecret } = require('firebase-functions/params');
 const { FieldValue } = require('firebase-admin/firestore');
 const zohoIntegrationURL = defineSecret('ZOHO_INTEGRATION_URL');
 const batchSize = 25;
+/*
+    firebase deploy --only functions:zohoExportRequest
+    firebase deploy --only functions:zohoExportmarkAllUsersPendingRequest
+    firebase deploy --only functions:zohoExportPaginationTrigger
+    firebase deploy --only functions:zohoExportScheduled
+*/
 
 /**
  * 
