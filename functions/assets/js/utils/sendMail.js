@@ -1,8 +1,6 @@
 const functions = require("firebase-functions/v2");
 const { logger } = require("firebase-functions");
 const { HttpsError } = functions.https;
-
-// Su función real para enviar correo
 const { sendEmail } = require('../Tools');
 
 /**

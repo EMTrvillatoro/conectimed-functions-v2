@@ -730,33 +730,47 @@ async function sendEmail(body) {
 
 async function sendSMS(body) {
   try {
-    let smsObj = {
-      type: 'transactional',
-      sender: body.sender ? body.sender : 'ConectiMED',
+    // ---- Construcción del objeto SMS ----
+    const smsObj = {
+      type: "transactional",
+      sender: body.sender ?? "ConectiMED",
       recipient: body.recipient,
-      content: body.content
+      content: body.content,
     };
-    if (body.tag) {
-      smsObj.tag = body.tag;
-    }
-    if (body.webUrl) {
-      smsObj.webUrl = body.webUrl;
-    }
-    return await sendRequest(
-      smsURL.value(),
-      {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'api-key': mailingAPIKey.value()
+
+    if (body.tag) smsObj.tag = body.tag;
+    if (body.webUrl) smsObj.webUrl = body.webUrl;
+
+    // ---- Configuración del request ----
+    const url = smsURL.value();
+    const apiKey = mailingAPIKey.value();
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "api-key": apiKey,
       },
-      'POST',
-      smsObj
-    );
+      body: JSON.stringify(smsObj),
+    });
+
+    // ---- Manejo de error HTTP ----
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("SMS service error:", errText);
+      throw new Error(`HTTP ${response.status}: ${errText}`);
+    }
+
+    // ---- Respuesta JSON de la API ----
+    return await response.json();
+
   } catch (error) {
-    console.error(error.response);
+    console.error("sendSMS error:", error);
+    throw error;
   }
-  return true;
 }
+
 
 async function sendRequest(url, headers, method, data) {
   return await axios({

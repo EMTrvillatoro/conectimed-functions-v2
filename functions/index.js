@@ -12,6 +12,7 @@ const { registerHandler, updateHandler } = require('./assets/js/user/register');
 const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
 const { sendMailHandler } = require('./assets/js/utils/sendMail');
+const { sendSmsHandler } = require('./assets/js/utils/sendSms');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
@@ -96,7 +97,10 @@ exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async 
 /* functions CALLABLES */
 
 /* DESC: SEND MAIL | AUTHOR: Miguel | TYPE: CALLABLE */
-exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, context));
+exports.sendMail = onCall(runtimeOpts, async (data, context) => await sendMailHandler(data, context));
+
+/* DESC: SEND SMS | AUTHOR: Rolando | TYPE: CALLABLE */
+exports.sendSms = onCall(runtimeOpts, async (data, context) => await sendSmsHandler(data, context));
 
 /* functions ON WRITE */
 
