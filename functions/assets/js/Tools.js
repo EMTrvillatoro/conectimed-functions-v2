@@ -30,7 +30,7 @@ const WINDOW_MS = 60 * 1000; // 60 segundos
 
 function getFBAdminInstance() {
   if (!admin.apps.length) {
-   admin.initializeApp({
+    admin.initializeApp({
       credential: admin.credential.cert(JSON.parse(CERT.value())),
       databaseURL: databaseURL.value(),
       serviceAccountId: clientEmail.value(),
@@ -283,7 +283,6 @@ function stringSearch(str, whiteSpaces) {
 function removeAccents(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
-
 
 async function asyncForEach(array, callback) {
   for (let index = 0; index < array.length; index++) {
@@ -629,51 +628,38 @@ async function sendEmail(body) {
   </html>
   `;
 
-    let sendData1 = {
+    // -------- Construcción de payload --------
+    const baseData = {
       to: [
         {
           email: body.recipient,
-          name: body.name ? body.name : null
-        }
+          name: body.name ?? null,
+        },
       ],
-      replyTo: {
-        email: 'no-reply@conectimed.com'
-      },
+      replyTo: { email: "no-reply@conectimed.com" },
+    };
+
+    const senderInfo = body.sender
+      ? {
+        name: body.sender.name,
+        email: body.sender.email,
+      }
+      : {
+        name: "CONECTIMED",
+        email: "notificaciones@conectimed.com.mx",
+      };
+
+    let sendData1 = {
+      ...baseData,
       subject: body.subject,
-      htmlContent: html
+      htmlContent: html,
+      sender: senderInfo,
     };
 
     let sendData2 = {
-      to: [
-        {
-          email: body.recipient,
-          name: body.name ? body.name : null
-        }
-      ],
-      replyTo: {
-        email: 'no-reply@conectimed.com'
-      }
+      ...baseData,
+      sender: senderInfo,
     };
-
-    if (!body.sender) {
-      sendData1.sender = {
-        name: 'CONECTIMED',
-        email: 'notificaciones@conectimed.com.mx'
-      };
-      sendData2.sender = {
-        name: 'CONECTIMED',
-        email: 'notificaciones@conectimed.com.mx'
-      };
-    } else {
-      sendData1.sender = {
-        name: body.sender.name,
-        email: body.sender.email
-      };
-      sendData2.sender = {
-        name: body.sender.name,
-        email: body.sender.email
-      };
-    }
 
     if (body.cc) {
       sendData1.cc = body.cc;
@@ -681,77 +667,65 @@ async function sendEmail(body) {
     }
 
     if (body.bcc) {
-      sendData1.bcc = [
-        {
-          email: body.bcc
-        }
-      ];
-      sendData2.bcc = [
-        {
-          email: body.bcc
-        }
-      ];
+      const bccObj = [{ email: body.bcc }];
+      sendData1.bcc = bccObj;
+      sendData2.bcc = bccObj;
     }
 
     if (body.attach) {
-      let arrayAtt = [];
-      if (attach.url) {
-        arrayAtt.push({
-          url: body.attach.url
-        });
-      } else if (attach.content) {
-        arrayAtt.push({
-          content: body.attach.content
-        });
+      const arrayAtt = [];
+      if (body.attach.url) {
+        arrayAtt.push({ url: body.attach.url });
+      } else if (body.attach.content) {
+        arrayAtt.push({ content: body.attach.content });
       }
-
       sendData1.attachment = arrayAtt;
       sendData2.attachment = arrayAtt;
     }
 
-    var finalData;
-
+    let payload;
     if (body.templateId) {
       sendData2.templateId = body.templateId;
-      if (body.params) {
-        sendData2.params = body.params;
-      }
+
+      if (body.params) sendData2.params = body.params;
 
       sendData2.headers = {
-        'X-Mailin-custom':
-          'custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3',
-        charset: 'iso-8859-1'
+        "X-Mailin-custom":
+          "custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3",
+        charset: "iso-8859-1",
       };
 
-      finalData = {
-        url: mailingURL.value(),
-        json: true,
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          accept: 'application/json',
-          'api-key': mailingAPIKey.value()
-        },
-        data: sendData2
-      };
+      payload = sendData2;
     } else {
-      finalData = {
-        url: mailingURL.value(),
-        json: true,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          'api-key': mailingAPIKey.value()
-        },
-        data: sendData1
-      };
+      payload = sendData1;
     }
-    await axios(finalData);
+
+    // -------- Request config --------
+    const url = mailingURL.value();
+    const apiKey = mailingAPIKey.value();
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "api-key": apiKey,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    // -------- Manejo de errores --------
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Email service error:", errorText);
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    return await response.json();
   } catch (error) {
-    console.error(error);
+    console.error("sendEmail error:", error);
+    throw error;
   }
-  return;
 }
 
 async function sendSMS(body) {
