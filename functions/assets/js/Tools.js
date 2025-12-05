@@ -720,7 +720,7 @@ async function sendEmail(body) {
       console.error("Email service error:", errorText);
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
-
+    console.log("Email sent successfully to:", body.recipient);
     return await response.json();
   } catch (error) {
     console.error("sendEmail error:", error);
@@ -763,6 +763,7 @@ async function sendSMS(body) {
     }
 
     // ---- Respuesta JSON de la API ----
+    console.log("SMS sent successfully to:", body.recipient);
     return await response.json();
 
   } catch (error) {
