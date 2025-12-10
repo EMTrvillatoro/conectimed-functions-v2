@@ -293,340 +293,556 @@ async function asyncForEach(array, callback) {
 async function sendEmail(body) {
   try {
     const html = `
-    <html lang="es">
-    <head>
-      <meta charset="utf-8" />
-      <title>${body.subject}</title>
-    </head>
+      <!doctype html>
+      <html lang="en" dir="auto" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+        xmlns:o="urn:schemas-microsoft-com:office:office">
 
-    <body>
-      <div style="font-family: Arial, Helvetica, sans-serif;text-align: center;width: 100%;margin: auto;">
-        <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="60%" align="center">
-          <tbody>
+      <head>
+        <title></title><!--[if !mso]><!-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <style type="text/css">
+          #outlook a {
+            padding: 0;
+          }
+
+          body {
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+          }
+
+          table,
+          td {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+          }
+
+          img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+          }
+
+          p {
+            display: block;
+            margin: 13px 0;
+          }
+        </style><!--[if mso]>
+          <noscript>
+          <xml>
+          <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+          </xml>
+          </noscript>
+          <![endif]--><!--[if lte mso 11]>
+          <style type="text/css">
+            .mj-outlook-group-fix { width:100% !important; }
+          </style>
+          <![endif]-->
+        <style type="text/css">
+          @media only screen and (min-width:480px) {
+            .mj-column-per-100 {
+              width: 100% !important;
+              max-width: 100%;
+            }
+          }
+        </style>
+        <style media="screen and (min-width:480px)">
+          .moz-text-html .mj-column-per-100 {
+            width: 100% !important;
+            max-width: 100%;
+          }
+        </style>
+        <style type="text/css">
+          @media only screen and (max-width:479px) {
+            table.mj-full-width-mobile {
+              width: 100% !important;
+            }
+
+            td.mj-full-width-mobile {
+              width: auto !important;
+            }
+          }
+        </style>
+        <style type="text/css">
+          @media (max-width: 479px) {
+            .hide-on-mobile {
+              display: none !important;
+            }
+          }
+
+          @media (min-width: 480px) {
+            .hide-on-desktop {
+              display: none !important;
+            }
+          }
+
+          .gr-mlimage-uqksdq img {
+            box-sizing: border-box;
+          }
+
+          @media (min-width: 480px) {
+            .gr-mlimage-wuerel {
+              height: 110px !important;
+            }
+          }
+
+          .gr-mltext-lkvlpf a,
+          .gr-mltext-lkvlpf a:visited {
+            text-decoration: none;
+          }
+
+          .gr-mlimage-uqksdq img {
+            box-sizing: border-box;
+          }
+
+          @media (min-width: 480px) {
+            .gr-mlimage-mlxxho {
+              height: 356px !important;
+            }
+          }
+
+          .gr-mltext-kibvpg a,
+          .gr-mltext-kibvpg a:visited {
+            text-decoration: none;
+          }
+
+          .gr-mltext-jqcjhq a,
+          .gr-mltext-jqcjhq a:visited {
+            text-decoration: none;
+          }
+
+          .gr-mltext-fyaero a,
+          .gr-mltext-fyaero a:visited {
+            text-decoration: none;
+          }
+
+          .gr-mltext-wwisfv a,
+          .gr-mltext-wwisfv a:visited {
+            text-decoration: none;
+          }
+
+          .gr-footer-njpwok a,
+          .gr-footer-njpwok a:visited {
+            color: #000000;
+            text-decoration: underline;
+          }
+        </style>
+        <link
+          href="https://fonts.googleapis.com/css?display=swap&family=Roboto:400,400i,700,700i|Open Sans:400,400i,700,700i&subset=cyrillic,greek,latin-ext,vietnamese"
+          rel="stylesheet" type="text/css">
+        <style type="text/css">
+          @import url(https://fonts.googleapis.com/css?display=swap&family=Roboto:400,400i,700,700i|Open Sans:400,400i,700,700i&subset=cyrillic,greek,latin-ext,vietnamese);
+        </style>
+      </head>
+
+      <body style="word-spacing:normal;background-color:#F6F6F6;">
+        <div class="elem-body" style="background-color:#F6F6F6;" lang="en" dir="auto">
+          <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+          <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+              style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+              <tbody>
+                <tr>
+                  <td
+                    style="border-bottom:0 none #E3E3E3;border-left:1px solid #E3E3E3;border-right:1px solid #E3E3E3;border-top:1px solid #E3E3E3;direction:ltr;font-size:0px;padding:0 32px;text-align:center;">
+                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:534px;" ><![endif]-->
+                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                        <tbody>
+                          <tr>
+                            <td
+                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                <tbody>
+                                  <tr>
+                                    <td style="font-size:0px;word-break:break-word;">
+                                      <div style="height:20px;line-height:20px;">&#8202;</div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="center" class="gr-mlimage-uqksdq gr-mlimage-wuerel"
+                                      style="font-size:0px;padding:0;word-break:break-word;">
+                                      <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                        style="border-collapse:collapse;border-spacing:0px;">
+                                        <tbody>
+                                          <tr>
+                                            <td style="width:122px;"><img alt=""
+                                                src="https://us-ms.gr-cdn.com/getresponse-yGxOr/photos/2fb30ebb-8942-4e92-bf23-e24ed9228ae9.png"
+                                                style="border:0;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;border-bottom:0 none #000000;border-radius:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
+                                                width="122" height="auto"></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-lkvlpf"
+                                      style="font-size:0px;padding:0;word-break:break-word;">
+                                      <div
+                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.2;text-align:left;color:#000000;">
+                                        <div style="text-align: center">
+                                          <p
+                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                            <span style="color: #4F4F4F"><strong><span style="font-size: 18px"><span
+                                                    style="font-family: Roboto, Arial, sans-serif">Plataforma de Educación
+                                                    Médica Contínua</span></span></strong></span></p>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="center" style="font-size:0px;padding:10px;word-break:break-word;">
+                                      <p style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:100%;"></p><!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:514px;" role="presentation" width="514px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+      </td></tr></table><![endif]-->
+                                    </td>
+                                  </tr>                          
+                                  ${body.text}
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+          <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+              style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+              <tbody>
+                <tr>
+                  <td
+                    style="border-bottom:1px solid #E3E3E3;border-left:1px solid #E3E3E3;border-right:1px solid #E3E3E3;border-top:0 none #E3E3E3;direction:ltr;font-size:0px;padding:0 32px;text-align:center;">
+                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:534px;" ><![endif]-->
+                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                        <tbody>
+                          <tr>
+                            <td
+                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                <tbody>
+                                  <tr>
+                                    <td align="center" style="font-size:0px;padding:24px;word-break:break-word;">
+                                      <p style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:80%;"></p><!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:388.8px;" role="presentation" width="388.8px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+      </td></tr></table><![endif]-->
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-jqcjhq"
+                                      style="font-size:0px;padding:0;word-break:break-word;">
+                                      <div
+                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:2;text-align:left;color:#000000;">
+                                        <div style="text-align: center">
+                                          <p
+                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                            <span style="color: #777777"><span style="font-size: 13px"><span
+                                                  style="font-family: Open Sans, Arial, sans-serif">&nbsp;Si tiene alguna
+                                                  pregunta o necesita asistencia adicional, no dude en comunicarse con nuestro
+                                                  equipo de soporte, siempre listo para ayudarle</span></span></span></p>
+                                        </div>
+                                        <div style="text-align: center">
+                                          <p
+                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                            <span style="font-size: 13px"><span
+                                                style="font-family: Open Sans, Arial, sans-serif"><span
+                                                  style="color: #777777">Escribanos a </span><span
+                                                  style="color: #2D88DA">contacto@conectimed.com </span><span
+                                                  style="color: #777777">donde con gusto le atenderemos.</span></span></span>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td style="font-size:0px;word-break:break-word;">
+                                      <div style="height:24px;line-height:24px;">&#8202;</div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#828282" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+          <div style="background:#828282;background-color:#828282;margin:0px auto;max-width:600px;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+              style="background:#828282;background-color:#828282;width:100%;">
+              <tbody>
+                <tr>
+                  <td
+                    style="border-bottom:0 none #000000;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;direction:ltr;font-size:0px;padding:5px;text-align:center;">
+                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:590px;" ><![endif]-->
+                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                        <tbody>
+                          <tr>
+                            <td
+                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                <tbody>
+                                  <tr>
+                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-fyaero"
+                                      style="font-size:0px;padding:10px;word-break:break-word;">
+                                      <div
+                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;">
+                                        <div style="text-align: center">
+                                          <p
+                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                            <span style="color: #F2F2F2">Síganos en nuestras redes sociales</span></p>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="center" style="font-size:0px;padding:5px;word-break:break-word;">
+                                      <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td><![endif]-->
+                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                        style="float:none;display:inline-table;">
+                                        <tbody>
+                                          <tr class="link-id-8c0c8c6943f7">
+                                            <td style="padding:0 10px;vertical-align:middle;">
+                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                                style="border-radius:0;width:30px;">
+                                                <tbody>
+                                                  <tr>
+                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
+                                                        href="https://www.facebook.com/conectimed/" target="_blank"><img
+                                                          alt="Visit our Facebook page" height="30"
+                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/facebook7.png"
+                                                          style="border-radius:0;display:block;" width="30"></a></td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table><!--[if mso | IE]></td><td><![endif]-->
+                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                        style="float:none;display:inline-table;">
+                                        <tbody>
+                                          <tr class="link-id-c418bf71afd1">
+                                            <td style="padding:0 10px;vertical-align:middle;">
+                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                                style="border-radius:0;width:30px;">
+                                                <tbody>
+                                                  <tr>
+                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
+                                                        href="https://www.instagram.com/conectimedapp/" target="_blank"><img
+                                                          alt="Visit our Instagram page" height="30"
+                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/instagram7.png"
+                                                          style="border-radius:0;display:block;" width="30"></a></td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table><!--[if mso | IE]></td><td><![endif]-->
+                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                        style="float:none;display:inline-table;">
+                                        <tbody>
+                                          <tr class="link-id-c29c1d26ba0b">
+                                            <td style="padding:0 10px;vertical-align:middle;">
+                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                                style="border-radius:0;width:30px;">
+                                                <tbody>
+                                                  <tr>
+                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
+                                                        href="https://mx.linkedin.com/company/conectimed" target="_blank"><img
+                                                          alt="Visit our LinkedIn page" height="30"
+                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/linkedin7.png"
+                                                          style="border-radius:0;display:block;" width="30"></a></td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table><!--[if mso | IE]></td><td><![endif]-->
+                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                        style="float:none;display:inline-table;">
+                                        <tbody>
+                                          <tr class="link-id-b83ae4f6d399">
+                                            <td style="padding:0 10px;vertical-align:middle;">
+                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                                style="border-radius:0;width:30px;">
+                                                <tbody>
+                                                  <tr>
+                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
+                                                        href="https://www.youtube.com/channel/UClVk1dBhD3Y59ddCPGA_ejg"
+                                                        target="_blank"><img alt="Visit our YouTube page" height="30"
+                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/youtube7.png"
+                                                          style="border-radius:0;display:block;" width="30"></a></td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table><!--[if mso | IE]></td></tr></table><![endif]-->
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+          <div style="margin:0px auto;max-width:600px;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+              <tbody>
+                <tr>
+                  <td
+                    style="border-bottom:0 none #000000;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;direction:ltr;font-size:0px;padding:0;text-align:center;">
+                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+                    <div class="mj-column-per-100 mj-outlook-group-fix"
+                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                        <tbody>
+                          <tr>
+                            <td
+                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                <tbody>
+                                  <tr>
+                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-wwisfv"
+                                      style="font-size:0px;padding:0 40px 10px 40px;word-break:break-word;">
+                                      <div
+                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;">
+                                        <div style="text-align: center">
+                                          <p
+                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                          </p>
+                                        </div>
+                                        <div style="text-align: center">
+                                          <p
+                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                            <span style="font-size: 9px"><span style="font-family: Arial, sans-serif">Usted
+                                                recibió este mail por ser suscriptor de </span></span><a
+                                              href="http://conectimed.com" style="text-decoration: none; color: inherit;"
+                                              target="_blank" class="link-id-3dc39d1329d1"><span
+                                                style="color: #00baff"><span><span style="font-size: 9px"><span
+                                                      style="font-family: Arial, sans-serif"><u>Conectimed.</u></span></span></span></span></a>
+                                          </p>
+                                        </div>
+                                        <div style="text-align: center">
+                                          <p
+                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                            <span style="font-size: 9px"><span style="font-family: Arial, sans-serif">Consulte
+                                                nuestro </span></span><a href="https://conectimed.com/privacy-policy/"
+                                              style="text-decoration: none; color: inherit;" target="_blank"
+                                              class="link-id-8b2370f3cc12"><span style="color: #00baff"><span><span
+                                                    style="font-size: 9px"><span
+                                                      style="font-family: Arial, sans-serif"><u>Aviso de
+                                                        privacidad</u></span></span></span></span></a></p>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div><!--[if mso | IE]></td></tr></table><![endif]-->
+          <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+            <tbody>
+              <tr>
+                <td>
+                  <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+                  <div style="margin:0px auto;max-width:600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+                      <tbody>
+                        <tr>
+                          <td
+                            style="border-bottom:0 none #000000;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;direction:ltr;font-size:0px;padding:5px;text-align:center;">
+                            <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:590px;" ><![endif]-->
+                            <div class="mj-column-per-100 mj-outlook-group-fix"
+                              style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                <tbody>
+                                  <tr>
+                                    <td
+                                      style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
+                                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                        <tbody>
+                                          <tr>
+                                            <td align="center" class="gr-footer-orxywg gr-footer-njpwok"
+                                              style="font-size:0px;padding:10px 40px;word-break:break-word;">
+                                              <div
+                                                style="font-family:Open Sans, Arial, sans-serif;font-size:10px;font-style:normal;line-height:1;text-align:center;text-decoration:none;color:#777777;">
+                                                <div>Calle Chihuahua #46, 10710, Ciudad de México, MX<br><br>You may <a
+                                                    href="mailto:contacto@conectimed.com"
+                                                    target="_blank">unsubscribe</a> or <a
+                                                    href="mailto:contacto@conectimed.com"
+                                                    target="_blank">change your contact details</a> at any time.</div>
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div><!--[if mso | IE]></td></tr></table><![endif]-->
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div><!--[if mso | IE]></td></tr></table><![endif]-->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table align="center"
+            style="font-family: 'Roboto', Helvetica, sans-serif; font-weight: 400; letter-spacing: .018em; text-align: center; font-size: 10px;">
             <tr>
-              <td align="center" colspan="2" style="font-size:0px;padding:15px 10px;word-break:break-word;">
-                <img
-                  alt=""
-                  height="auto"
-                  src="https://m.gr-cdn-6.com/getresponse-yGxOr/photos/5d046360-c754-4aba-8933-dae26f1d9da2.png"
-                  style="border:0;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;border-bottom:0 none #000000;border-radius:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
-                  width="440"
-                />
-              </td>
+              <td style="padding-bottom: 20px"></td>
             </tr>
-            <tr>
-              <td align="center" colspan="2" style="font-size:0px;padding:15px 10px;word-break:break-word;">
-                <p style="border-top:solid 3px #10BCF9;font-size:1;margin:0px auto;width:100%;"></p>
-                <!--[if mso | IE]>
-                          <table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 3px #10BCF9;font-size:1;margin:0px auto;width:540px;" role="presentation" width="540px" >
-                            <tr>
-                              <td style="height:0;line-height:0;"> &nbsp;</td>
-                            </tr>
-                          </table>
-                          <![endif]-->
-              </td>
-            </tr>
-            <tr>
-              <td
-                colspan="2"
-                align="center"
-                class="gr-mltext-uogniq gr-mltext-rxkiwr"
-                style="font-size:0px;padding:5px 10px;word-break:break-word;"
-              >
-                <div
-                  style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;"
-                >
-                  <div style="text-align: center;">
-                    <p
-                      style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;"
-                    >
-                      <span style="font-family: Georgia;"
-                        ><span style="font-size: 28px">Información relevante para el</span></span
-                      >
-                    </p>
-                  </div>
-                  <div style="text-align: center;">
-                    <p
-                      style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;"
-                    >
-                      <span style="font-family: Georgia;"
-                        ><span style="font-size: 28px"><strong>MÉDICO DE HOY</strong></span></span
-                      >
-                    </p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" colspan="2" style="font-size:0px;padding:15px 10px;word-break:break-word;">
-                <p style="border-top:solid 3px #10BCF9;font-size:1;margin:0px auto;width:100%;"></p>
-                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 3px #10BCF9;font-size:1;margin:0px auto;width:540px;" role="presentation" width="540px" ><tr><td style="height:0;line-height:0;"> &nbsp;
-        </td></tr></table><![endif]-->
-              </td>
-            </tr>
-            <tr>
-              <td
-                align="center"
-                style="
-    width: 50%;
-  "
-              >
-                <div style="width: 50px;text-align: center;">
-                  <a href="https://www.amem.com.mx/" target="_blank"
-                    ><img
-                      alt=""
-                      height="auto"
-                      src="https://m.gr-cdn-6.com/getresponse-yGxOr/photos/474746ed-df08-4a3c-a06b-6c157171c95e.jpg"
-                      style="border:0;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;border-bottom:0 none #000000;border-radius:0;display:block;outline:none;text-decoration:none;height:auto;font-size:13px;text-align: center;"
-                      width="50"
-                  /></a>
-                </div>
-              </td>
-              <td align="center">
-                <div
-                  style="/* width: 50%; */font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;"
-                >
-                  <p
-                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;"
-                  >
-                    <a style="text-decoration: none;" target="_blank" href="https://www.amem.com.mx/"
-                      ><strong
-                        ><span style="color: #000000"><u>Asociación Mexicana para la Educación Médica</u></span></strong
-                      ></a
-                    >
-                  </p>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" colspan="2" style="font-size:0px;padding:15px 20px;word-break:break-word;">
-                <p style="border-top:dashed 3px #BDBDBD;font-size:1;margin:0px auto;width:100%;"></p>
-                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:dashed 3px #BDBDBD;font-size:1;margin:0px auto;width:560px;" role="presentation" width="560px" ><tr><td style="height:0;line-height:0;"> &nbsp;
-        </td></tr></table><![endif]-->
-              </td>
-            </tr>
-            <tr>
-              <td align="center" colspan="2">
-                <p>Estimado (a) ${body.name ? body.name : ''}</p>
-                <p>
-                  <br />
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" colspan="2">
-                <table border="0" cellspacing="0" cellpadding="0" width="100%" style="text-align: center;">
-                  <tbody>
-                    <tr>
-                      <td width="100%" colspan="2">
-                        ${body.text}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" colspan="2">
-                <p><br /></p>
-                <p>Para cualquier duda o comentario escribanos a</p>
-                <p>
-                  <a href="mailto:contacto@conectimed.com" data-cke-saved-href="mailto:contacto@conectimed.com"
-                    >contacto@conectimed.com</a
-                  >&nbsp;donde con gusto le atenderemos.
-                </p>
-                <p>
-                  <br />
-                </p>
-                <p>
-                  En CONECTI<strong>MED</strong>&nbsp;trabajamos todos los días buscando la satisfacción de nuestros
-                  usuarios.
-                </p>
-                <p>
-                  <br />
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" colspan="2" style="font-size:0px;padding:15px 20px;word-break:break-word;">
-                <p style="border-top:dashed 3px #BDBDBD;font-size:1;margin:0px auto;width:100%;"></p>
-                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:dashed 3px #BDBDBD;font-size:1;margin:0px auto;width:560px;" role="presentation" width="560px" ><tr><td style="height:0;line-height:0;"> &nbsp;
-        </td></tr></table><![endif]-->
-              </td>
-            </tr>
-            <tr>
-              <td
-                colspan="2"
-                style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0 40px;"
-              >
-                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                  <tbody>
-                    <tr>
-                      <td style="font-size:0px;word-break:break-word;">
-                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td height="20" style="vertical-align:top;height:20px;"><![endif]-->
-                        <div style="height:20px;">&nbsp;</div>
-                        <!--[if mso | IE]></td></tr></table><![endif]-->
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" style="font-size:0px;padding:5px;word-break:break-word;">
-                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td><![endif]-->
-                        <table
-                          align="center"
-                          border="0"
-                          cellpadding="0"
-                          cellspacing="0"
-                          role="presentation"
-                          style="float:none;display:inline-table;"
-                        >
-                          <tbody>
-                            <tr>
-                              <td style="padding:0 10px;">
-                                <table
-                                  border="0"
-                                  cellpadding="0"
-                                  cellspacing="0"
-                                  role="presentation"
-                                  style="border-radius:0;width:30px;"
-                                >
-                                  <tbody>
-                                    <tr>
-                                      <td style="font-size:0;height:30px;vertical-align:middle;width:30px;">
-                                        <a href="" target="_blank"
-                                          ><img
-                                            height="30"
-                                            src="https://app.getresponse.com/images/common/templates/messages/v2/social/facebook4.png"
-                                            style="border-radius:0;display:block;"
-                                            width="30"
-                                        /></a>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <!--[if mso | IE]></td><td><![endif]-->
-                        <table
-                          align="center"
-                          border="0"
-                          cellpadding="0"
-                          cellspacing="0"
-                          role="presentation"
-                          style="float:none;display:inline-table;"
-                        >
-                          <tbody>
-                            <tr>
-                              <td style="padding:0 10px;">
-                                <table
-                                  border="0"
-                                  cellpadding="0"
-                                  cellspacing="0"
-                                  role="presentation"
-                                  style="border-radius:0;width:30px;"
-                                >
-                                  <tbody>
-                                    <tr>
-                                      <td style="font-size:0;height:30px;vertical-align:middle;width:30px;">
-                                        <a href="" target="_blank"
-                                          ><img
-                                            height="30"
-                                            src="https://app.getresponse.com/images/common/templates/messages/v2/social/youtube4.png"
-                                            style="border-radius:0;display:block;"
-                                            width="30"
-                                        /></a>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <!--[if mso | IE]></td><td><![endif]-->
-                        <table
-                          align="center"
-                          border="0"
-                          cellpadding="0"
-                          cellspacing="0"
-                          role="presentation"
-                          style="float:none;display:inline-table;"
-                        >
-                          <tbody>
-                            <tr>
-                              <td style="padding:0 10px;">
-                                <table
-                                  border="0"
-                                  cellpadding="0"
-                                  cellspacing="0"
-                                  role="presentation"
-                                  style="border-radius:0;width:30px;"
-                                >
-                                  <tbody>
-                                    <tr>
-                                      <td style="font-size:0;height:30px;vertical-align:middle;width:30px;">
-                                        <a href="" target="_blank"
-                                          ><img
-                                            height="30"
-                                            src="https://app.getresponse.com/images/common/templates/messages/v2/social/linkedin4.png"
-                                            style="border-radius:0;display:block;"
-                                            width="30"
-                                        /></a>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <!--[if mso | IE]></td></tr></table><![endif]-->
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:0px;word-break:break-word;">
-                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td height="20" style="vertical-align:top;height:20px;"><![endif]-->
-                        <div style="height:20px;">&nbsp;</div>
-                        <!--[if mso | IE]></td></tr></table><![endif]-->
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        align="center"
-                        class="gr-footer-xgabce gr-footer-wabdho"
-                        style="font-size:0px;padding:0;word-break:break-word;"
-                      >
-                        <div
-                          style="font-family:Sen, Arial, sans-serif;font-size:10px;font-style:normal;line-height:1;text-align:center;text-decoration:none;color:#B3B3B3;"
-                        >
-                          <div>
-                            Calle Chihuahua #46, 10710, Ciudad de México, MX<br /><br />You may
-                            <a href="mailto:contacto@conectimed.com">unsubscribe</a>
-                            or
-                            <a href="mailto:contacto@conectimed.com">change your contact details</a>
-                            at any time.
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="font-size:0px;word-break:break-word;">
-                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td height="20" style="vertical-align:top;height:20px;"><![endif]-->
-                        <div style="height:20px;">&nbsp;</div>
-                        <!--[if mso | IE]></td></tr></table><![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </body>
-  </html>
-  `;
+          </table>
+        </div>
+      </body>
+
+      </html>`;
 
     // -------- Construcción de payload --------
     const baseData = {
