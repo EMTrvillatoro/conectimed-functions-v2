@@ -735,6 +735,7 @@ async function sendSMS(body) {
       type: "transactional",
       sender: body.sender ?? "ConectiMED",
       recipient: body.recipient,
+      "unicodeEnabled": true,
       content: body.content,
     };
 
