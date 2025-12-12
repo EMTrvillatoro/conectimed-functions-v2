@@ -13,6 +13,7 @@ const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
 const { sendMailHandler } = require('./assets/js/utils/sendMail');
 const { sendSmsHandler } = require('./assets/js/utils/sendSms');
+const { updateSearchArrayCallable } = require('./assets/js/user/updateSearch');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
@@ -101,6 +102,9 @@ exports.sendMail = onCall(runtimeOpts, async (data, context) => await sendMailHa
 
 /* DESC: SEND SMS | AUTHOR: Rolando | TYPE: CALLABLE */
 exports.sendSms = onCall(runtimeOpts, async (data, context) => await sendSmsHandler(data, context));
+
+/* DESC: UPDATE SEARCH ARRAY | AUTHOR: Rolando | TYPE: CALLABLE */
+exports.updateSearchArray = onCall(runtimeOpts, async (data, context) => await updateSearchArrayCallable(data, context));
 
 /* functions ON WRITE */
 
