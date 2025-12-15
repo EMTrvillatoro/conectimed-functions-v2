@@ -15,6 +15,8 @@ const databaseName = defineSecret('CONFIGFB_DATABASE_NAME');
 const mailingURL = defineSecret('MAILING_URL');
 const mailingAPIKey = defineSecret('MAILING_API_KEY');
 const smsURL = defineSecret('SMS_URL');
+const smsUser = defineSecret('SMS_USER');
+const smsToken = defineSecret('SMS_TOKEN');
 const configAppURL = defineSecret('CONFIGAPP_URL');
 const configAppIcon = defineSecret('CONFIGAPP_ICON');
 const cloudMessagingURL = defineSecret('CLOUD_MESSAGING_URL');
@@ -946,28 +948,30 @@ async function sendEmail(body) {
 
 async function sendSMS(body) {
   try {
-    // ---- Construcción del objeto SMS ----
+    // ---- Construcción del objeto SMS (LabsMobile) ----
     const smsObj = {
-      type: "transactional",
-      sender: body.sender ?? "ConectiMED",
-      recipient: body.recipient,
-      "unicodeEnabled": true,
-      content: body.content,
+      message: body.content,
+      unicode: 1,
+      tpoa: body.sender ?? "ConectiMED",
+      recipient: [
+        { msisdn: body.recipient }
+      ]
     };
 
-    if (body.tag) smsObj.tag = body.tag;
-    if (body.webUrl) smsObj.webUrl = body.webUrl;
+    // ---- Configuración LabsMobile ----
+    const url = smsURL.value();     // https://api.labsmobile.com/json/send
+    const user = smsUser.value();   // usuario / email
+    const token = smsToken.value(); // token API
 
-    // ---- Configuración del request ----
-    const url = smsURL.value();
-    const apiKey = mailingAPIKey.value();
+    // ---- Basic Auth ----
+    const auth = Buffer.from(`${user}:${token}`).toString("base64");
 
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "api-key": apiKey,
+        Authorization: `Basic ${auth}`,
       },
       body: JSON.stringify(smsObj),
     });
@@ -980,15 +984,15 @@ async function sendSMS(body) {
     }
 
     // ---- Respuesta JSON de la API ----
+    const result = await response.json();
     console.log("SMS sent successfully to:", body.recipient);
-    return await response.json();
+    return { ...result, recipient: body.recipient,company:'LabsMobile' };
 
   } catch (error) {
     console.error("sendSMS error:", error);
     throw error;
   }
 }
-
 
 async function sendRequest(url, headers, method, data) {
   return await axios({

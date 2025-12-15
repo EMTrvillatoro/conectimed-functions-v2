@@ -36,13 +36,6 @@ async function sendSmsHandler(request) {
     );
   }
 
-  if (body.recipient.length !== 12) {
-    throw new HttpsError(
-      "invalid-argument",
-      "El campo 'recipient' debe tener exactamente 12 caracteres (incluyendo código país)."
-    );
-  }
-
   try {
     await sendSMS(body);
 
