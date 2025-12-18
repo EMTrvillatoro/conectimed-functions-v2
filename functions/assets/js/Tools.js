@@ -11,9 +11,10 @@ const CERT = defineSecret('CONFIGFB_ADMIN_CREDENTIAL_CERT');
 const clientEmail = defineSecret('CONFIGFB_CLIENT_EMAIL');
 const storageBucket = defineSecret('CONFIGFB_STORAGE_BUCKET');
 const databaseName = defineSecret('CONFIGFB_DATABASE_NAME');
-
+// Email: ZeptoMail
 const mailingURL = defineSecret('MAILING_URL');
-const mailingAPIKey = defineSecret('MAILING_API_KEY');
+const mailingAToken = defineSecret('MAILING_TOKEN');
+
 const smsURL = defineSecret('SMS_URL');
 const smsUser = defineSecret('SMS_USER');
 const smsToken = defineSecret('SMS_TOKEN');
@@ -23,6 +24,7 @@ const cloudMessagingURL = defineSecret('CLOUD_MESSAGING_URL');
 
 const axios = require('axios');
 const { google } = require('googleapis');
+const { SendMailClient } = require("zeptomail");
 const specialities = require('../data/specialities.json');
 
 // Rate limit en memoria
@@ -845,103 +847,85 @@ async function sendEmail(body) {
       </body>
 
       </html>`;
+    // -------- Configuración ZeptoMail --------
+    const url = mailingURL.value(); // Ej: https://api.zeptomail.com/v1.1/email
+    const token = mailingAToken.value();
+    // Debe venir así: "Zoho-enczapikey XXXXX"
 
-    // -------- Construcción de payload --------
-    const baseData = {
-      to: [
-        {
-          email: body.recipient,
-          name: body.name ?? null,
-        },
-      ],
-      replyTo: { email: "no-reply@conectimed.com" },
-    };
+    const client = new SendMailClient({ url, token });
 
-    const senderInfo = body.sender
+    // -------- FROM --------
+    const from = body.sender
       ? {
+        address: body.sender.email,
         name: body.sender.name,
-        email: body.sender.email,
       }
       : {
+        address: "notificaciones@conectimed.com",
         name: "CONECTIMED",
-        email: "notificaciones@conectimed.com.mx",
       };
 
-    let sendData1 = {
-      ...baseData,
-      subject: body.subject,
-      htmlContent: html,
-      sender: senderInfo,
-    };
-
-    let sendData2 = {
-      ...baseData,
-      sender: senderInfo,
-    };
-
-    if (body.cc) {
-      sendData1.cc = body.cc;
-      sendData2.cc = body.cc;
-    }
-
-    if (body.bcc) {
-      const bccObj = [{ email: body.bcc }];
-      sendData1.bcc = bccObj;
-      sendData2.bcc = bccObj;
-    }
-
-    if (body.attach) {
-      const arrayAtt = [];
-      if (body.attach.url) {
-        arrayAtt.push({ url: body.attach.url });
-      } else if (body.attach.content) {
-        arrayAtt.push({ content: body.attach.content });
-      }
-      sendData1.attachment = arrayAtt;
-      sendData2.attachment = arrayAtt;
-    }
-
-    let payload;
-    if (body.templateId) {
-      sendData2.templateId = body.templateId;
-
-      if (body.params) sendData2.params = body.params;
-
-      sendData2.headers = {
-        "X-Mailin-custom":
-          "custom_header_1:custom_value_1|custom_header_2:custom_value_2|custom_header_3:custom_value_3",
-        charset: "iso-8859-1",
-      };
-
-      payload = sendData2;
-    } else {
-      payload = sendData1;
-    }
-
-    // -------- Request config --------
-    const url = mailingURL.value();
-    const apiKey = mailingAPIKey.value();
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "api-key": apiKey,
-        "Content-Type": "application/json",
-        Accept: "application/json",
+    // -------- TO --------
+    const to = [
+      {
+        email_address: {
+          address: body.recipient,
+          name: body.name ?? "",
+        },
       },
-      body: JSON.stringify(payload),
-    });
+    ];
 
-    // -------- Manejo de errores --------
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Email service error:", errorText);
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    // -------- Payload base --------
+    const mailData = {
+      from,
+      to,
+      subject: body.subject,
+      htmlbody: html,
+    };
+
+    // -------- CC --------
+    if (body.cc) {
+      mailData.cc = body.cc.map((email) => ({
+        email_address: { address: email },
+      }));
     }
-    console.log("Email sent successfully to:", body.recipient);
-    return await response.json();
+
+    // -------- BCC --------
+    if (body.bcc) {
+      mailData.bcc = [
+        {
+          email_address: { address: body.bcc },
+        },
+      ];
+    }
+
+    // -------- Reply-To --------
+    mailData.reply_to = [
+      {
+        address: "no-reply@conectimed.com",
+      },
+    ];
+
+    // -------- Attachments --------
+    if (body.attach) {
+      mailData.attachments = [];
+
+      if (body.attach.content) {
+        mailData.attachments.push({
+          content: body.attach.content, // Base64
+          name: body.attach.name || "attachment",
+          mime_type: body.attach.mimeType || "application/pdf",
+        });
+      }
+    }
+
+    // -------- Envío --------
+    const response = await client.sendMail(mailData);
+
+    console.log("Email enviado(ZeptoMail) correctamente a:", body.recipient);
+    return response;
   } catch (error) {
-    console.error("sendEmail error:", error);
+    console.error("sendEmail ZeptoMail error:", error);
     throw error;
   }
 }
@@ -952,7 +936,7 @@ async function sendSMS(body) {
     const smsObj = {
       message: body.content,
       unicode: 1,
-      tpoa: body.sender ?? "ConectiMED",
+      tpoa: body.sender ?? "Conectimed",
       recipient: [
         { msisdn: body.recipient }
       ]
@@ -986,7 +970,7 @@ async function sendSMS(body) {
     // ---- Respuesta JSON de la API ----
     const result = await response.json();
     console.log("SMS sent successfully to:", body.recipient);
-    return { ...result, recipient: body.recipient,company:'LabsMobile' };
+    return { ...result, recipient: body.recipient, company: 'LabsMobile' };
 
   } catch (error) {
     console.error("sendSMS error:", error);
