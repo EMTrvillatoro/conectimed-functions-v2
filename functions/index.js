@@ -2,7 +2,7 @@ const { onRequest, onCall } = require("firebase-functions/v2/https");
 const { onSchedule } = require('firebase-functions/v2/scheduler');
 const { onDocumentWritten, onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require("firebase-functions/v2/firestore");
 // files
-const { runtimeOpts } = require('./assets/js/Tools');
+const { runtimeOpts, sendEmail } = require('./assets/js/Tools');
 const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./assets/js/stripe/stripe');
 const { infoDBFHandler } = require('./assets/js/experimental/experimental');
 const { getValidatedUsersHandler, getAllAuthUsersHandler } = require('./assets/js/members/createusers');
@@ -156,3 +156,26 @@ exports.zohoExportScheduled = onSchedule({
 
 
 /** ONLY TEST */
+
+exports.senmails = onRequest(runtimeOpts, async (req, res) => {
+
+    res.set("Access-Control-Allow-Origin", "*");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Content-Type", "application/json");
+
+    if (req.method === "OPTIONS") {
+        return res.status(204).send("");
+    }
+
+    if (req.method !== "POST") {
+        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
+    }
+
+    try {
+        const body = req.body;
+        const response = await sendEmail(body);
+        return res.status(200).json({ status: "success", ...response });
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});

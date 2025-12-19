@@ -294,641 +294,74 @@ async function asyncForEach(array, callback) {
   }
 }
 
+function escapeHtmlToString(html) {
+  return html
+    .replace(/\\/g, '\\')   // Backslash
+    .replace(/"/g, '\"')     // Comillas dobles
+    .replace(/\r?\n/g, '\n') // Saltos de línea
+    .replace(/\t/g, '\t');   // Tabs
+}
+
 async function sendEmail(body) {
   try {
-    const html = `
-      <!doctype html>
-      <html lang="en" dir="auto" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
-        xmlns:o="urn:schemas-microsoft-com:office:office">
-
-      <head>
-        <title></title><!--[if !mso]><!-->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <style type="text/css">
-          #outlook a {
-            padding: 0;
-          }
-
-          body {
-            margin: 0;
-            padding: 0;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-          }
-
-          table,
-          td {
-            border-collapse: collapse;
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
-          }
-
-          img {
-            border: 0;
-            height: auto;
-            line-height: 100%;
-            outline: none;
-            text-decoration: none;
-            -ms-interpolation-mode: bicubic;
-          }
-
-          p {
-            display: block;
-            margin: 13px 0;
-          }
-        </style><!--[if mso]>
-          <noscript>
-          <xml>
-          <o:OfficeDocumentSettings>
-            <o:AllowPNG/>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-          </o:OfficeDocumentSettings>
-          </xml>
-          </noscript>
-          <![endif]--><!--[if lte mso 11]>
-          <style type="text/css">
-            .mj-outlook-group-fix { width:100% !important; }
-          </style>
-          <![endif]-->
-        <style type="text/css">
-          @media only screen and (min-width:480px) {
-            .mj-column-per-100 {
-              width: 100% !important;
-              max-width: 100%;
-            }
-          }
-        </style>
-        <style media="screen and (min-width:480px)">
-          .moz-text-html .mj-column-per-100 {
-            width: 100% !important;
-            max-width: 100%;
-          }
-        </style>
-        <style type="text/css">
-          @media only screen and (max-width:479px) {
-            table.mj-full-width-mobile {
-              width: 100% !important;
-            }
-
-            td.mj-full-width-mobile {
-              width: auto !important;
-            }
-          }
-        </style>
-        <style type="text/css">
-          @media (max-width: 479px) {
-            .hide-on-mobile {
-              display: none !important;
-            }
-          }
-
-          @media (min-width: 480px) {
-            .hide-on-desktop {
-              display: none !important;
-            }
-          }
-
-          .gr-mlimage-uqksdq img {
-            box-sizing: border-box;
-          }
-
-          @media (min-width: 480px) {
-            .gr-mlimage-wuerel {
-              height: 110px !important;
-            }
-          }
-
-          .gr-mltext-lkvlpf a,
-          .gr-mltext-lkvlpf a:visited {
-            text-decoration: none;
-          }
-
-          .gr-mlimage-uqksdq img {
-            box-sizing: border-box;
-          }
-
-          @media (min-width: 480px) {
-            .gr-mlimage-mlxxho {
-              height: 356px !important;
-            }
-          }
-
-          .gr-mltext-kibvpg a,
-          .gr-mltext-kibvpg a:visited {
-            text-decoration: none;
-          }
-
-          .gr-mltext-jqcjhq a,
-          .gr-mltext-jqcjhq a:visited {
-            text-decoration: none;
-          }
-
-          .gr-mltext-fyaero a,
-          .gr-mltext-fyaero a:visited {
-            text-decoration: none;
-          }
-
-          .gr-mltext-wwisfv a,
-          .gr-mltext-wwisfv a:visited {
-            text-decoration: none;
-          }
-
-          .gr-footer-njpwok a,
-          .gr-footer-njpwok a:visited {
-            color: #000000;
-            text-decoration: underline;
-          }
-        </style>
-        <link
-          href="https://fonts.googleapis.com/css?display=swap&family=Roboto:400,400i,700,700i|Open Sans:400,400i,700,700i&subset=cyrillic,greek,latin-ext,vietnamese"
-          rel="stylesheet" type="text/css">
-        <style type="text/css">
-          @import url(https://fonts.googleapis.com/css?display=swap&family=Roboto:400,400i,700,700i|Open Sans:400,400i,700,700i&subset=cyrillic,greek,latin-ext,vietnamese);
-        </style>
-      </head>
-
-      <body style="word-spacing:normal;background-color:#F6F6F6;">
-        <div class="elem-body" style="background-color:#F6F6F6;" lang="en" dir="auto">
-          <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-          <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
-              style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
-              <tbody>
-                <tr>
-                  <td
-                    style="border-bottom:0 none #E3E3E3;border-left:1px solid #E3E3E3;border-right:1px solid #E3E3E3;border-top:1px solid #E3E3E3;direction:ltr;font-size:0px;padding:0 32px;text-align:center;">
-                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:534px;" ><![endif]-->
-                    <div class="mj-column-per-100 mj-outlook-group-fix"
-                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                        <tbody>
-                          <tr>
-                            <td
-                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
-                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                <tbody>
-                                  <tr>
-                                    <td style="font-size:0px;word-break:break-word;">
-                                      <div style="height:20px;line-height:20px;">&#8202;</div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td align="center" class="gr-mlimage-uqksdq gr-mlimage-wuerel"
-                                      style="font-size:0px;padding:0;word-break:break-word;">
-                                      <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                        style="border-collapse:collapse;border-spacing:0px;">
-                                        <tbody>
-                                          <tr>
-                                            <td style="width:122px;"><img alt=""
-                                                src="https://us-ms.gr-cdn.com/getresponse-yGxOr/photos/2fb30ebb-8942-4e92-bf23-e24ed9228ae9.png"
-                                                style="border:0;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;border-bottom:0 none #000000;border-radius:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
-                                                width="122" height="auto"></td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-lkvlpf"
-                                      style="font-size:0px;padding:0;word-break:break-word;">
-                                      <div
-                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.2;text-align:left;color:#000000;">
-                                        <div style="text-align: center">
-                                          <p
-                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
-                                            <span style="color: #4F4F4F"><strong><span style="font-size: 18px"><span
-                                                    style="font-family: Roboto, Arial, sans-serif">Plataforma de Educación
-                                                    Médica Contínua</span></span></strong></span></p>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td align="center" style="font-size:0px;padding:10px;word-break:break-word;">
-                                      <p style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:100%;"></p><!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:514px;" role="presentation" width="514px" ><tr><td style="height:0;line-height:0;"> &nbsp;
-      </td></tr></table><![endif]-->
-                                    </td>
-                                  </tr>                          
-                                  ${body.text}
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-          <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
-              style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
-              <tbody>
-                <tr>
-                  <td
-                    style="border-bottom:1px solid #E3E3E3;border-left:1px solid #E3E3E3;border-right:1px solid #E3E3E3;border-top:0 none #E3E3E3;direction:ltr;font-size:0px;padding:0 32px;text-align:center;">
-                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:534px;" ><![endif]-->
-                    <div class="mj-column-per-100 mj-outlook-group-fix"
-                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                        <tbody>
-                          <tr>
-                            <td
-                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
-                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                <tbody>
-                                  <tr>
-                                    <td align="center" style="font-size:0px;padding:24px;word-break:break-word;">
-                                      <p style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:80%;"></p><!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:388.8px;" role="presentation" width="388.8px" ><tr><td style="height:0;line-height:0;"> &nbsp;
-      </td></tr></table><![endif]-->
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-jqcjhq"
-                                      style="font-size:0px;padding:0;word-break:break-word;">
-                                      <div
-                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:2;text-align:left;color:#000000;">
-                                        <div style="text-align: center">
-                                          <p
-                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
-                                            <span style="color: #777777"><span style="font-size: 13px"><span
-                                                  style="font-family: Open Sans, Arial, sans-serif">&nbsp;Si tiene alguna
-                                                  pregunta o necesita asistencia adicional, no dude en comunicarse con nuestro
-                                                  equipo de soporte, siempre listo para ayudarle</span></span></span></p>
-                                        </div>
-                                        <div style="text-align: center">
-                                          <p
-                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
-                                            <span style="font-size: 13px"><span
-                                                style="font-family: Open Sans, Arial, sans-serif"><span
-                                                  style="color: #777777">Escribanos a </span><span
-                                                  style="color: #2D88DA">contacto@conectimed.com </span><span
-                                                  style="color: #777777">donde con gusto le atenderemos.</span></span></span>
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td style="font-size:0px;word-break:break-word;">
-                                      <div style="height:24px;line-height:24px;">&#8202;</div>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#828282" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-          <div style="background:#828282;background-color:#828282;margin:0px auto;max-width:600px;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
-              style="background:#828282;background-color:#828282;width:100%;">
-              <tbody>
-                <tr>
-                  <td
-                    style="border-bottom:0 none #000000;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;direction:ltr;font-size:0px;padding:5px;text-align:center;">
-                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:590px;" ><![endif]-->
-                    <div class="mj-column-per-100 mj-outlook-group-fix"
-                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                        <tbody>
-                          <tr>
-                            <td
-                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
-                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                <tbody>
-                                  <tr>
-                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-fyaero"
-                                      style="font-size:0px;padding:10px;word-break:break-word;">
-                                      <div
-                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;">
-                                        <div style="text-align: center">
-                                          <p
-                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
-                                            <span style="color: #F2F2F2">Síganos en nuestras redes sociales</span></p>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td align="center" style="font-size:0px;padding:5px;word-break:break-word;">
-                                      <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td><![endif]-->
-                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                        style="float:none;display:inline-table;">
-                                        <tbody>
-                                          <tr class="link-id-8c0c8c6943f7">
-                                            <td style="padding:0 10px;vertical-align:middle;">
-                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                                style="border-radius:0;width:30px;">
-                                                <tbody>
-                                                  <tr>
-                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
-                                                        href="https://www.facebook.com/conectimed/" target="_blank"><img
-                                                          alt="Visit our Facebook page" height="30"
-                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/facebook7.png"
-                                                          style="border-radius:0;display:block;" width="30"></a></td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table><!--[if mso | IE]></td><td><![endif]-->
-                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                        style="float:none;display:inline-table;">
-                                        <tbody>
-                                          <tr class="link-id-c418bf71afd1">
-                                            <td style="padding:0 10px;vertical-align:middle;">
-                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                                style="border-radius:0;width:30px;">
-                                                <tbody>
-                                                  <tr>
-                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
-                                                        href="https://www.instagram.com/conectimedapp/" target="_blank"><img
-                                                          alt="Visit our Instagram page" height="30"
-                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/instagram7.png"
-                                                          style="border-radius:0;display:block;" width="30"></a></td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table><!--[if mso | IE]></td><td><![endif]-->
-                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                        style="float:none;display:inline-table;">
-                                        <tbody>
-                                          <tr class="link-id-c29c1d26ba0b">
-                                            <td style="padding:0 10px;vertical-align:middle;">
-                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                                style="border-radius:0;width:30px;">
-                                                <tbody>
-                                                  <tr>
-                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
-                                                        href="https://mx.linkedin.com/company/conectimed" target="_blank"><img
-                                                          alt="Visit our LinkedIn page" height="30"
-                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/linkedin7.png"
-                                                          style="border-radius:0;display:block;" width="30"></a></td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table><!--[if mso | IE]></td><td><![endif]-->
-                                      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                        style="float:none;display:inline-table;">
-                                        <tbody>
-                                          <tr class="link-id-b83ae4f6d399">
-                                            <td style="padding:0 10px;vertical-align:middle;">
-                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                                style="border-radius:0;width:30px;">
-                                                <tbody>
-                                                  <tr>
-                                                    <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"><a
-                                                        href="https://www.youtube.com/channel/UClVk1dBhD3Y59ddCPGA_ejg"
-                                                        target="_blank"><img alt="Visit our YouTube page" height="30"
-                                                          src="https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/youtube7.png"
-                                                          style="border-radius:0;display:block;" width="30"></a></td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table><!--[if mso | IE]></td></tr></table><![endif]-->
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-          <div style="margin:0px auto;max-width:600px;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-              <tbody>
-                <tr>
-                  <td
-                    style="border-bottom:0 none #000000;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;direction:ltr;font-size:0px;padding:0;text-align:center;">
-                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
-                    <div class="mj-column-per-100 mj-outlook-group-fix"
-                      style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                        <tbody>
-                          <tr>
-                            <td
-                              style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
-                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                <tbody>
-                                  <tr>
-                                    <td align="left" class="gr-mltext-aqlhqu gr-mltext-wwisfv"
-                                      style="font-size:0px;padding:0 40px 10px 40px;word-break:break-word;">
-                                      <div
-                                        style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;">
-                                        <div style="text-align: center">
-                                          <p
-                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
-                                          </p>
-                                        </div>
-                                        <div style="text-align: center">
-                                          <p
-                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
-                                            <span style="font-size: 9px"><span style="font-family: Arial, sans-serif">Usted
-                                                recibió este mail por ser suscriptor de </span></span><a
-                                              href="http://conectimed.com" style="text-decoration: none; color: inherit;"
-                                              target="_blank" class="link-id-3dc39d1329d1"><span
-                                                style="color: #00baff"><span><span style="font-size: 9px"><span
-                                                      style="font-family: Arial, sans-serif"><u>Conectimed.</u></span></span></span></span></a>
-                                          </p>
-                                        </div>
-                                        <div style="text-align: center">
-                                          <p
-                                            style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
-                                            <span style="font-size: 9px"><span style="font-family: Arial, sans-serif">Consulte
-                                                nuestro </span></span><a href="https://conectimed.com/privacy-policy/"
-                                              style="text-decoration: none; color: inherit;" target="_blank"
-                                              class="link-id-8b2370f3cc12"><span style="color: #00baff"><span><span
-                                                    style="font-size: 9px"><span
-                                                      style="font-family: Arial, sans-serif"><u>Aviso de
-                                                        privacidad</u></span></span></span></span></a></p>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div><!--[if mso | IE]></td></tr></table><![endif]-->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div><!--[if mso | IE]></td></tr></table><![endif]-->
-          <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-            <tbody>
-              <tr>
-                <td>
-                  <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-                  <div style="margin:0px auto;max-width:600px;">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                      <tbody>
-                        <tr>
-                          <td
-                            style="border-bottom:0 none #000000;border-left:0 none #000000;border-right:0 none #000000;border-top:0 none #000000;direction:ltr;font-size:0px;padding:5px;text-align:center;">
-                            <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:590px;" ><![endif]-->
-                            <div class="mj-column-per-100 mj-outlook-group-fix"
-                              style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                <tbody>
-                                  <tr>
-                                    <td
-                                      style="background-color:transparent;border-bottom:none;border-left:none;border-right:none;border-top:none;vertical-align:top;padding:0;">
-                                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                        <tbody>
-                                          <tr>
-                                            <td align="center" class="gr-footer-orxywg gr-footer-njpwok"
-                                              style="font-size:0px;padding:10px 40px;word-break:break-word;">
-                                              <div
-                                                style="font-family:Open Sans, Arial, sans-serif;font-size:10px;font-style:normal;line-height:1;text-align:center;text-decoration:none;color:#777777;">
-                                                <div>Calle Chihuahua #46, 10710, Ciudad de México, MX<br><br>You may <a
-                                                    href="mailto:contacto@conectimed.com"
-                                                    target="_blank">unsubscribe</a> or <a
-                                                    href="mailto:contacto@conectimed.com"
-                                                    target="_blank">change your contact details</a> at any time.</div>
-                                              </div>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div><!--[if mso | IE]></td></tr></table><![endif]-->
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div><!--[if mso | IE]></td></tr></table><![endif]-->
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <table align="center"
-            style="font-family: 'Roboto', Helvetica, sans-serif; font-weight: 400; letter-spacing: .018em; text-align: center; font-size: 10px;">
-            <tr>
-              <td style="padding-bottom: 20px"></td>
-            </tr>
-          </table>
-        </div>
-      </body>
-
-      </html>`;
     // -------- Configuración ZeptoMail --------
-    const url = mailingURL.value(); // Ej: https://api.zeptomail.com/v1.1/email
+    const url = mailingURL.value();
     const token = mailingAToken.value();
-    // Debe venir así: "Zoho-enczapikey XXXXX"
 
-    const client = new SendMailClient({ url, token });
+    const _text = escapeHtmlToString(body.text);
 
-    // -------- FROM --------
-    const from = body.sender
-      ? {
-        address: body.sender.email,
-        name: body.sender.name,
-      }
-      : {
-        address: "notificaciones@conectimed.com",
-        name: "CONECTIMED",
-      };
 
-    // -------- TO --------
-    const to = [
-      {
-        email_address: {
-          address: body.recipient,
-          name: body.name ?? "",
-        },
+    const html1 = "<div class=\"elem-body\" style=\"background-color:#F6F6F6;\" lang=\"en\" dir=\"auto\"><div style=\"background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #FFFFFF; background-color: #FFFFFF; width: 100%;\" width=\"100%\" bgcolor=\"#FFFFFF\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #E3E3E3; border-left: 1px solid #E3E3E3; border-right: 1px solid #E3E3E3; border-top: 1px solid #E3E3E3; direction: ltr; font-size: 0px; padding: 0 32px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; word-break: break-word;\"><div style=\"height:20px;line-height:20px;\">&hairsp;<br></div></td></tr><tr><td align=\"center\" class=\"gr-mlimage-jfxauj gr-mlimage-itvddn\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 0; word-break: break-word;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; border-spacing: 0px;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 94px;\" width=\"94\"><img alt=\"\" src=\"https://us-ms.gr-cdn.com/getresponse-yGxOr/photos/2fb30ebb-8942-4e92-bf23-e24ed9228ae9.png\" style=\"line-height: 100%; -ms-interpolation-mode: bicubic; box-sizing: border-box; border: 0; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; border-bottom: 0 none #000000; border-radius: 0; display: block; outline: none; text-decoration: none; height: auto; width: 100%; font-size: 13px;\" width=\"94\" height=\"auto\"></td></tr></tbody></table></td></tr><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; word-break: break-word;\"><div style=\"height:10px;line-height:10px;\">&hairsp;<br></div></td></tr><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-dtmpwx\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 0; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.2;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(79, 79, 79)\"><b><span class=\"size\" style=\"font-size:16px\"><span class=\"font\" style=\"font-family:Roboto, Arial, sans-serif\">Plataforma de Educación Médica Contínua</span></span></b></span><br></span></span></span></p></div></div></td></tr><tr><td align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px; word-break: break-word;\"><p style=\"display: block; border-top: 2px solid rgb(119, 119, 119); margin: 0px auto; width: 100%;\"><span class=\"size\" style=\"font-size: 1px; display: block; border-top: 2px solid rgb(119, 119, 119); margin: 0px auto; width: 100%;\"><br></span></p></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div></div>";
+    const html2 = "</td></tr></tbody></table></div></div><div style=\"background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #FFFFFF; background-color: #FFFFFF; width: 100%;\" width=\"100%\" bgcolor=\"#FFFFFF\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 1px solid #E3E3E3; border-left: 1px solid #E3E3E3; border-right: 1px solid #E3E3E3; border-top: 0 none #E3E3E3; direction: ltr; font-size: 0px; padding: 0 32px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px; word-break: break-word;\"><p style=\"display: block; border-top: 2px solid rgb(119, 119, 119); margin: 0px auto; width: 80%;\"></p></td></tr><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-giguff\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 0; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:2;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(119, 119, 119)\"><span class=\"size\" style=\"font-size:13px\"><span class=\"font\" style=\"font-family:\" open=\"\" sans\",=\"\" arial,=\"\" sans-serif\"=\"\">Si tiene alguna pregunta o necesita asistencia adicional, no dude en comunicarse con nuestro equipo de soporte, siempre listo para ayudarle.</span></span></span><br></span></span></span></p></div><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"size\" style=\"font-size:13px\"><span class=\"font\" style=\"font-family:\" open=\"\" sans\",=\"\" arial,=\"\" sans-serif\"=\"\"><span class=\"colour\" style=\"color:rgb(45, 136, 218)\">contacto@conectimed.com </span><span class=\"colour\" style=\"color:rgb(119, 119, 119)\">donde con gusto le atenderemos.</span></span></span><br></span></span></span></p></div></div></td></tr><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; word-break: break-word;\"><div style=\"height:24px;line-height:24px;\">&hairsp;<br></div></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div><div style=\"background:#828282;background-color:#828282;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #828282; background-color: #828282; width: 100%;\" width=\"100%\" bgcolor=\"#828282\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #000000; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; direction: ltr; font-size: 0px; padding: 5px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-wsdrfi\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(242, 242, 242)\">Síganos en nuestras redes sociales</span><br></span></span></span></p></div></div></td></tr><tr><td align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 5px; word-break: break-word;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-8c0c8c6943f7\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://www.facebook.com/conectimed/\" target=\"_blank\"><img alt=\"Visit our Facebook page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/facebook7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-c418bf71afd1\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://www.instagram.com/conectimedapp/\" target=\"_blank\"><img alt=\"Visit our Instagram page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/instagram7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-c29c1d26ba0b\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://mx.linkedin.com/company/conectimed\" target=\"_blank\"><img alt=\"Visit our LinkedIn page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/linkedin7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-b83ae4f6d399\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://www.youtube.com/channel/UClVk1dBhD3Y59ddCPGA_ejg\" target=\"_blank\"><img alt=\"Visit our YouTube page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/youtube7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div><div style=\"margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #000000; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; direction: ltr; font-size: 0px; padding: 0; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-pqfkci\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 0 40px 10px 40px; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><br></span></span></span></p></div><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\">Usted recibió este mail por ser suscriptor de </span></span><a href=\"http://conectimed.com\" style=\"text-decoration: none; color: inherit;\" target=\"_blank\" class=\"link-id-3dc39d1329d1\"><span class=\"colour\" style=\"color:rgb(0, 186, 255)\"><span><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\"><u>Conectimed.</u></span></span></span></span></a><br></span></span></span></p></div><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\">Consulte nuestro </span></span><a href=\"https://conectimed.com/privacy-policy/\" style=\"text-decoration: none; color: inherit;\" target=\"_blank\" class=\"link-id-8b2370f3cc12\"><span class=\"colour\" style=\"color:rgb(0, 186, 255)\"><span><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\"><u>Aviso de privacidad</u></span></span></span></span></a><br></span></span></span></p></div></div></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><div style=\"margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #000000; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; direction: ltr; font-size: 0px; padding: 5px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"center\" class=\"gr-footer-nhdnla gr-footer-swgtwg\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px 40px; word-break: break-word;\"><div style=\"font-family:Open Sans, Arial, sans-serif;font-size:10px;font-style:normal;line-height:1;text-align:center;text-decoration:none;color:#777777;\"><div>Calle Chihuahua #46, 10710, Ciudad de México, MX <br> <br> You may <a href=\"https://app.getresponse.com/unsubscribe.html?x=a62b&amp;co=E&amp;m=E&amp;mc=JG&amp;u=yGxOr&amp;z=EV52ylE&amp;\" target=\"_blank\" style=\"color: #000000; text-decoration: underline;\">unsubscribe</a> or <a href=\"https://app.getresponse.com/change_details.html?x=a62b&amp;co=E&amp;m=E&amp;u=yGxOr&amp;z=ESOp9AA&amp;\" target=\"_blank\" style=\"color: #000000; text-decoration: underline;\">change your contact details</a> at any time.</div></div></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div></td></tr></tbody></table><table align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: 'Roboto', Helvetica, sans-serif; font-weight: 400; letter-spacing: .018em; text-align: center; font-size: 10px;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding-bottom: 20px;\"><br></td></tr></tbody></table></div>"
+
+    const _html = html1 +_text+ html2;
+
+    const dataMail = {
+      from: {
+        address: "no-reply@conectimed.com",
+        name: "Conectimed"
       },
-    ];
-
-    // -------- Payload base --------
-    const mailData = {
-      from,
-      to,
-      subject: body.subject,
-      htmlbody: html,
+      to: [
+        {
+          email_address: {
+            address: body.recipient,
+            name: body && body.name ? body.name : "Usuario Conectimed"
+          }
+        }
+      ],
+      subject: body && body.subject ? body.subject : "Contacto de Conectimed",
+      htmlbody: _html
     };
 
-    // -------- CC --------
-    if (body.cc) {
-      mailData.cc = body.cc.map((email) => ({
-        email_address: { address: email },
-      }));
-    }
-
-    // -------- BCC --------
-    if (body.bcc) {
-      mailData.bcc = [
-        {
-          email_address: { address: body.bcc },
-        },
-      ];
-    }
-
-    // -------- Reply-To --------
-    mailData.reply_to = [
-      {
-        address: "no-reply@conectimed.com",
-      },
-    ];
-
-    // -------- Attachments --------
-    if (body.attach) {
-      mailData.attachments = [];
-
-      if (body.attach.content) {
-        mailData.attachments.push({
-          content: body.attach.content, // Base64
-          name: body.attach.name || "attachment",
-          mime_type: body.attach.mimeType || "application/pdf",
-        });
-      }
-    }
 
     // -------- Envío --------
-    const response = await client.sendMail(mailData);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dataMail)
+    });
 
-    console.log("Email enviado(ZeptoMail) correctamente a:", body.recipient);
-    return response;
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error("Error ZeptoMail:", result);
+      throw new Error(
+        `ZeptoMail error (${response.status}): ${JSON.stringify(result)}`
+      );
+    }
+
+    console.log("Email enviado (ZeptoMail) correctamente a:", body.recipient);
+    return { _html };
+
   } catch (error) {
     console.error("sendEmail ZeptoMail error:", error);
     throw error;
   }
 }
+
 
 async function sendSMS(body) {
   try {
@@ -1528,5 +961,6 @@ module.exports = {
   isRateLimited,
   filterMetaData,
   normalizeMxMobile,
+  escapeHtmlToString,
   runtimeOpts // <-- export runtimeOpts
 };
