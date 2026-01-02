@@ -402,7 +402,7 @@ async function sendSMS(body) {
 
     // ---- Respuesta JSON de la API ----
     const result = await response.json();
-    console.log("SMS sent successfully to:", body.recipient);
+    console.log(`SMS sent successfully to: ${body.recipient}  Account: ${user}`);
     return { ...result, recipient: body.recipient, company: 'LabsMobile' };
 
   } catch (error) {
