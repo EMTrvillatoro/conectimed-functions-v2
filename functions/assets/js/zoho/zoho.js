@@ -22,29 +22,9 @@ async function processUsersToZohoHandler() {
     let userBatch = [];
 
     // ============================================================
-    // 1. OBTENER EL ÚLTIMO PIVOTE (si existe)
+    // 1. PIVOTE READING REMOVED
+    // Logic removed to ensure pending users are pulled from the top of the queue.
     // ============================================================
-    const pivotQuery = await db
-        .collection("validated-user-data-pivot")
-        .orderBy("createdAt", "desc")
-        .limit(1)
-        .get();
-
-    let startAfterSnapshot = null;
-
-    if (!pivotQuery.empty) {
-        const pivotDoc = pivotQuery.docs[0];
-        const pivotId = pivotDoc.get("pivot");
-
-        if (pivotId) {
-            const pivotRef = db.doc(`validated-user-data/${pivotId}`);
-            const pivotSnap = await pivotRef.get();
-
-            if (pivotSnap.exists) {
-                startAfterSnapshot = pivotSnap;
-            }
-        }
-    }
 
     // ============================================================
     // 2. ARMAR QUERY BASE
@@ -56,9 +36,7 @@ async function processUsersToZohoHandler() {
         .orderBy("dateOfCreation", "asc")
         .limit(batchSize);
 
-    if (startAfterSnapshot) {
-        query = query.startAfter(startAfterSnapshot);
-    }
+
 
     // ============================================================
     // 3. EJECUTAR CONSULTA
@@ -184,15 +162,7 @@ async function processUsersToZohoHandler() {
         status: "pending"
     });
 
-    // ============================================================
-    // 8. ACTUALIZAR EL PIVOTE ANTERIOR A "complete"
-    // ============================================================
-    if (!pivotQuery.empty) {
-        const previousPivotRef = pivotQuery.docs[0].ref;
-        await previousPivotRef.update({
-            status: "complete"
-        });
-    }
+
 
     return {
         status: "success",
