@@ -56,40 +56,7 @@ async function processUsersToZohoHandler() {
     // 4. PROCESAR DOCUMENTOS
     // ============================================================
     const users = snapshot.docs.map((e) => {
-        const ID = e.id;
-        const DATA = e.data() || {};
-
-        return {
-            // IDENTIDAD
-            "First_Name": String(capitalizeText(String(DATA.firstName || '') + " " + String(DATA.secondName || ''))).trim().slice(0, 40),
-            "Last_Name": String(capitalizeText(String(DATA.lastName1 || '') + " " + String(DATA.lastName2 || ''))).trim() || "-",
-            "Email": DATA && DATA.email ? String(DATA.email).trim().toLocaleLowerCase() : '',
-            "Mobile": DATA && DATA.mobile ? normalizeMxMobile(String(DATA.mobile).trim()) : '',
-            "ID_Usuario": ID,
-            // UBICACIÓN / DIRECCIÓN
-            "Mailing_Street": String((DATA && DATA.address1 && DATA.address1.street ? String(capitalizeText(DATA.address1.street)).trim() : '') + ' ' + (DATA && DATA.address1 && DATA.address1.outsideNumber ? String(capitalizeText(DATA.address1.outsideNumber)).trim() : '')).trim(),
-            "Mailing_City": (DATA && DATA.address1 && DATA.address1.city ? String(capitalizeText(DATA.address1.city)).trim() : ''),
-            "Mailing_State": (DATA && DATA.address1 && DATA.address1.state ? String(capitalizeText(DATA.address1.state)).trim() : ''),
-            "Mailing_Zip": (DATA && DATA.address1 && DATA.address1.postalCode ? String(capitalizeText(DATA.address1.postalCode)).trim() : ''),
-            "Mailing_Country": "Mexico",
-            // PROFESIÓN / DATOS MÉDICOS
-            "Tipo_de_usuario": DATA && DATA.metaType ? String(DATA.metaType).trim() : '',
-            "Especialidad": (DATA && DATA.specialty1 && DATA.specialty1.specialtyName ? String(capitalizeText(DATA.specialty1.specialtyName)).trim() : ''),
-            "reas_de_inter_s": DATA && DATA.personalInterests ? Array.from(DATA.personalInterests) : [],
-            "Tipo_de_profesional_OPS": DATA && DATA.metaType === 'Otros profesionales de la salud' ? (DATA && DATA.whyIsNotMedic ? String(DATA.whyIsNotMedic).trim() : '') : '',
-            "C_dula_profesional": DATA && DATA.cedula ? String(DATA.cedula).trim() : '',
-            "C_dula_profesional_especialidad": (DATA && DATA.specialty1 && DATA.specialty1.cedula ? String(capitalizeText(DATA.specialty1.cedula)).trim() : ''),
-            "Tiempo_restante_para_titulaci_n": DATA && DATA.estimatedGraduationTime ? String(DATA.estimatedGraduationTime).trim() : '',
-            // VALIDACIONES ACADÉMICAS / DOCUMENTACIÓN
-            "URL_documento_validador_academico": DATA && DATA.verificationFileUrl ? String(DATA.verificationFileUrl).trim() : '',
-            "Verificado_para_distribuci_n": "verdadero",
-            // REGISTRO / ORIGEN
-            "Medio_de_Registro": "Conectimed",
-            "Tipo_de_Contacto": "Plataformas",
-            "Fecha_de_registro": DATA && DATA.dateOfCreation ? new Date(DATA.dateOfCreation.toDate()).toISOString().split('T')[0] : '',
-            // METADATA / OTROS
-            "Description": DATA && DATA.notes ? String(DATA.notes).trim() : ''
-        };
+        return formatUserForZoho(e.id, e.data() || {});
     });
 
     // ============================================================
@@ -316,9 +283,151 @@ async function setZohoStatusForAllUsers(action) {
     console.log(`Batch completado: todos los usuarios marcados como ${statusValue}.`);
 }
 
+
+/**
+ * 
+ * @param { import('express').Request } req 
+ * @param { import('express').Response } res 
+ * @returns 
+ */
+async function _onRequest_single(req, res) {
+    res.header('Content-Type', 'application/json');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
+    }
+
+    if (req && req.method === 'GET') {
+        const id = req.query.id; // Expect 'id' in query params
+        if (!id) {
+            return res.status(400).json({ status: 'Error', message: 'Missing "id" parameter.' });
+        }
+
+        try {
+            const resp = await processSingleUserToZohoHandler(id);
+            return res.status(200).json({ status: 'Success', data: resp, message: 'Exportación individual completada' });
+        } catch (error) {
+            console.error("Error en exportación individual:", error);
+            return res.status(500).json({ status: 'Error', message: error.message });
+        }
+
+    } else {
+        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
+    }
+}
+
+async function processSingleUserToZohoHandler(userId) {
+    const admin = getFBAdminInstance();
+    const db = admin.firestore();
+
+    // 1. Fetch User Data
+    const docRef = db.doc(`validated-user-data/${userId}`);
+    const docSnap = await docRef.get();
+
+    if (!docSnap.exists) {
+        throw new Error(`Usuario con ID ${userId} no encontrado.`);
+    }
+
+    // 2. Format User
+    const user = formatUserForZoho(docSnap.id, docSnap.data());
+    const users = [user]; // Put in array for reuse of saveToZoho
+
+    console.log("Procesando usuario individual:", userId);
+
+    // 3. Send to Zoho
+    let zohoResult = null;
+    let zohoError = null;
+    let zohoStatus = 'error';
+
+    try {
+        const data = await saveToZoho(users);
+
+        // Analyze response similar to batch process
+        if (data && data.details && data.details.output) {
+            const _DATA = typeof data.details.output === 'string' ? JSON.parse(data.details.output) : data.details.output;
+
+            if (_DATA && _DATA.registros && _DATA.registros.length > 0) {
+                const item = _DATA.registros[0];
+                if (item && item.status === 'error') {
+                    zohoStatus = 'error';
+                    zohoError = item.error;
+                } else {
+                    zohoStatus = 'complete';
+                    zohoResult = item;
+                }
+            }
+        } else {
+            // Fallback if structure is different
+            zohoError = { message: "Unexpected response from Zoho", data };
+        }
+
+    } catch (err) {
+        console.error("Error enviando a Zoho (Single):", err);
+        throw err;
+    }
+
+    // 4. Update Firestore Status
+    try {
+        let newData = { zoho_migration_status: zohoStatus };
+        if (zohoError) {
+            newData.error = zohoError;
+        }
+        await docRef.update(newData);
+        console.log(`Usuario ${userId} actualizado a status: ${zohoStatus}`);
+    } catch (error) {
+        console.error("Error actualizando status en Firestore:", error);
+        // We still return true/success regarding the process, but log the DB error
+    }
+
+    return {
+        id: userId,
+        status: zohoStatus,
+        zohoResponse: zohoResult,
+        error: zohoError
+    };
+}
+
+
+function formatUserForZoho(ID, DATA) {
+    return {
+        // IDENTIDAD
+        "First_Name": String(capitalizeText(String(DATA.firstName || '') + " " + String(DATA.secondName || ''))).trim().slice(0, 40),
+        "Last_Name": String(capitalizeText(String(DATA.lastName1 || '') + " " + String(DATA.lastName2 || ''))).trim() || "-",
+        "Email": DATA && DATA.email ? String(DATA.email).trim().toLocaleLowerCase() : '',
+        "Mobile": DATA && DATA.mobile ? normalizeMxMobile(String(DATA.mobile).trim()) : '',
+        "ID_Usuario": ID,
+        // UBICACIÓN / DIRECCIÓN
+        "Mailing_Street": String((DATA && DATA.address1 && DATA.address1.street ? String(capitalizeText(DATA.address1.street)).trim() : '') + ' ' + (DATA && DATA.address1 && DATA.address1.outsideNumber ? String(capitalizeText(DATA.address1.outsideNumber)).trim() : '')).trim(),
+        "Mailing_City": (DATA && DATA.address1 && DATA.address1.city ? String(capitalizeText(DATA.address1.city)).trim() : ''),
+        "Mailing_State": (DATA && DATA.address1 && DATA.address1.state ? String(capitalizeText(DATA.address1.state)).trim() : ''),
+        "Mailing_Zip": (DATA && DATA.address1 && DATA.address1.postalCode ? String(capitalizeText(DATA.address1.postalCode)).trim() : ''),
+        "Mailing_Country": "Mexico",
+        // PROFESIÓN / DATOS MÉDICOS
+        "Tipo_de_usuario": DATA && DATA.metaType ? String(DATA.metaType).trim() : '',
+        "Especialidad": (DATA && DATA.specialty1 && DATA.specialty1.specialtyName ? String(capitalizeText(DATA.specialty1.specialtyName)).trim() : ''),
+        "reas_de_inter_s": DATA && DATA.personalInterests ? Array.from(DATA.personalInterests) : [],
+        "Tipo_de_profesional_OPS": DATA && DATA.metaType === 'Otros profesionales de la salud' ? (DATA && DATA.whyIsNotMedic ? String(DATA.whyIsNotMedic).trim() : '') : '',
+        "C_dula_profesional": DATA && DATA.cedula ? String(DATA.cedula).trim() : '',
+        "C_dula_profesional_especialidad": (DATA && DATA.specialty1 && DATA.specialty1.cedula ? String(capitalizeText(DATA.specialty1.cedula)).trim() : ''),
+        "Tiempo_restante_para_titulaci_n": DATA && DATA.estimatedGraduationTime ? String(DATA.estimatedGraduationTime).trim() : '',
+        // VALIDACIONES ACADÉMICAS / DOCUMENTACIÓN
+        "URL_documento_validador_academico": DATA && DATA.verificationFileUrl ? String(DATA.verificationFileUrl).trim() : '',
+        "Verificado_para_distribuci_n": "verdadero",
+        // REGISTRO / ORIGEN
+        "Medio_de_Registro": "Conectimed",
+        "Tipo_de_Contacto": "Plataformas",
+        "Fecha_de_registro": DATA && DATA.dateOfCreation ? new Date(DATA.dateOfCreation.toDate()).toISOString().split('T')[0] : '',
+        // METADATA / OTROS
+        "Description": DATA && DATA.notes ? String(DATA.notes).trim() : ''
+    };
+}
+
 module.exports = {
     _onRequest,
     _onRequest_setStatus,
     _onDocumentWritten,
-    _onSchedule
+    _onSchedule,
+    _onRequest_single
 };

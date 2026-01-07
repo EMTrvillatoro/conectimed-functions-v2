@@ -19,7 +19,7 @@ const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
 const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted, virtualSessionsAttendanceConfirmationCountFix/*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
-const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_setStatus } = require('./assets/js/zoho/zoho');
+const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_setStatus, _onRequest_single } = require('./assets/js/zoho/zoho');
 
 /* functions HTTP REQUEST */
 
@@ -91,6 +91,9 @@ exports.zohoExportRequest = onRequest(runtimeOpts, async (req, res) => await _on
 
 /* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.zohoExportmarkAllUsersPendingRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_setStatus(req, res));
+
+/* DESC: EXPORT SINGLE USER TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.zohoExportSingleRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_single(req, res));
 
 /* DESC: OBTAINING CONFIRMATION OF ATTENDANCE AT VIRTUAL SESSIONS | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));
