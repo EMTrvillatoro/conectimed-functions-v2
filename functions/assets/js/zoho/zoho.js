@@ -391,6 +391,50 @@ async function processSingleUserToZohoHandler(userId) {
 
 
 function formatUserForZoho(ID, DATA) {
+    const _metaType = DATA && DATA._metaType ? String(DATA._metaType).trim().toLocaleLowerCase() : '';
+
+    let Tipo_de_profesional_OPS = '';
+    let Especialidad = '';
+    let C_dula_profesional_especialidad = '';
+
+    switch (_metaType) {
+        case 'medico':
+            let sawIsSecondary = false;
+            for (let i = 2; i <= 5; i++) {
+                const sp = DATA && DATA[`specialty${i}`];
+                if (!sp) continue;
+                if (sp.isSecondary === true) {
+                    sawIsSecondary = true;
+                    const name = sp.specialtyName ? String(capitalizeText(sp.specialtyName)).trim() : '';
+                    const ced = sp.cedula ? String(sp.cedula).trim() : '';
+                    if (name !== '' && ced !== '') {
+                        Especialidad = name;
+                        C_dula_profesional_especialidad = ced;
+                        break;
+                    }
+                }
+            }
+            if (!Especialidad || !C_dula_profesional_especialidad) {
+                for (let i = 2; i <= 5; i++) {
+                    const sp = DATA && DATA[`specialty${i}`];
+                    if (!sp) continue;
+                    const name = sp.specialtyName ? String(capitalizeText(sp.specialtyName)).trim() : '';
+                    const ced = sp.cedula ? String(sp.cedula).trim() : '';
+                    if (name !== '' && ced !== '') {
+                        Especialidad = name;
+                        C_dula_profesional_especialidad = ced;
+                        break;
+                    }
+                }
+            }
+            break;
+        case 'medico-en-formacion':
+            break;
+        case 'profesional-de-la-salud':
+            Tipo_de_profesional_OPS = DATA && DATA.specialty1 && DATA && DATA.specialty1.specialtyName ? String(DATA.specialty1.specialtyName).trim() : '';
+            break;
+    }
+
     return {
         // IDENTIDAD
         "First_Name": String(capitalizeText(String(DATA.firstName || '') + " " + String(DATA.secondName || ''))).trim().slice(0, 40),
@@ -406,11 +450,11 @@ function formatUserForZoho(ID, DATA) {
         "Mailing_Country": "Mexico",
         // PROFESIÓN / DATOS MÉDICOS
         "Tipo_de_usuario": DATA && DATA.metaType ? String(DATA.metaType).trim() : '',
-        "Especialidad": (DATA && DATA.specialty1 && DATA.specialty1.specialtyName ? String(capitalizeText(DATA.specialty1.specialtyName)).trim() : ''),
         "reas_de_inter_s": DATA && DATA.personalInterests ? Array.from(DATA.personalInterests) : [],
-        "Tipo_de_profesional_OPS": DATA && DATA.metaType === 'Otros profesionales de la salud' ? (DATA && DATA.whyIsNotMedic ? String(DATA.whyIsNotMedic).trim() : '') : '',
-        "C_dula_profesional": DATA && DATA.cedula ? String(DATA.cedula).trim() : '',
-        "C_dula_profesional_especialidad": (DATA && DATA.specialty1 && DATA.specialty1.cedula ? String(capitalizeText(DATA.specialty1.cedula)).trim() : ''),
+        "C_dula_profesional": DATA && DATA.specialty1 && DATA && DATA.specialty1.cedula ? String(DATA.specialty1.cedula).trim() : '',
+        Especialidad,
+        Tipo_de_profesional_OPS,
+        C_dula_profesional_especialidad,
         "Tiempo_restante_para_titulaci_n": DATA && DATA.estimatedGraduationTime ? String(DATA.estimatedGraduationTime).trim() : '',
         // VALIDACIONES ACADÉMICAS / DOCUMENTACIÓN
         "URL_documento_validador_academico": DATA && DATA.verificationFileUrl ? String(DATA.verificationFileUrl).trim() : '',
@@ -418,7 +462,7 @@ function formatUserForZoho(ID, DATA) {
         // REGISTRO / ORIGEN
         "Medio_de_Registro": "Conectimed",
         "Tipo_de_Contacto": "Plataformas",
-        "Fecha_de_registro": DATA && DATA.dateOfCreation ? new Date(DATA.dateOfCreation.toDate()).toISOString().split('T')[0] : '',
+        "Fecha_de_registro": DATA && DATA.dateOfCreation ? new Date(DATA.dateOfCreation.toDate()).toISOString() : '',
         // METADATA / OTROS
         "Description": DATA && DATA.notes ? String(DATA.notes).trim() : ''
     };
