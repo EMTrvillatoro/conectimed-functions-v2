@@ -20,6 +20,10 @@ const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
 const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted, virtualSessionsAttendanceConfirmationCountFix/*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
 const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_setStatus, _onRequest_single } = require('./assets/js/zoho/zoho');
+const { chatTriggerHandler } = require('./assets/js/triggers/chats');
+const { readFileHandler } = require('./assets/js/chat/readFile');
+const { sectionsHandler } = require('./assets/js/chat/sections');
+const { chatBatchRequestHandler } = require('./assets/js/chat/chatBatch');
 
 /* functions HTTP REQUEST */
 
@@ -98,6 +102,9 @@ exports.zohoExportSingleRequest = onRequest(runtimeOpts, async (req, res) => awa
 /* DESC: OBTAINING CONFIRMATION OF ATTENDANCE AT VIRTUAL SESSIONS | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));
 
+/* DESC: INIT THE CHAT BATCH OPERATION | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.chatBatch = onRequest(runtimeOpts, async (req, res) => await chatBatchRequestHandler(req, res));
+
 /* functions CALLABLES */
 
 /* DESC: SEND MAIL | AUTHOR: Miguel | TYPE: CALLABLE */
@@ -145,6 +152,27 @@ exports.zohoExportPaginationTrigger = onDocumentWritten({
     timeoutSeconds: 540,
     document: "validated-user-data-pivot/{pivotId}"
 }, async (event) => await _onDocumentWritten(event));
+
+/* DESC: SEND MASIVE CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.onChatsWrite = onDocumentWritten({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "chats/{messageId}"
+}, async (event) => await chatTriggerHandler(event));
+
+/* DESC: READ FILE FOR MASIVE CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.onCreateChatBatch = onDocumentCreated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "chats-batch/{id}"
+}, async (event) => await readFileHandler(event));
+
+/* DESC: PAGINATION UPDATE SECTION IN MASIVE CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.onUpdateChatBatchItem = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "chats-batch/{id_batch}/sections/{id}"
+}, async (event) => await sectionsHandler(event));
 
 /* functions SCHEDULED */
 
