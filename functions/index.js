@@ -102,7 +102,7 @@ exports.zohoExportSingleRequest = onRequest(runtimeOpts, async (req, res) => awa
 /* DESC: OBTAINING CONFIRMATION OF ATTENDANCE AT VIRTUAL SESSIONS | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));
 
-/* DESC: INIT THE CHAT BATCH OPERATION | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+/* DESC: INIT THE #CHAT BATCH OPERATION | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.chatBatch = onRequest(runtimeOpts, async (req, res) => await chatBatchRequestHandler(req, res));
 
 /* functions CALLABLES */
@@ -153,21 +153,21 @@ exports.zohoExportPaginationTrigger = onDocumentWritten({
     document: "validated-user-data-pivot/{pivotId}"
 }, async (event) => await _onDocumentWritten(event));
 
-/* DESC: SEND MASIVE CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+/* DESC: SEND MASIVE #CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
 exports.onChatsWrite = onDocumentWritten({
     memory: "1GiB",
     timeoutSeconds: 540,
     document: "chats/{messageId}"
 }, async (event) => await chatTriggerHandler(event));
 
-/* DESC: READ FILE FOR MASIVE CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+/* DESC: READ FILE FOR MASIVE #CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
 exports.onCreateChatBatch = onDocumentCreated({
     memory: "1GiB",
     timeoutSeconds: 540,
     document: "chats-batch/{id}"
 }, async (event) => await readFileHandler(event));
 
-/* DESC: PAGINATION UPDATE SECTION IN MASIVE CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+/* DESC: PAGINATION UPDATE SECTION IN MASIVE #CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
 exports.onUpdateChatBatchItem = onDocumentUpdated({
     memory: "1GiB",
     timeoutSeconds: 540,

@@ -20,12 +20,12 @@ const db = admin.firestore();
 
 async function chatTriggerHandler(event) {
     try {
-        const document = event.after.exists ? event.after.data() : null;
-        const oldDocument = event.before.exists ? event.before.data() : null;
+        const document = event.data.after.exists ? event.data.after.data() : null;
+        const oldDocument = event.data.before.exists ? event.data.before.data() : null;
 
         if (!oldDocument) {
             console.log('new chat');
-            // await createActivity(document, event.after.id);
+            // await createActivity(document, event.data.after.id);
         } else if (!document) {
             console.log('chat deleted');
         } else if (oldDocument) {
@@ -35,7 +35,7 @@ async function chatTriggerHandler(event) {
                 !moment(document.last_message.date.toDate()).isSame(oldDocument.last_message.date.toDate())
             ) {
                 console.log('chat new message');
-                await createActivity(document, event.after.id);
+                await createActivity(document, event.data.after.id);
             }
         }
     } catch (error) {

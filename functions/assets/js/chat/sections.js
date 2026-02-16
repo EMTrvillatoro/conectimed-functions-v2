@@ -16,13 +16,13 @@ const db = admin.firestore();
  */
 
 async function sectionsHandler(event) {
-    if (event && event.after && event.after.get('status') === 'in_progress') {
+    if (event && event.data && event.data.after && event.data.after.get('status') === 'in_progress') {
         const message_request = await db.doc('chats-batch/' + event.params.id_batch).get();
         const message = message_request.data();
         const repid = message.repid;
         const messages = message.messages;
-        const _array = Array.from(event.after.get('data')) || [];
-        const next_page = event.after.get('next_page') || null;
+        const _array = Array.from(event.data.after.get('data')) || [];
+        const next_page = event.data.after.get('next_page') || null;
 
         for (let user_id of _array) {
             try {
@@ -33,7 +33,7 @@ async function sectionsHandler(event) {
         }
 
         try {
-            await event.after.ref.update({ status: 'complete' });
+            await event.data.after.ref.update({ status: 'complete' });
         } catch (error) {
             console.log(JSON.stringify(error));
         }
@@ -53,7 +53,7 @@ async function sectionsHandler(event) {
                 console.log(JSON.stringify(error));
             }
         }
-        console.log('====== CHAT BATCH PAGE: ' + event.after.id + ' ======');
+        console.log('====== CHAT BATCH PAGE: ' + event.data.after.id + ' ======');
         return true;
     } else {
         return false;

@@ -27,10 +27,10 @@ async function updateError(id) {
  * @returns {Promise<void>}
  */
 
-async function readFileHandler(event, context) {
-    const main_id = event.id;
+async function readFileHandler(event) {
+    const main_id = event.params.id
     try {
-        const route_file = event.get('fullPath');
+        const route_file = event.data.get('fullPath');
 
         const file = await bucket.file(route_file).get();
 
