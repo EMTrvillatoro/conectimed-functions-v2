@@ -18,26 +18,34 @@ const db = admin.firestore();
 
 async function sectionsHandler(event) {
     if (event && event.data && event.data.after && event.data.after.get('status') === 'in_progress') {
-        const message_request = await db.doc('chats-batch/' + event.params.id_batch).get();
-        const message = message_request.data();
-        const repid = message.repid;
-        const messages = message.messages;
-        const _array = Array.from(event.data.after.get('data')) || [];
-        const next_page = event.data.after.get('next_page') || null;
+        const sectionData = event.data.after.data();
+        let repid = sectionData.repid;
+        let messages = sectionData.messages;
+        let senderData = sectionData.senderData;
+        const _array = Array.from(sectionData.data) || [];
+        const next_page = sectionData.next_page || null;
 
-        // 1. Fetch Sender Data ONCE
-        let senderData = null;
-        try {
-            const senderDoc = await db.collection('users').doc(repid).get();
-            if (senderDoc.exists) {
-                senderData = senderDoc.data();
-                senderData.uid = senderDoc.id;
+        // Fallback if redundant data is missing (for older batches)
+        if (!repid || !messages || !senderData) {
+            const message_request = await db.doc('chats-batch/' + event.params.id_batch).get();
+            const message = message_request.data();
+            repid = repid || message.repid;
+            messages = messages || message.messages;
+
+            if (!senderData) {
+                try {
+                    const senderDoc = await db.collection('users').doc(repid).get();
+                    if (senderDoc.exists) {
+                        senderData = senderDoc.data();
+                        senderData.uid = senderDoc.id;
+                    }
+                } catch (e) {
+                    console.error('Error fetching sender data:', e);
+                }
             }
-        } catch (e) {
-            console.error('Error fetching sender data:', e);
         }
 
-        // 2. Process users in chunks to batch "existence checks"
+        // 1. Process users in chunks to batch "existence checks"
         // We need to check existence for 5 users at a time (5 * 2 = 10 identifiers, limit of 'in' query)
         const CHUNK_SIZE = 5;
         const userChunks = [];
@@ -57,34 +65,72 @@ async function sectionsHandler(event) {
                 userMap[userId] = [id1, id2];
             });
 
-            // Batch check
+            // Batch check chats existence
             let foundChatsMap = {}; // userId -> chatDoc
+            let usersToFetch = []; // UIDs of users whose data we need (chat missing or missing members)
+
             try {
                 const querySnapshot = await checkExistingChats(identifiersToCheck);
+                const foundIdentifiers = new Set();
+
                 if (!querySnapshot.empty) {
                     querySnapshot.docs.forEach(doc => {
                         const data = doc.data();
                         const identifier = data.identifier;
+                        foundIdentifiers.add(identifier);
+
                         // Find which user this identifier belongs to
-                        // We can't easily map back from identifier to user without parsing, 
-                        // but we know our map: userMap[userId] has the identifiers.
                         for (const userId of chunk) {
                             if (userMap[userId].includes(identifier)) {
                                 foundChatsMap[userId] = doc;
+                                // If chat exists but missing members, we'll still want to fetch user data to fix it
+                                if (!data.members || data.members.length < 2) {
+                                    usersToFetch.push(userId);
+                                }
                                 break;
                             }
                         }
                     });
                 }
+
+                // Any user in chunk that didn't have a chat found also needs fetching
+                chunk.forEach(userId => {
+                    const [id1, id2] = userMap[userId];
+                    if (!foundIdentifiers.has(id1) && !foundIdentifiers.has(id2)) {
+                        usersToFetch.push(userId);
+                    }
+                });
+
             } catch (e) {
                 console.error('Error batch checking chats:', e);
+                // Fallback: try to fetch all in chunk if query failed
+                usersToFetch = chunk;
             }
 
-            // Create/Send for each user in chunk
+            // 2. Fetch ONLY necessary receiver data in BATCH
+            let receiversMap = {};
+            if (usersToFetch.length > 0) {
+                try {
+                    const userRefs = usersToFetch.map(uid => db.collection('users').doc(String(uid)));
+                    const userDocs = await db.getAll(...userRefs);
+                    userDocs.forEach(doc => {
+                        if (doc.exists) {
+                            const data = doc.data();
+                            data.uid = doc.id;
+                            receiversMap[doc.id] = data;
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error fetching necessary receiver data:', e);
+                }
+            }
+
+            // 3. Create/Send for each user in chunk
             for (let user_id of chunk) {
                 try {
                     const existingDoc = foundChatsMap[user_id];
-                    await createChatHandler(user_id, messages, repid, senderData, existingDoc);
+                    const receiverData = receiversMap[user_id] || null;
+                    await createChatHandler(user_id, messages, repid, senderData, existingDoc, receiverData);
                 } catch (error) {
                     console.log(JSON.stringify(error));
                 }

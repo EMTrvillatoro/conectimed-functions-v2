@@ -69,12 +69,7 @@ async function createActivity(document, object_id) {
 
 
     if (document.participants) {
-        const array = document.participants.filter((item, index) => {
-            if (item !== document.last_message.user) {
-                return item[index];
-            }
-            return null;
-        });
+        const array = document.participants.filter(item => item !== String(document.last_message.user));
 
         otherUserId = array[0];
 
@@ -92,37 +87,41 @@ async function createActivity(document, object_id) {
         }
 
         // create activity for thisUser
-        const actividad = {
-            date: document.last_message.date,
-            title: `Usted le ha enviado un mensaje a ${otherUser.name} ${otherUser.lastName1 ? otherUser.lastName1 : ''}${otherUser.lastName2 ? ' ' + otherUser.lastName2 : ''
-                }`,
-            user_id: document.last_message.user,
-            other_id: otherUserId,
-            viewed: false,
-            type: 'chat',
-            object_id
-        };
+        if (otherUser) {
+            const actividad = {
+                date: document.last_message.date,
+                title: `Usted le ha enviado un mensaje a ${otherUser.name || ''} ${otherUser.lastName1 ? otherUser.lastName1 : ''}${otherUser.lastName2 ? ' ' + otherUser.lastName2 : ''
+                    }`,
+                user_id: document.last_message.user,
+                other_id: otherUserId,
+                viewed: false,
+                type: 'chat',
+                object_id
+            };
 
-        await db.collection('activity').add(actividad);
+            await db.collection('activity').add(actividad);
+        }
 
-        const message = `${thisUser.name} ${thisUser.lastName1 ? thisUser.lastName1 : ''}${thisUser.lastName2 ? ' ' + thisUser.lastName2 : ''
-            } le ha enviado un mensaje`;
+        const message = thisUser ? `${thisUser.name || ''} ${thisUser.lastName1 ? thisUser.lastName1 : ''}${thisUser.lastName2 ? ' ' + thisUser.lastName2 : ''
+            } le ha enviado un mensaje` : 'Le han enviado un mensaje';
 
         // create activity for otherUser
-        const actividad2 = {
-            date: document.last_message.date,
-            title: message,
-            user_id: otherUserId,
-            other_id: document.last_message.user,
-            viewed: false,
-            type: 'chat',
-            object_id
-        };
+        if (otherUserId) {
+            const actividad2 = {
+                date: document.last_message.date,
+                title: message,
+                user_id: otherUserId,
+                other_id: document.last_message.user,
+                viewed: false,
+                type: 'chat',
+                object_id
+            };
 
-        await db.collection('activity').add(actividad2);
+            await db.collection('activity').add(actividad2);
+        }
 
         // send notification to otherUser
-        if (otherUser.deviceMobileToken) {
+        if (otherUser && otherUser.deviceMobileToken) {
             await sendNotificationHandler(
                 otherUser.deviceMobileToken,
                 'Nuevo mensaje',
@@ -135,7 +134,7 @@ async function createActivity(document, object_id) {
             );
         }
 
-        if (otherUser.deviceWebToken) {
+        if (otherUser && otherUser.deviceWebToken) {
             await sendNotificationHandler(
                 otherUser.deviceWebToken,
                 'Nuevo mensaje',

@@ -33,11 +33,11 @@ async function chatBatchRequestHandler(request, response) {
     }
 }
 
-async function createChatHandler(userId, messages, repid, senderData, existingChatDoc) {
-    return await createChat(userId, messages, repid, senderData, existingChatDoc);
+async function createChatHandler(userId, messages, repid, senderData, existingChatDoc, receiverData) {
+    return await createChat(userId, messages, repid, senderData, existingChatDoc, receiverData);
 };
 
-async function createChat(userId, messages, maskedID, senderData, existingChatDoc) {
+async function createChat(userId, messages, maskedID, senderData, existingChatDoc, receiverData) {
     const myID = maskedID ? maskedID : undefined;
     const ids = [String(myID) + String(userId), String(userId) + String(myID)];
 
@@ -65,19 +65,15 @@ async function createChat(userId, messages, maskedID, senderData, existingChatDo
         const existingChatDoc = response.docs[0];
         const existingChatData = existingChatDoc.data();
 
-        messages.forEach(element => {
-            sendChatMessage(
-                existingChatDoc.id,
-                element.message,
-                element.convert,
-                element.isFile,
-                element.url,
-                myID,
-                element.sendMail,
-                element.label,
-                existingChatData // Pass existing data
-            );
-        });
+        // Optimized: Send multiple messages with a single parent document update
+        await sendChatMessagesBatch(
+            existingChatDoc.id,
+            messages,
+            myID,
+            existingChatData,
+            member1,
+            receiverData
+        );
     } else {
         const viewers = {};
         viewers[myID] = {
@@ -89,7 +85,10 @@ async function createChat(userId, messages, maskedID, senderData, existingChatDo
             news: 0
         };
 
-        const member2 = await getUserData(userId);
+        let member2 = receiverData;
+        if (!member2) {
+            member2 = await getUserData(userId);
+        }
 
         // If we still don't have member1 (sender) or member2 (receiver), we might have issues, but assuming they exist.
 
@@ -112,20 +111,15 @@ async function createChat(userId, messages, maskedID, senderData, existingChatDo
         };
         const newChat = await createNewChat(data);
 
-        // Use the data we just created
-        messages.forEach(element => {
-            sendChatMessage(
-                newChat.id,
-                element.message,
-                element.convert,
-                element.isFile,
-                element.url,
-                myID,
-                element.sendMail,
-                element.label,
-                data // Pass the new chat data
-            );
-        });
+        // Optimized: Send multiple messages with a single parent document update
+        await sendChatMessagesBatch(
+            newChat.id,
+            messages,
+            myID,
+            data,
+            member1,
+            member2
+        );
     }
 }
 
@@ -173,6 +167,129 @@ async function getUserData(uid) {
 
 async function createNewChat(data) {
     return db.collection('chats').add(data);
+}
+
+async function sendChatMessagesBatch(chatId, messages, user, chatData, member1, member2) {
+    if (!messages || !Array.isArray(messages) || messages.length === 0) return;
+
+    try {
+        const participants = Array.from(chatData.members || []).map(item => String(item.uid));
+        // If members are missing, rebuild participants from member1/member2
+        if (participants.length === 0 && member1 && member2) {
+            if (member1.uid) participants.push(String(member1.uid));
+            if (member2.uid) participants.push(String(member2.uid));
+        }
+
+        const viewers =
+            chatData && chatData.last_message && chatData.last_message.viewers ? chatData.last_message.viewers : {};
+        let ArrayViewers = Object.keys(viewers);
+
+        // If viewers are missing, initialize them
+        if (ArrayViewers.length === 0 && member1 && member2) {
+            viewers[String(member1.uid)] = { news: 0, seen: true };
+            viewers[String(member2.uid)] = { news: 0, seen: false };
+            ArrayViewers = Object.keys(viewers);
+        }
+
+        let otherUser;
+        const totalNewMessages = messages.length;
+        const newViewers = {};
+
+        ArrayViewers.forEach(item => {
+            let data = viewers[item];
+            if (String(item) === String(user ? user : undefined)) {
+                data = {
+                    news: 0,
+                    seen: true
+                };
+            } else {
+                const news = (Number(data.news) || 0) + totalNewMessages;
+                data = {
+                    news,
+                    seen: false
+                };
+                otherUser = item;
+            }
+            newViewers[item] = data;
+        });
+
+        const CURRENT_DATE = moment().toDate();
+        let last_message_payload = null;
+
+        for (let i = 0; i < messages.length; i++) {
+            const element = messages[i];
+            let messageText = element.message || '';
+            if (element.convert === true) {
+                messageText = urlify(messageText, true);
+            }
+
+            const isLast = i === messages.length - 1;
+            if (isLast) {
+                last_message_payload = {
+                    date: CURRENT_DATE,
+                    message: messageText,
+                    user: String(user ? user : undefined),
+                    receiver: otherUser,
+                    viewers: newViewers,
+                    sendMail: element.sendMail ? element.sendMail : false
+                };
+            }
+
+            let dataMessage = {
+                date: moment().toDate(),
+                message: messageText,
+                isFile: element.isFile ? element.isFile : false,
+                url: element.url ? element.url : '',
+                sender: String(user ? user : undefined)
+            };
+
+            if (element.label !== undefined && element.label !== null && element.label !== '') {
+                let myParticipants = Array.from(participants);
+                const index = myParticipants.indexOf(String(user ? user : undefined));
+                const userID = myParticipants[0];
+                if (index > -1) {
+                    myParticipants.splice(index, 1);
+                }
+                let docData = {
+                    chatID: chatId,
+                    label: element.label,
+                    sender: String(user ? user : undefined),
+                    to: userID,
+                    viewed: false,
+                    date: moment().toDate()
+                };
+                const resp = await db.collection('chat-metrics').add(docData);
+                dataMessage.chat_metric_doc_id = resp.id;
+                dataMessage.metric_label = element.label;
+            }
+
+            await db
+                .collection('chats')
+                .doc(chatId)
+                .collection('messages')
+                .add(dataMessage);
+        }
+
+        const updateData = {
+            initialized: true,
+            last_message_date: CURRENT_DATE,
+            last_message_user_id: String(user ? user : undefined),
+            last_message: last_message_payload,
+            participants
+        };
+
+        // Ensure members are in the document to avoid Read Ops in the chat trigger
+        if (!chatData.members || chatData.members.length < 2) {
+            if (member1 && member2) {
+                updateData.members = [member1, member2];
+            }
+        }
+
+        await db.collection('chats').doc(chatId).update(updateData);
+
+    } catch (error) {
+        console.error('Error in sendChatMessagesBatch:', error);
+    }
 }
 
 async function sendChatMessage(chatId, message, convert, isFile, url, user, sendMail, label, chatDataOpt) {
