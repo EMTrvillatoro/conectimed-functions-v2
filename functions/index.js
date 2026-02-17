@@ -25,6 +25,18 @@ const { readFileHandler } = require('./assets/js/chat/readFile');
 const { sectionsHandler } = require('./assets/js/chat/sections');
 const { chatBatchRequestHandler } = require('./assets/js/chat/chatBatch');
 
+/*
+firebase emulators:start --import exports
+firebase emulators:export exports
+*/
+
+/*
+firebase deploy --only functions:chatBatch
+firebase deploy --only functions:onChatsWrite
+firebase deploy --only functions:onCreateChatBatch
+firebase deploy --only functions:onUpdateChatBatchItem
+
+*/
 /* functions HTTP REQUEST */
 
 /* DESC: STRIPE | AUTHOR: Rolando | TYPE: HTTP REQUEST */

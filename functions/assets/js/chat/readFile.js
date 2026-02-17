@@ -29,6 +29,19 @@ async function updateError(id) {
 async function readFileHandler(event) {
     const main_id = event.params.id
     try {
+        const repid = event.data.get('repid');
+        const messages = event.data.get('messages');
+
+        // Fetch sender data once
+        let senderData = null;
+        if (repid) {
+            const senderDoc = await db.collection('users').doc(repid).get();
+            if (senderDoc.exists) {
+                senderData = senderDoc.data();
+                senderData.uid = senderDoc.id;
+            }
+        }
+
         const adminInstance = getFBAdminInstance();
         const bucket = adminInstance.storage().bucket();
         const route_file = event.data.get('fullPath');
@@ -75,7 +88,14 @@ async function readFileHandler(event) {
 
         for (let i = 1; i <= pagination.total_pages; i++) {
             const page = arrayPaginator(uids, i, size);
-            originalArray.push({ ref: db.doc('chats-batch/' + main_id + '/sections/' + page.page), data: page });
+            // Include redundant data to save reads in sectionsHandler
+            const sectionData = {
+                ...page,
+                repid: repid || null,
+                messages: messages || [],
+                senderData: senderData || null
+            };
+            originalArray.push({ ref: db.doc('chats-batch/' + main_id + '/sections/' + page.page), data: sectionData });
         }
 
         console.log("============ originalArray ============", originalArray);
