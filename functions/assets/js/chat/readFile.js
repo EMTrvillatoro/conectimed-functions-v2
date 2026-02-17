@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const { unique, arrayPaginator } = require('../Tools');
+const { unique, arrayPaginator, getFBAdminInstance } = require('../Tools');
 const XLSX = require('xlsx');
 
 if (!admin.apps.length) {
@@ -9,7 +9,6 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
-const bucket = admin.storage().bucket();
 
 async function updateError(id) {
     try {
@@ -30,6 +29,8 @@ async function updateError(id) {
 async function readFileHandler(event) {
     const main_id = event.params.id
     try {
+        const adminInstance = getFBAdminInstance();
+        const bucket = adminInstance.storage().bucket();
         const route_file = event.data.get('fullPath');
 
         const file = await bucket.file(route_file).get();

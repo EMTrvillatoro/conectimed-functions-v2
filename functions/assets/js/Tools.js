@@ -1,6 +1,17 @@
 const { defineSecret } = require('firebase-functions/params');
 const admin = require('firebase-admin');
 
+// Detectar si estamos en modo emulador
+const IS_EMULATOR = process.env.FUNCTIONS_EMULATOR === 'true';
+
+// Helper para obtener valores tanto de secrets como de env vars
+function getConfigValue(secret, envVarName) {
+  if (IS_EMULATOR) {
+    return process.env[envVarName] || '';
+  }
+  return secret.value();
+}
+
 const ctmCryptSecretKey = defineSecret('CTM_CRYPT_SECRET_KEY');
 const ctmCryptIvLength = defineSecret('CTM_CRYPT_IV_LENGTH');
 const minLength = 3;
@@ -34,13 +45,25 @@ const WINDOW_MS = 60 * 1000; // 60 segundos
 
 function getFBAdminInstance() {
   if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(CERT.value())),
-      databaseURL: databaseURL.value(),
-      serviceAccountId: clientEmail.value(),
-      storageBucket: storageBucket.value(),
-      projectId: databaseName.value()
-    });
+    const certValue = getConfigValue(CERT, 'CONFIGFB_ADMIN_CREDENTIAL_CERT');
+    const dbURL = getConfigValue(databaseURL, 'CONFIGFB_DATABASE_URL');
+    const clientEmailValue = getConfigValue(clientEmail, 'CONFIGFB_CLIENT_EMAIL');
+    const storageBucketValue = getConfigValue(storageBucket, 'CONFIGFB_STORAGE_BUCKET');
+    const databaseNameValue = getConfigValue(databaseName, 'CONFIGFB_DATABASE_NAME');
+
+    // En emulador, si no hay credenciales, usar configuración por defecto
+    if (IS_EMULATOR && !certValue) {
+      console.log('🔧 Emulator mode: Using default credentials');
+      admin.initializeApp();
+    } else {
+      admin.initializeApp({
+        credential: admin.credential.cert(JSON.parse(certValue)),
+        databaseURL: dbURL,
+        serviceAccountId: clientEmailValue,
+        storageBucket: storageBucketValue,
+        projectId: databaseNameValue
+      });
+    }
     const settings = { timestampsInSnapshots: true, ignoreUndefinedProperties: true };
     admin.firestore().settings(settings);
   }
@@ -50,7 +73,7 @@ function getFBAdminInstance() {
 function getAccessToken() {
   var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
   var SCOPES = [MESSAGING_SCOPE];
-  var key = JSON.parse(CERT.value());
+  var key = JSON.parse(getConfigValue(CERT, 'CONFIGFB_ADMIN_CREDENTIAL_CERT'));
   return new Promise((resolve, reject) => {
     const client_email = key.client_email;
     const private_key = String(key.private_key).replace(/\\n/g, '\n');
@@ -100,10 +123,11 @@ function xorWithKeyAndIv(data, key, iv) {
 
 function decryptBack(b64) {
   const packed = Buffer.from(b64, "base64");
-  const iv = packed.slice(0, ctmCryptIvLength.value());
-  const cipher = packed.slice(ctmCryptIvLength.value());
+  const ivLength = IS_EMULATOR ? parseInt(process.env.CTM_CRYPT_IV_LENGTH || '16') : ctmCryptIvLength.value();
+  const iv = packed.slice(0, ivLength);
+  const cipher = packed.slice(ivLength);
 
-  const keyBytes = utf8Encode(ctmCryptSecretKey.value());
+  const keyBytes = utf8Encode(getConfigValue(ctmCryptSecretKey, 'CTM_CRYPT_SECRET_KEY'));
   const plainBytes = xorWithKeyAndIv(cipher, keyBytes, iv);
 
   return utf8Decode(plainBytes);
@@ -305,8 +329,8 @@ function escapeHtmlToString(html) {
 async function sendEmail(body) {
   try {
     // -------- Configuración ZeptoMail --------
-    const url = mailingURL.value();
-    const token = mailingAToken.value();
+    const url = getConfigValue(mailingURL, 'MAILING_URL');
+    const token = getConfigValue(mailingAToken, 'MAILING_TOKEN');
 
     const _text = escapeHtmlToString(body.text);
 
@@ -314,7 +338,7 @@ async function sendEmail(body) {
     const html1 = "<div class=\"elem-body\" style=\"background-color:#F6F6F6;\" lang=\"en\" dir=\"auto\"><div style=\"background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #FFFFFF; background-color: #FFFFFF; width: 100%;\" width=\"100%\" bgcolor=\"#FFFFFF\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #E3E3E3; border-left: 1px solid #E3E3E3; border-right: 1px solid #E3E3E3; border-top: 1px solid #E3E3E3; direction: ltr; font-size: 0px; padding: 0 32px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; word-break: break-word;\"><div style=\"height:20px;line-height:20px;\">&hairsp;<br></div></td></tr><tr><td align=\"center\" class=\"gr-mlimage-jfxauj gr-mlimage-itvddn\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 0; word-break: break-word;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; border-spacing: 0px;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 94px;\" width=\"94\"><img alt=\"\" src=\"https://us-ms.gr-cdn.com/getresponse-yGxOr/photos/2fb30ebb-8942-4e92-bf23-e24ed9228ae9.png\" style=\"line-height: 100%; -ms-interpolation-mode: bicubic; box-sizing: border-box; border: 0; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; border-bottom: 0 none #000000; border-radius: 0; display: block; outline: none; text-decoration: none; height: auto; width: 100%; font-size: 13px;\" width=\"94\" height=\"auto\"></td></tr></tbody></table></td></tr><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; word-break: break-word;\"><div style=\"height:10px;line-height:10px;\">&hairsp;<br></div></td></tr><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-dtmpwx\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 14px; padding: 0; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.2;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(79, 79, 79)\"><b><span class=\"size\" style=\"font-size:16px\"><span class=\"font\" style=\"font-family:Roboto, Arial, sans-serif\">Plataforma de Educación Médica Contínua</span></span></b></span></span></span></span></p></div></div></td></tr><tr><td align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px; word-break: break-word;\"><p style=\"display: block; border-top: 2px solid rgb(119, 119, 119); margin: 0px auto; width: 100%;\"><span class=\"size\" style=\"font-size: 1px; display: block; border-top: 2px solid rgb(119, 119, 119); margin: 0px auto; width: 100%;\"><br></span></p></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div><div style=\"background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #FFFFFF; background-color: #FFFFFF; width: 100%;\" width=\"100%\" bgcolor=\"#FFFFFF\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;  border-left: 1px solid #E3E3E3; border-right: 1px solid #E3E3E3; border-top: 0 none #E3E3E3; direction: ltr; font-size: 0px; padding: 0 32px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\">";
     const html2 = "</div></td></tr></tbody></table></div><div style=\"background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #FFFFFF; background-color: #FFFFFF; width: 100%;\" width=\"100%\" bgcolor=\"#FFFFFF\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 1px solid #E3E3E3; border-left: 1px solid #E3E3E3; border-right: 1px solid #E3E3E3; border-top: 0 none #E3E3E3; direction: ltr; font-size: 0px; padding: 0 32px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px; word-break: break-word;\"><p style=\"display: block; border-top: 2px solid rgb(119, 119, 119); margin: 0px auto; width: 80%;\"></p></td></tr><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-giguff\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 0; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:2;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(119, 119, 119)\"><span class=\"size\" style=\"font-size:13px\"><span class=\"font\" style=\"font-family:\" open=\"\" sans\",=\"\" arial,=\"\" sans-serif\"=\"\">Si tiene alguna pregunta o necesita asistencia adicional, no dude en comunicarse con nuestro equipo de soporte, siempre listo para ayudarle.</span></span></span><br></span></span></span></p></div><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"size\" style=\"font-size:13px\"><span class=\"font\" style=\"font-family:\" open=\"\" sans\",=\"\" arial,=\"\" sans-serif\"=\"\"><span class=\"colour\" style=\"color:rgb(119, 119, 119)\">Escribanos a </span><span class=\"colour\" style=\"color:rgb(45, 136, 218)\">contacto@conectimed.com </span><span class=\"colour\" style=\"color:rgb(119, 119, 119)\">donde con gusto le atenderemos.</span></span></span><br></span></span></span></p></div></div></td></tr><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; word-break: break-word;\"><div style=\"height:24px;line-height:24px;\">&hairsp;<br></div></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div><div style=\"background:#828282;background-color:#828282;margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #828282; background-color: #828282; width: 100%;\" width=\"100%\" bgcolor=\"#828282\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #000000; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; direction: ltr; font-size: 0px; padding: 5px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-wsdrfi\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(242, 242, 242)\">Síganos en nuestras redes sociales</span><br></span></span></span></p></div></div></td></tr><tr><td align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 5px; word-break: break-word;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-8c0c8c6943f7\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://www.facebook.com/conectimed/\" target=\"_blank\"><img alt=\"Visit our Facebook page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/facebook7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-c418bf71afd1\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://www.instagram.com/conectimedapp/\" target=\"_blank\"><img alt=\"Visit our Instagram page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/instagram7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-c29c1d26ba0b\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://mx.linkedin.com/company/conectimed\" target=\"_blank\"><img alt=\"Visit our LinkedIn page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/linkedin7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; float: none; display: inline-table;\"><tbody><tr class=\"link-id-b83ae4f6d399\"><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding: 0 10px; vertical-align: middle;\" valign=\"middle\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; width: 30px;\" width=\"30\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0; height: 30px; vertical-align: middle; width: 30px;\" width=\"30\" height=\"30\" valign=\"middle\"><a href=\"https://www.youtube.com/channel/UClVk1dBhD3Y59ddCPGA_ejg\" target=\"_blank\"><img alt=\"Visit our YouTube page\" height=\"30\" src=\"https://us-as.gr-cdn.com/images/common/templates/messages/v2/social/youtube7.png\" style=\"border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border-radius: 0; display: block;\" width=\"30\"></a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div></td></tr></tbody></table></div><div style=\"margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #000000; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; direction: ltr; font-size: 0px; padding: 0; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"left\" class=\"gr-mltext-euhkjf gr-mltext-pqfkci\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 0 40px 10px 40px; word-break: break-word;\"><div style=\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.4;text-align:left;color:#000000;\"><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><br></span></span></span></p></div><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\">Usted recibió este mail por ser suscriptor de </span></span><a href=\"http://conectimed.com\" style=\"text-decoration: none; color: inherit;\" target=\"_blank\" class=\"link-id-3dc39d1329d1\"><span class=\"colour\" style=\"color:rgb(0, 186, 255)\"><span><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\"><u>Conectimed.</u></span></span></span></span></a><br></span></span></span></p></div><div style=\"text-align: center\"><p style=\"display: block; margin: 0px; font-weight: normal;\"><span class=\"colour\" style=\"color:rgb(0, 0, 0)\"><span class=\"font\" style=\"font-family:Arial\"><span class=\"size\" style=\"font-size: 14px; display: block; margin: 0px; font-weight: normal;\"><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\">Consulte nuestro </span></span><a href=\"https://conectimed.com/privacy-policy/\" style=\"text-decoration: none; color: inherit;\" target=\"_blank\" class=\"link-id-8b2370f3cc12\"><span class=\"colour\" style=\"color:rgb(0, 186, 255)\"><span><span class=\"size\" style=\"font-size:9px\"><span class=\"font\" style=\"font-family:Arial, sans-serif\"><u>Aviso de privacidad</u></span></span></span></span></a><br></span></span></span></p></div></div></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><div style=\"margin:0px auto;max-width:600px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-bottom: 0 none #000000; border-left: 0 none #000000; border-right: 0 none #000000; border-top: 0 none #000000; direction: ltr; font-size: 0px; padding: 5px; text-align: center;\" align=\"center\"><div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent; border-bottom: none; border-left: none; border-right: none; border-top: none; vertical-align: top; padding: 0;\" bgcolor=\"transparent\" valign=\"top\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;\"><tbody><tr><td align=\"center\" class=\"gr-footer-nhdnla gr-footer-swgtwg\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-size: 0px; padding: 10px 40px; word-break: break-word;\"><div style=\"font-family:Open Sans, Arial, sans-serif;font-size:10px;font-style:normal;line-height:1;text-align:center;text-decoration:none;color:#777777;\"><div>Calle Chihuahua #46, 10710, Ciudad de México, MX <br> <br> You may <a href=\"https://app.getresponse.com/unsubscribe.html?x=a62b&amp;co=E&amp;m=E&amp;mc=JG&amp;u=yGxOr&amp;z=EV52ylE&amp;\" target=\"_blank\" style=\"color: #000000; text-decoration: underline;\">unsubscribe</a> or <a href=\"https://app.getresponse.com/change_details.html?x=a62b&amp;co=E&amp;m=E&amp;u=yGxOr&amp;z=ESOp9AA&amp;\" target=\"_blank\" style=\"color: #000000; text-decoration: underline;\">change your contact details</a> at any time.</div></div></td></tr></tbody></table></td></tr></tbody></table></div></td></tr></tbody></table></div></td></tr></tbody></table><table align=\"center\" style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: 'Roboto', Helvetica, sans-serif; font-weight: 400; letter-spacing: .018em; text-align: center; font-size: 10px;\"><tbody><tr><td style=\"border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding-bottom: 20px;\"><br></td></tr></tbody></table></div>";
 
-    const _html = html1 +_text+ html2;
+    const _html = html1 + _text + html2;
 
     const dataMail = {
       from: {
@@ -376,9 +400,9 @@ async function sendSMS(body) {
     };
 
     // ---- Configuración LabsMobile ----
-    const url = smsURL.value();     // https://api.labsmobile.com/json/send
-    const user = smsUser.value();   // usuario / email
-    const token = smsToken.value(); // token API
+    const url = getConfigValue(smsURL, 'SMS_URL');     // https://api.labsmobile.com/json/send
+    const user = getConfigValue(smsUser, 'SMS_USER');   // usuario / email
+    const token = getConfigValue(smsToken, 'SMS_TOKEN'); // token API
 
     // ---- Basic Auth ----
     const auth = Buffer.from(`${user}:${token}`).toString("base64");
@@ -466,7 +490,7 @@ async function sendNotificationHandler(tokens, title, body, priority, type, data
   }
 
   const base64 = Buffer.from(data).toString('base64');
-  const LINK_WEB = configAppURL.value() + '/notifications/' + type + '/' + base64;
+  const LINK_WEB = getConfigValue(configAppURL, 'CONFIGAPP_URL') + '/notifications/' + type + '/' + base64;
 
   let payload = {
     message: {
@@ -474,7 +498,7 @@ async function sendNotificationHandler(tokens, title, body, priority, type, data
       notification: {
         title: title,
         body: body,
-        image: configAppIcon.value()
+        image: getConfigValue(configAppIcon, 'CONFIGAPP_ICON')
       },
       android: {
         notification: {
@@ -502,7 +526,7 @@ async function sendNotificationHandler(tokens, title, body, priority, type, data
       },
       apns: {
         fcm_options: {
-          image: configAppIcon.value(),
+          image: getConfigValue(configAppIcon, 'CONFIGAPP_ICON'),
           analytics_label: 'push_notification_conectimed_test_label_one'
         }
       },
@@ -517,7 +541,7 @@ async function sendNotificationHandler(tokens, title, body, priority, type, data
   };
   try {
     console.log("=== MESSAGE ===", JSON.stringify(payload));
-    const URL = cloudMessagingURL.value();
+    const URL = getConfigValue(cloudMessagingURL, 'CLOUD_MESSAGING_URL');
     const accessToken = (await getAccessToken()).token;
     const headers = {
       'Content-Type': 'application/json',
@@ -962,5 +986,7 @@ module.exports = {
   filterMetaData,
   normalizeMxMobile,
   escapeHtmlToString,
+  getConfigValue, // Helper para obtener valores de secrets o env vars
+  IS_EMULATOR, // Flag para detectar si estamos en emulador
   runtimeOpts // <-- export runtimeOpts
 };

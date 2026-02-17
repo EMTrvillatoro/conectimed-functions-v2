@@ -33,25 +33,49 @@ async function chatBatchRequestHandler(request, response) {
     }
 }
 
-async function createChatHandler(userId, messages, repid) {
-    return await createChat(userId, messages, repid);
+async function createChatHandler(userId, messages, repid, senderData, existingChatDoc) {
+    return await createChat(userId, messages, repid, senderData, existingChatDoc);
 };
 
-async function createChat(userId, messages, maskedID) {
+async function createChat(userId, messages, maskedID, senderData, existingChatDoc) {
     const myID = maskedID ? maskedID : undefined;
     const ids = [String(myID) + String(userId), String(userId) + String(myID)];
-    const response = await ifChatExists(ids);
+
+    let response;
+    if (existingChatDoc) {
+        // If we have a pre-fetched doc, wrap it to mimic the query snapshot structure if simple, 
+        // or just use it directly. The logic below expects 'response.empty' and 'response.docs'.
+        // Let's standardize on existingChatDoc being a DocumentSnapshot or null/undefined.
+        response = {
+            empty: false,
+            docs: [existingChatDoc]
+        };
+    } else {
+        response = await ifChatExists(ids);
+    }
+
+    // Determine sender data (use passed data or fetch if missing)
+    let member1 = senderData;
+    if (!member1) {
+        member1 = await getUserData(myID);
+    }
+
     if (response.empty === false) {
+        // Chat exists, use the existing doc data to avoid re-reading in sendChatMessage
+        const existingChatDoc = response.docs[0];
+        const existingChatData = existingChatDoc.data();
+
         messages.forEach(element => {
             sendChatMessage(
-                response.docs[0].id,
+                existingChatDoc.id,
                 element.message,
                 element.convert,
                 element.isFile,
                 element.url,
                 myID,
                 element.sendMail,
-                element.label
+                element.label,
+                existingChatData // Pass existing data
             );
         });
     } else {
@@ -64,11 +88,11 @@ async function createChat(userId, messages, maskedID) {
             seen: false,
             news: 0
         };
-        const dataSimple1 = await getUserData(myID);
-        const dataSimple2 = await getUserData(userId);
 
-        const member1 = dataSimple1;
-        const member2 = dataSimple2;
+        const member2 = await getUserData(userId);
+
+        // If we still don't have member1 (sender) or member2 (receiver), we might have issues, but assuming they exist.
+
         const currentDate = moment().toDate();
         const data = {
             identifier: ids[0],
@@ -87,6 +111,8 @@ async function createChat(userId, messages, maskedID) {
             members: [member1, member2]
         };
         const newChat = await createNewChat(data);
+
+        // Use the data we just created
         messages.forEach(element => {
             sendChatMessage(
                 newChat.id,
@@ -96,7 +122,8 @@ async function createChat(userId, messages, maskedID) {
                 element.url,
                 myID,
                 element.sendMail,
-                element.label
+                element.label,
+                data // Pass the new chat data
             );
         });
     }
@@ -106,6 +133,23 @@ async function ifChatExists(ids) {
     return await db
         .collection('chats')
         .where('identifier', 'in', ids)
+        .limit(1)
+        .get();
+}
+
+/**
+ * Checks for existing chats for a batch of identifiers.
+ * @param {string[]} identifiers - Array of identifier strings to check.
+ * @returns {Promise<FirebaseFirestore.QuerySnapshot>}
+ */
+async function checkExistingChats(identifiers) {
+    if (!identifiers || identifiers.length === 0) return { empty: true, docs: [] };
+    // Firestore 'in' query limit is 10.
+    // We assume the caller handles batching or we handle it here if array is small.
+    // But safely, let's just run the query.
+    return await db
+        .collection('chats')
+        .where('identifier', 'in', identifiers)
         .get();
 }
 
@@ -131,19 +175,20 @@ async function createNewChat(data) {
     return db.collection('chats').add(data);
 }
 
-async function sendChatMessage(chatId, message, convert, isFile, url, user, sendMail, label) {
+async function sendChatMessage(chatId, message, convert, isFile, url, user, sendMail, label, chatDataOpt) {
     if (message && message !== '') {
         try {
             if (convert === true) {
                 message = urlify(message, true);
             }
-            const chatData = (
-                await db
-                    .collection('chats')
-                    .doc(chatId)
-                    .get()
-            ).data();
-            const participants = Array.from(chatData.members).map(item => String(item.uid));
+
+            let chatData = chatDataOpt;
+            if (!chatData) {
+                const chatDoc = await db.collection('chats').doc(chatId).get();
+                chatData = chatDoc.data();
+            }
+
+            const participants = Array.from(chatData.members || []).map(item => String(item.uid));
             const viewers =
                 chatData && chatData.last_message && chatData.last_message.viewers ? chatData.last_message.viewers : {};
             const newViewers = {};
@@ -177,12 +222,8 @@ async function sendChatMessage(chatId, message, convert, isFile, url, user, send
             };
             // Check send Email
 
-            const data = await db
-                .collection('chats')
-                .doc(chatId)
-                .get();
-
-            const lastMessage = data.get('last_message');
+            // Avoid re-reading chatData again here, use what we have
+            const lastMessage = chatData.last_message;
             if (lastMessage && lastMessage.sendMail === true && lastMessage.user && !user) {
                 const dataUser = await getUserData(lastMessage.user);
                 // send mail handler
@@ -361,5 +402,6 @@ async function productInfo(email, name, chatID) {
 
 module.exports = {
     chatBatchRequestHandler,
-    createChatHandler
+    createChatHandler,
+    checkExistingChats
 };

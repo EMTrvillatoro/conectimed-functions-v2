@@ -46,12 +46,27 @@ async function chatTriggerHandler(event) {
 async function createActivity(document, object_id) {
     // console.log(JSON.stringify(document));
     // get users involve
-    const thisUser = (
-        await db
-            .collection('users')
-            .doc(document.last_message.user)
-            .get()
-    ).data();
+    // console.log(JSON.stringify(document));
+    // get users involve
+
+    // Optimize: Try to get user data from 'members' array in the chat document first
+    let thisUser = null;
+    let otherUser = null;
+    let otherUserId = null;
+
+    if (document.members && Array.isArray(document.members)) {
+        thisUser = document.members.find(m => String(m.uid) === String(document.last_message.user));
+    }
+
+    if (!thisUser) {
+        thisUser = (
+            await db
+                .collection('users')
+                .doc(document.last_message.user)
+                .get()
+        ).data();
+    }
+
 
     if (document.participants) {
         const array = document.participants.filter((item, index) => {
@@ -61,14 +76,20 @@ async function createActivity(document, object_id) {
             return null;
         });
 
-        const otherUserId = array[0];
+        otherUserId = array[0];
 
-        const otherUser = (
-            await db
-                .collection('users')
-                .doc(otherUserId)
-                .get()
-        ).data();
+        if (document.members && Array.isArray(document.members)) {
+            otherUser = document.members.find(m => String(m.uid) === String(otherUserId));
+        }
+
+        if (!otherUser) {
+            otherUser = (
+                await db
+                    .collection('users')
+                    .doc(otherUserId)
+                    .get()
+            ).data();
+        }
 
         // create activity for thisUser
         const actividad = {
