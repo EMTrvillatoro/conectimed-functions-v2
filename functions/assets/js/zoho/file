@@ -1,0 +1,306 @@
+crmAPIRequestMap = crmAPIRequest.toMap();
+request_body = crmAPIRequestMap.get("body");
+registros = request_body.get("data");
+//obtengo los registros
+lista_Log_Creacion = List();
+lista_Log_Actualizacion = List();
+lista_Log = List();
+registros_A_Crear = List();
+registros_A_Actualizar = List();
+mapa_Contacto = Map();
+//info registros;
+try 
+{
+	if(registros.size() > 0)
+	{
+		for each  registro in registros
+		{
+			mapa_Contacto = Map();
+			if(!isNull(registro.get("Last_Name")))
+			{
+				mapa_Contacto.put("Last_Name",registro.get("Last_Name"));
+			}
+			if(!isNull(registro.get("reas_de_inter_s")))
+			{
+				mapa_Contacto.put("reas_de_inter_s",registro.get("reas_de_inter_s"));
+			}
+			if(!isNull(registro.get("Medio_de_Registro")))
+			{
+				mapa_Contacto.put("Medio_de_Registro",registro.get("Medio_de_Registro"));
+			}
+			if(!isNull(registro.get("Tipo_de_usuario")))
+			{
+				mapa_Contacto.put("Tipo_de_usuario",registro.get("Tipo_de_usuario"));
+			}
+			if(!isNull(registro.get("ID_Usuario")))
+			{
+				mapa_Contacto.put("ID_Usuario",registro.get("ID_Usuario"));
+			}
+			if(!isNull(registro.get("Mailing_Country")))
+			{
+				mapa_Contacto.put("Mailing_Country",registro.get("Mailing_Country"));
+			}
+			// 		if(!isNull(registro.get("Semestre_acad_mico_en_curso")))
+			// 		{
+			// 			mapa_Contacto.put("Semestre_acad_mico_en_curso",registro.get("Semestre_acad_mico_en_curso"));
+			// 		}
+			if(!isNull(registro.get("Tipo_de_Contacto")))
+			{
+				mapa_Contacto.put("Tipo_de_Contacto",registro.get("Tipo_de_Contacto"));
+			}
+			if(!isNull(registro.get("Tipo_de_profesional_OPS")))
+			{
+				mapa_Contacto.put("Tipo_de_profesional_OPS",registro.get("Tipo_de_profesional_OPS"));
+			}
+			if(!isNull(registro.get("Verificado_para_distribuci_n")))
+			{
+				mapa_Contacto.put("Verificado_para_distribuci_n",registro.get("Verificado_para_distribuci_n"));
+			}
+			if(!isNull(registro.get("Matr_cula")))
+			{
+				mapa_Contacto.put("Matr_cula",registro.get("Matr_cula").toNumber());
+			}
+			if(!isNull(registro.get("Mobile")))
+			{
+				mapa_Contacto.put("Mobile",registro.get("Mobile"));
+			}
+			if(!isNull(registro.get("First_Name")))
+			{
+				mapa_Contacto.put("First_Name",registro.get("First_Name"));
+			}
+			if(!isNull(registro.get("C_dula_profesional")))
+			{
+				mapa_Contacto.put("C_dula_profesional",registro.get("C_dula_profesional"));
+			}
+			if(!isNull(registro.get("C_dula_profesional_especialidad")))
+			{
+				mapa_Contacto.put("C_dula_profesional_especialidad",registro.get("C_dula_profesional_especialidad"));
+			}
+			if(!isNull(registro.get("Mailing_Zip")))
+			{
+				mapa_Contacto.put("Mailing_Zip",registro.get("Mailing_Zip"));
+			}
+			if(!isNull(registro.get("Mailing_City")))
+			{
+				mapa_Contacto.put("Mailing_City",registro.get("Mailing_City"));
+			}
+			if(!isNull(registro.get("Email")))
+			{
+				mapa_Contacto.put("Email",registro.get("Email"));
+			}
+			if(!isNull(registro.get("Description")))
+			{
+				mapa_Contacto.put("Description",registro.get("Description"));
+			}
+			if(!isNull(registro.get("Mailing_Street")))
+			{
+				mapa_Contacto.put("Mailing_Street",registro.get("Mailing_Street"));
+			}
+			if(!isNull(registro.get("Escuela")))
+			{
+				mapa_Contacto.put("Escuela",registro.get("Escuela"));
+			}
+			if(!isNull(registro.get("Especialidad")))
+			{
+				mapa_Contacto.put("Especialidad",registro.get("Especialidad"));
+			}
+			if(!isNull(registro.get("Mailing_State")))
+			{
+				mapa_Contacto.put("Mailing_State",registro.get("Mailing_State"));
+			}
+			if(!isNull(registro.get("Fecha_de_registro")))
+			{
+				mapa_Contacto.put("Fecha_de_registro",registro.get("Fecha_de_registro").toString("yyyy-MM-dd'T'HH:mm:ss"));
+			}
+			if(!isNull(registro.get("URL_documento_validador_academico")))
+			{
+				mapa_Contacto.put("URL_documento_validador_academico",registro.get("URL_documento_validador_academico"));
+			}
+			if(!isNull(registro.get("Tiempo_restante_para_titulaci_n")))
+			{
+				mapa_Contacto.put("Tiempo_restante_para_titulaci_n",registro.get("Tiempo_restante_para_titulaci_n"));
+			}
+			//	mapa_Contacto.put("ID_M_dico",registro.get("ID_M_dico").toNumber());
+			//	mapa_Contacto.put("ID_M_dico_en_formaci_n",registro.get("ID_M_dico_en_formaci_n").toNumber());
+			//	mapa_Contacto.put("ID_OPS",registro.get("ID_OPS").toNumber());
+			//	mapa_Contacto.put("ID_Paciente",registro.get("ID_Paciente").toNumber());
+			// 		mapa_Contacto.put("Assistant",registro.get("Assistant"));
+			// 		mapa_Contacto.put("Calle_Num_Ext_Int",registro.get("Calle_Num_Ext_Int"));
+			// 		mapa_Contacto.put("Ciudad",registro.get("Ciudad"));
+			// 		mapa_Contacto.put("C_digo_Postal",registro.get("C_digo_Postal").toNumber());
+			// 		mapa_Contacto.put("Colonia",registro.get("Colonia"));
+			// 		mapa_Contacto.put("Connected_To__s",registro.get("Connected_To__s"));
+			// 		mapa_Contacto.put("Consultorio",registro.get("Consultorio").toNumber());
+			// 		mapa_Contacto.put("Secondary_Email",registro.get("Secondary_Email"));
+			// 	//	mapa_Contacto.put("Created_By",registro.get("Created_By"));
+			// 		mapa_Contacto.put("Department",registro.get("Department"));
+			// 		mapa_Contacto.put("Days_Visited",registro.get("Days_Visited").toNumber());
+			// 		mapa_Contacto.put("Domicilio",registro.get("Domicilio"));	
+			// 		mapa_Contacto.put("Estado",registro.get("Estado"));
+			// 		mapa_Contacto.put("Tag",registro.get("Tag"));
+			// 		mapa_Contacto.put("Extensi_n",registro.get("Extensi_n").toNumber());
+			// 		mapa_Contacto.put("Fax",registro.get("Fax"));
+			// 		mapa_Contacto.put("Date_of_Birth",registro.get("Date_of_Birth").toString("yyyy-MM-dd"));
+			// 		mapa_Contacto.put("Fecha_Ultima_Actividad",registro.get("Fecha_Ultima_Actividad").toString("yyyy-MM-dd'T'HH:mm:ss"));
+			//mapa_Contacto.put("Lead_Source",registro.get("Lead_Source"));
+			// 		mapa_Contacto.put("Hospitales",registro.get("Hospitales"));
+			// 		mapa_Contacto.put("Skype_ID",registro.get("Skype_ID"));
+			// 		mapa_Contacto.put("Record_Image",registro.get("Record_Image"));
+			// 		mapa_Contacto.put("Medio_de_Registro",registro.get("Medio_de_Registro"));
+			// 		//mapa_Contacto.put("Modified_By",registro.get("Modified_By"));
+			// 		mapa_Contacto.put("Asst_Phone",registro.get("Asst_Phone"));
+			// 		mapa_Contacto.put("Email_Opt_Out",registro.get("Email_Opt_Out"));
+			// 		mapa_Contacto.put("Account_Name",registro.get("Account_Name"));
+			// 		mapa_Contacto.put("Vendor_Name",registro.get("Vendor_Name"));
+			// 		mapa_Contacto.put("Number_Of_Chats",registro.get("Number_Of_Chats").toNumber());
+			// 		mapa_Contacto.put("Other_City",registro.get("Other_City"));
+			// 		mapa_Contacto.put("Other_Zip",registro.get("Other_Zip"));
+			// 		mapa_Contacto.put("Other_Street",registro.get("Other_Street"));
+			// 		mapa_Contacto.put("Other_State",registro.get("Other_State"));
+			// 		mapa_Contacto.put("Other_Country",registro.get("Other_Country"));
+			// 		mapa_Contacto.put("Other_Phone",registro.get("Other_Phone"));
+			// 		mapa_Contacto.put("Pa_s",registro.get("Pa_s"));
+			// 		mapa_Contacto.put("First_Visited_URL",registro.get("First_Visited_URL"));
+			// 		mapa_Contacto.put("First_Visited_Time",registro.get("First_Visited_Time").toString("yyyy-MM-dd'T'HH:mm:ss"));
+			// 		//mapa_Contacto.put("Owner",registro.get("Owner").toLong());
+			// 		mapa_Contacto.put("Puntuaci_n_CRM",registro.get("Puntuaci_n_CRM").toNumber());
+			// 		mapa_Contacto.put("Visitor_Score",registro.get("Visitor_Score").toNumber());
+			// 		mapa_Contacto.put("Referrer",registro.get("Referrer"));
+			// 		mapa_Contacto.put("Salutation",registro.get("Salutation"));
+			// 		mapa_Contacto.put("Secci_n",registro.get("Secci_n"));
+			// 		mapa_Contacto.put("Reporting_To",registro.get("Reporting_To"));
+			// 		mapa_Contacto.put("Phone",registro.get("Phone"));
+			// 		mapa_Contacto.put("Home_Phone",registro.get("Home_Phone"));
+			// 		mapa_Contacto.put("Average_Time_Spent_Minutes",registro.get("Average_Time_Spent_Minutes").toNumber());
+			// 		mapa_Contacto.put("Title",registro.get("Title"));
+			// 		mapa_Contacto.put("Torre",registro.get("Torre"));
+			// 		mapa_Contacto.put("Twitter",registro.get("Twitter"));
+			// 		mapa_Contacto.put("Last_Visited_Time",registro.get("Last_Visited_Time").toString("yyyy-MM-dd'T'HH:mm:ss"));
+			// 		mapa_Contacto.put("Zona",registro.get("Zona"));
+			contacto_Crm = zoho.crm.searchRecords("Contacts","(ID_Usuario:equals:" + registro.get("ID_Usuario") + ")");
+			//info contacto_Crm;
+			if(!isNull(contacto_Crm))
+			{
+				if(contacto_Crm.size() > 0)
+				{
+					mapa_Contacto.put("id",contacto_Crm.get(0).get("id"));
+					registros_A_Actualizar.add(mapa_Contacto);
+				}
+				else
+				{
+					registros_A_Crear.add(mapa_Contacto);
+				}
+			}
+			if(registros_A_Actualizar.size() == 100)
+			{
+				//info "Hay 100 registros actualizar";
+				mapa_Envio = Map();
+				// 			Triggers = List();
+				// 			Triggers.add("workflow");
+				//mapa_Envio.put("trigger",Triggers);
+				mapa_Envio.put("data",registros_A_Actualizar);
+				mapa_Envio = mapa_Envio.ToString();
+				response = invokeurl
+				[
+					url :"https://www.zohoapis.com/crm/v8/Contacts"
+					type :PUT
+					parameters:mapa_Envio
+					connection:"zcrm"
+				];
+				lista_Log_Actualizacion.add(response);
+				//info response;
+				registros_A_Actualizar = List();
+				//Reinicio mi lista.
+			}
+			if(registros_A_Crear.size() == 100)
+			{
+				//	info "Hay 100 registros";
+				mapa_Envio = Map();
+				// 			Triggers = List();
+				// 			Triggers.add("workflow");
+				//mapa_Envio.put("trigger",Triggers);
+				mapa_Envio.put("data",registros_A_Crear);
+				mapa_Envio = mapa_Envio.ToString();
+				response = invokeurl
+				[
+					url :"https://www.zohoapis.com/crm/v8/Contacts"
+					type :POST
+					parameters:mapa_Envio
+					connection:"zcrm"
+				];
+				lista_Log_Creacion.add(response);
+				//info response;
+				registros_A_Crear = List();
+				//Reinicio mi lista.
+			}
+		}
+		if(registros_A_Crear.size() > 0)
+		{
+			//info "crea lo que resta";
+			//info registros_A_Crear.size();
+			mapa_Envio = Map();
+			//Triggers = List();
+			//Triggers.add("workflow");
+			//MapaEnvio.put("trigger",Triggers);
+			mapa_Envio.put("data",registros_A_Crear);
+			mapa_Envio = mapa_Envio.ToString();
+			response = invokeurl
+			[
+				url :"https://www.zohoapis.com/crm/v8/Contacts"
+				type :POST
+				parameters:mapa_Envio
+				connection:"zcrm"
+			];
+			lista_Log_Creacion.add(response);
+			registros_A_Crear = List();
+			//info response;
+		}
+		if(registros_A_Actualizar.size() > 0)
+		{
+			//info "actualiza lo que resta";
+			mapa_Envio = Map();
+			// 			Triggers = List();
+			// 			Triggers.add("workflow");
+			//mapa_Envio.put("trigger",Triggers);
+			mapa_Envio.put("data",registros_A_Actualizar);
+			mapa_Envio = mapa_Envio.ToString();
+			response = invokeurl
+			[
+				url :"https://www.zohoapis.com/crm/v8/Contacts"
+				type :PUT
+				parameters:mapa_Envio
+				connection:"zcrm"
+			];
+			lista_Log_Actualizacion.add(response);
+			//info response;
+			registros_A_Actualizar = List();
+		}
+	}
+	else
+	{
+		lista_Log.add("No se encontraron registros de entrada.");
+	}
+	if(lista_Log.size() == 0)
+	{
+		if(lista_Log_Creacion.size() > 0)
+		{
+			lista_Log.add(lista_Log_Creacion + " " + hexToText("0A"));
+		}
+		if(lista_Log_Actualizacion.size() > 0)
+		{
+			lista_Log.add(lista_Log_Actualizacion);
+		}
+	}
+}
+catch (e)
+{
+	//"rvillatoro@emt.dev,
+	sendmail
+	[
+		from :zoho.loginuserid
+		to :"andres@partner-digital.com"
+		subject :"Error en Funcion API CRM"
+		message :"Ha ocurrido un error en la funcion 'Api conexion Contactos'. "
+	]
+}
+return lista_Log;

@@ -1,32 +1,56 @@
-const { HttpsError } = require('firebase-functions/v2/https');
+const functions = require("firebase-functions/v2");
+const { logger } = require("firebase-functions");
+const { HttpsError } = functions.https;
 const { sendEmail } = require('../Tools');
 
 /**
- * 
- * @param { CallableRequest<any> } data 
- * @param { CallableResponse<unknown> | undefined } context 
- * @returns 
-*/
+ * Callable Function v2 para enviar correos.
+ * Sigue buenas prácticas:
+ * - Validaciones claras
+ * - Manejo de errores con HttpsError
+ * - enforceAppCheck y CORS
+ * - Logging seguro
+ */
 
-async function sendMailHandler(data, context) {
-    // name, text!, subject!, recipient!, bcc, cc, attach, sender
-    const body = data;
-    // console.log(JSON.stringify(body));
-    // Authentication / user information is automatically added to the request.
-    if (context.auth && context.auth.uid) {
-        if (!body.recipient) {
-            throw new HttpsError(
-                'invalid-argument',
-                'El valor recipient es requerido para el envío de correos'
-            );
-        }
+async function sendMailHandler(request) {
+    const body = request.data;
+
+    logger.info("Ejecutando sendMail", {
+        hasAuth: !!request.auth,
+        recipient: body?.recipient ? "provided" : "missing",
+    });
+
+    // ✔ Validar autenticación
+    if (!request.auth || !request.auth.uid) {
+        throw new HttpsError(
+            "unauthenticated",
+            "La función debe ser llamada por un usuario autenticado."
+        );
+    }
+
+    // ✔ Validación de parámetros requeridos
+    if (!body.recipient) {
+        throw new HttpsError(
+            "invalid-argument",
+            "El campo 'recipient' es obligatorio para enviar correos."
+        );
+    }
+
+    try {
         await sendEmail(body);
+
         return {
-            sucess: true,
-            message: `Email successfully sent to ${body.recipient} ${body.bcc ? body.bcc : ''} ${body.cc ? body.cc : ''}`
+            success: true,
+            message: `Email enviado a ${body.recipient}${body.bcc ? `, BCC: ${body.bcc}` : ""}${body.cc ? `, CC: ${body.cc}` : ""}`,
         };
-    } else {
-        throw new HttpsError('unauthenticated', 'The function must be called while authenticated');
+
+    } catch (err) {
+        logger.error("Error enviando correo", err);
+
+        throw new HttpsError(
+            "internal",
+            "No se pudo enviar el correo. Verifique los parámetros o intente más tarde."
+        );
     }
 }
 

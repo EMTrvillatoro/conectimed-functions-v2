@@ -1,19 +1,29 @@
 const { onRequest, onCall } = require("firebase-functions/v2/https");
-const { onDocumentWritten } = require('firebase-functions/v2/firestore');
+const { onSchedule } = require('firebase-functions/v2/scheduler');
+const { onDocumentWritten, onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require("firebase-functions/v2/firestore");
 // files
-const { runtimeOpts } = require('./assets/js/Tools');
+const { runtimeOpts, sendEmail } = require('./assets/js/Tools');
 const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./assets/js/stripe/stripe');
 const { infoDBFHandler } = require('./assets/js/experimental/experimental');
 const { getValidatedUsersHandler, getAllAuthUsersHandler } = require('./assets/js/members/createusers');
+const { handler } = require('./assets/js/members/lastForoPost');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
 const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
 const { sendMailHandler } = require('./assets/js/utils/sendMail');
+const { sendSmsHandler } = require('./assets/js/utils/sendSms');
+const { updateSearchArrayCallable } = require('./assets/js/user/updateSearch');
 const { getSpecialties, getSpecialty } = require('./assets/js/specialties/specialties');
 const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
-
+const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
+const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted, virtualSessionsAttendanceConfirmationCountFix/*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
+const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_setStatus, _onRequest_single } = require('./assets/js/zoho/zoho');
+const { chatTriggerHandler } = require('./assets/js/triggers/chats');
+const { readFileHandler } = require('./assets/js/chat/readFile');
+const { sectionsHandler } = require('./assets/js/chat/sections');
+const { chatBatchRequestHandler } = require('./assets/js/chat/chatBatch');
 
 /* functions HTTP REQUEST */
 
@@ -66,15 +76,137 @@ exports.getSpecialties = onRequest(runtimeOpts, async (req, res) => await getSpe
 exports.getSpecialty = onRequest(runtimeOpts, async (req, res) => await getSpecialty(req, res));
 
 /*DESC: CONECTIMED LANDING | AUTHOR: MIGUEL | TYPE: HTTP REQUEST  */
-exports.conectimed_landing = onRequest(runtimeOpts, async (req, res)=> await handler_onRequest(req, res));
+exports.conectimed_landing = onRequest(runtimeOpts, async (req, res) => await handler_onRequest(req, res));
+
+/*DESC: LASTFOROPOSTS | AUTHOR: MIGUEL | TYPE: HTTP REQUEST  */
+exports.lastForoPosts = onRequest(runtimeOpts, async (req, res) => await handler(req, res));
+
+/* DESC: GEN HTML CERT | AUTHOR: Miguel | TYPE: HTTP REQUEST */
+exports.generateHtmlCertificate = onRequest(runtimeOpts, async (req, res) => await generateHtmlCertificateHandler(req, res));
+
+/* DESC: FIX THE AMOUNT OF VIRTUAL SESSIONS ASSISTANCE CONFIRMATIONS IN BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.virtualSessionsAttendanceConfirmationCountFix = onRequest(runtimeOpts, async (req, res) => await virtualSessionsAttendanceConfirmationCountFix(req, res));
+
+/* DESC: VIRTUAL SESSIONS ASSISTANCE FROM FIRESTORE TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST ===================== TEST, ON WORKING! =====================*/
+// exports.exportAssistanceToBigQuery = onRequest(runtimeOpts, async (req, res) => await exportAssistanceToBigQuery(req, res));
+
+/* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.zohoExportRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest(req, res));
+
+/* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.zohoExportmarkAllUsersPendingRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_setStatus(req, res));
+
+/* DESC: EXPORT SINGLE USER TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.zohoExportSingleRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_single(req, res));
+
+/* DESC: OBTAINING CONFIRMATION OF ATTENDANCE AT VIRTUAL SESSIONS | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));
+
+/* DESC: INIT THE #CHAT BATCH OPERATION | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.chatBatch = onRequest(runtimeOpts, async (req, res) => await chatBatchRequestHandler(req, res));
 
 /* functions CALLABLES */
 
 /* DESC: SEND MAIL | AUTHOR: Miguel | TYPE: CALLABLE */
-exports.sendMail = onCall(async (data, context) => await sendMailHandler(data, context));
+exports.sendMail = onCall(runtimeOpts, async (data, context) => await sendMailHandler(data, context));
 
+/* DESC: SEND SMS | AUTHOR: Rolando | TYPE: CALLABLE */
+exports.sendSms = onCall(runtimeOpts, async (data, context) => await sendSmsHandler(data, context));
+
+/* DESC: UPDATE SEARCH ARRAY | AUTHOR: Rolando | TYPE: CALLABLE */
+exports.updateSearchArray = onCall(runtimeOpts, async (data, context) => await updateSearchArrayCallable(data, context));
 
 /* functions ON WRITE */
 
 /* DESC: COLLECTION 'medico-meta' changes | AUTHOR: Rolando | TYPE: ON WRITE */
-exports.onDoctorWrite = onDocumentWritten("medico-meta/{medicoId}", async (event) => await onWriteDoctorsHandler(event.data, event.context));
+exports.onDoctorWrite = onDocumentWritten({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "medico-meta/{medicoId}"
+}, async (event) => await onWriteDoctorsHandler(event.data, event.context));
+
+/* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT CREATED */
+exports.sVSoho_onAssistanceCreated = onDocumentCreated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "posts/{postId}/assistance/{userId}"
+}, async (event) => await handleAssistanceCreated(event));
+
+/* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT UPDATED */
+exports.sVSoho_onAssistanceUpdated = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "posts/{postId}/assistance/{userId}"
+}, async (event) => await handleAssistanceUpdated(event));
+
+/* DESC: COLLECTION 'posts/{postId}/assistance' changes | AUTHOR: Rolando | TYPE: ON DOCUMENT DELETED */
+exports.sVSoho_onAssistanceDeleted = onDocumentDeleted({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "posts/{postId}/assistance/{userId}"
+}, async (event) => await handleAssistanceDeleted(event));
+
+/* DESC: EXPORT TO ZOHO (PAGINATION) | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.zohoExportPaginationTrigger = onDocumentWritten({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "validated-user-data-pivot/{pivotId}"
+}, async (event) => await _onDocumentWritten(event));
+
+/* DESC: SEND MASIVE #CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.onChatsWrite = onDocumentWritten({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "chats/{messageId}"
+}, async (event) => await chatTriggerHandler(event));
+
+/* DESC: READ FILE FOR MASIVE #CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.onCreateChatBatch = onDocumentCreated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "chats-batch/{id}"
+}, async (event) => await readFileHandler(event));
+
+/* DESC: PAGINATION UPDATE SECTION IN MASIVE #CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
+exports.onUpdateChatBatchItem = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "chats-batch/{id_batch}/sections/{id}"
+}, async (event) => await sectionsHandler(event));
+
+/* functions SCHEDULED */
+
+/* DESC: EXPORT TO ZOHO (DAILY) | AUTHOR: Rolando | TYPE: SCHEDULED */
+exports.zohoExportScheduled = onSchedule({
+    schedule: "0 */12 * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    retryCount: 3,
+}, async (event) => await _onSchedule(event));
+
+
+/** ONLY TEST */
+
+exports.senmails = onRequest(runtimeOpts, async (req, res) => {
+
+    res.set("Access-Control-Allow-Origin", "*");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Content-Type", "application/json");
+
+    if (req.method === "OPTIONS") {
+        return res.status(204).send("");
+    }
+
+    if (req.method !== "POST") {
+        return res.status(405).json({ code: 405, message: `${req.method} Method Not Allowed` });
+    }
+
+    try {
+        const body = req.body;
+        const response = await sendEmail(body);
+        return res.status(200).json({ status: "success", ...response });
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});

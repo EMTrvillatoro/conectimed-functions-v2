@@ -28,9 +28,10 @@ async function registerHandler(req, res) {
 
     try {
 
-        let { email, password, type, data } = req.body;
+        const data = req.body;
 
-        email = String(email || "").trim().toLowerCase();
+        const email = String(data?.email || "").trim().toLowerCase();
+        const password = decryptBack(data?.password);
 
         if (!email || !password) {
             console.warn("Faltan parámetros requeridos");
@@ -39,7 +40,7 @@ async function registerHandler(req, res) {
 
         const resp = await getAuth().createUser({
             email,
-            password: decryptBack(password)
+            password
         });
 
         if (resp && resp.uid && resp.email) {
@@ -56,16 +57,25 @@ async function registerHandler(req, res) {
             const userRef = db.collection("users").doc(resp.uid);
             const userMetaRef = db.collection("medico-meta").doc(resp.uid);
 
-            const estimatedGraduationTime = data?.estimatedGraduationTime || undefined;
-            const studentVerificationFileUrl = data?.studentVerificationFileUrl || undefined;
-
             await db.runTransaction(async (transaction) => {
+
+                let address1 = {
+                    city: data.city,
+                    colony: data.colony,
+                    delegation: data.delegation,
+                    hospital: '',
+                    interiorNumber: '',
+                    outsideNumber: '',
+                    postalCode: data.postal_code,
+                    state: data.state,
+                    strState: stringSearch(data.state),
+                    street: '',
+                    tower: ''
+                }
+
                 let metadata = {
-                    specialty1: data?.specialty1 || null,
-                    specialty2: data?.specialty2 || null,
-                    specialty3: data?.specialty3 || null,
-                    specialty4: data?.specialty4 || null,
-                    specialty5: data?.specialty5 || null
+                    address1,
+                    specialty1: { id: null, cedula: null }
                 }
 
                 const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
@@ -94,16 +104,29 @@ async function registerHandler(req, res) {
                     search: search || [],
                     'filter-meta-data': _filterMetaData || [],
                     status: 'new',
-                    type: type || 'medico',
+                    type: data?.type || 'medico',
                     updatedAt: FieldValue.serverTimestamp(),
+                    metaType: data?.metaType,
+                    validatedStatus: 'pending',
                     newConditionsOfUseAccepted: true
                 }
 
-                if (estimatedGraduationTime !== undefined && studentVerificationFileUrl !== null) {
-                    _data.estimatedGraduationTime = estimatedGraduationTime;
-                    _data.studentVerificationFileUrl = studentVerificationFileUrl;
+                switch (data?.metaType) {
+                    case 'medico-en-formacion':
+                        _data.verificationFileUrl = data.verificationFileUrl;
+                        _data.estimatedGraduationTime = data.estimatedGraduationTime;
+                        break;
+                    case 'profesional-de-la-salud':
+                        _data.educationalLevel = data.educationalLevel;
+                        if (_data.educationalLevel === 'estudiante') {
+                            _data.verificationFileUrl = data.verificationFileUrl;
+                            _data.estimatedGraduationTime = data.estimatedGraduationTime
+                        } else if (_data.educationalLevel === 'tecnico') {
+                            _data.verificationFileUrl = data.verificationFileUrl;
+                        }
+                        break;
                 }
-
+                console.log("=== ===== ==== === === === === ==== ===", _data);
                 transaction.set(userRef, _data, { merge: true });
 
                 // Elimina todas las propiedades de metadata que sean === null
@@ -113,12 +136,13 @@ async function registerHandler(req, res) {
                     }
                 });
 
-                transaction.set(userMetaRef, {
-                    ...metadata,
-                    cedulaProfesional: data?.cedula || '',
-                    address1: data?.address1 || {},
-                }, { merge: true });
+                let _metaData = metadata;
 
+                if (data?.metaType === 'medico' || (data?.metaType === 'profesional-de-la-salud' && data && data.educationalLevel === 'universitario')) {
+                    _metaData.cedula = data.cedula;
+                }
+
+                transaction.set(userMetaRef, _metaData, { merge: true });
             });
 
             // Obtener custom token para el usuario
@@ -201,46 +225,47 @@ async function updateHandler(req, res) {
             const userMetaRef = db.collection("medico-meta").doc(resp.uid);
 
             const estimatedGraduationTime = data?.estimatedGraduationTime || undefined;
-            const studentVerificationFileUrl = data?.studentVerificationFileUrl || undefined;
+            const verificationFileUrl = data?.verificationFileUrl || undefined;
 
-            /*  await db.runTransaction(async (transaction) => {
-                 let metadata = {
-                     specialty1: data?.specialty1 || null,
-                     specialty2: data?.specialty2 || null,
-                     specialty3: data?.specialty3 || null,
-                     specialty4: data?.specialty4 || null,
-                     specialty5: data?.specialty5 || null
-                 }
- 
-                 const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
- 
-                 let _data = {                    
-                     personalInterests: data?.personalInterests || [],
-                     search: search || [],
-                     updatedAt: FieldValue.serverTimestamp(),
-                 }
- 
-                 if (estimatedGraduationTime !== undefined && studentVerificationFileUrl !== null) {
-                     _data.estimatedGraduationTime = estimatedGraduationTime;
-                     _data.studentVerificationFileUrl = studentVerificationFileUrl;
-                 }
- 
-                 transaction.set(userRef, _data, { merge: true });
- 
-                 // Elimina todas las propiedades de metadata que sean === null
-                 Object.keys(metadata).forEach(key => {
-                     if (metadata[key] == null) {
-                         delete metadata[key];
-                     }
-                 });
- 
-                 transaction.set(userMetaRef, {
-                     ...metadata,
-                     cedulaProfesional: data?.cedula || '',
-                     address1: data?.address1 || {},
-                 }, { merge: true });
- 
-             }); */
+            await db.runTransaction(async (transaction) => {
+                let metadata = {
+                    specialty1: data?.specialty1 || null,
+                    specialty2: data?.specialty2 || null,
+                    specialty3: data?.specialty3 || null,
+                    specialty4: data?.specialty4 || null,
+                    specialty5: data?.specialty5 || null
+                }
+
+                const search = await updateUserSearch({ name, lastName1, lastName2, email: resp.email }, metadata);
+
+                let _data = {
+                    personalInterests: data?.personalInterests || [],
+                    search: search || [],
+                    updatedAt: FieldValue.serverTimestamp(),
+                }
+
+                if (estimatedGraduationTime !== undefined && verificationFileUrl !== null) {
+                    _data.estimatedGraduationTime = estimatedGraduationTime;
+                    _data.verificationFileUrl = verificationFileUrl;
+                }
+
+                transaction.set(userRef, _data, { merge: true });
+
+                //Elimina todas las propiedades de metadata que sean === null
+
+                Object.keys(metadata).forEach(key => {
+                    if (metadata[key] == null) {
+                        delete metadata[key];
+                    }
+                });
+
+                transaction.set(userMetaRef, {
+                    ...metadata,
+                    cedulaProfesional: data?.cedula || '',
+                    address1: data?.address1 || {},
+                }, { merge: true });
+
+            });
 
             // Obtener custom token para el usuario
 
