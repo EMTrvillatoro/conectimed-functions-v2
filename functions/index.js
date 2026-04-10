@@ -5,7 +5,7 @@ const { onDocumentWritten, onDocumentCreated, onDocumentUpdated, onDocumentDelet
 const { runtimeOpts, sendEmail } = require('./assets/js/Tools');
 const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomerRetrieveHandler, stripeCustomerUpdateHandler, stripePaymentIntentHandler, stripePaymentIntentUpdateHandler } = require('./assets/js/stripe/stripe');
 const { infoDBFHandler } = require('./assets/js/experimental/experimental');
-const { getValidatedUsersHandler, getAllAuthUsersHandler } = require('./assets/js/members/createusers');
+const { getValidatedUsersHandler, getAllAuthUsersHandler, getAuthUsersByListHandler } = require('./assets/js/members/createusers');
 const { handler } = require('./assets/js/members/lastForoPost');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
@@ -74,6 +74,9 @@ exports.userAppUpdate = onRequest(runtimeOpts, async (req, res) => await updateH
 
 /* DESC: GET ALL AUTH USERS | AUTHOR: Miguel | TYPE: HTTP REQUEST */
 exports.getAllAuthUsers = onRequest(runtimeOpts, async (req, res) => await getAllAuthUsersHandler(req, res));
+
+/* DESC: GET AUTH USERS BY LIST | AUTHOR: Miguel | TYPE: HTTP REQUEST */
+exports.getAuthUsersByList = onRequest(runtimeOpts, async (req, res) => await getAuthUsersByListHandler(req, res));
 
 /* DESC: GEN HTML CERT | AUTHOR: Miguel | TYPE: HTTP REQUEST */
 exports.generateHtmlCertificate = onRequest(runtimeOpts, async (req, res) => await generateHtmlCertificateHandler(req, res));

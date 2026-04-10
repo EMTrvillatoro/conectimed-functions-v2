@@ -452,16 +452,16 @@ function formatUserForZoho(ID, DATA) {
         "Tipo_de_usuario": DATA && DATA.metaType ? String(DATA.metaType).trim() : '',
         "reas_de_inter_s": DATA && DATA.personalInterests ? Array.from(DATA.personalInterests) : [],
         "C_dula_profesional": DATA && DATA.specialty1 && DATA && DATA.specialty1.cedula ? String(DATA.specialty1.cedula).trim() : '',
-        Especialidad,
-        Tipo_de_profesional_OPS,
-        C_dula_profesional_especialidad,
+        "Especialidad": Especialidad,
+        "Tipo_de_profesional_OPS": Tipo_de_profesional_OPS,
+        "C_dula_profesional_especialidad": C_dula_profesional_especialidad,
         "Tiempo_restante_para_titulaci_n": DATA && DATA.estimatedGraduationTime ? String(DATA.estimatedGraduationTime).trim() : '',
         // VALIDACIONES ACADÉMICAS / DOCUMENTACIÓN
         "URL_documento_validador_academico": DATA && DATA.verificationFileUrl ? String(DATA.verificationFileUrl).trim() : '',
         "Verificado_para_distribuci_n": "verdadero",
         // REGISTRO / ORIGEN
         "Medio_de_Registro": "Conectimed",
-        "Tipo_de_Contacto": "Plataformas",
+        "Tipo_de_Contacto": "Usuario plataformas",
         "Fecha_de_registro": DATA && DATA.dateOfCreation ? new Date(DATA.dateOfCreation.toDate()).toISOString() : '',
         // METADATA / OTROS
         "Description": DATA && DATA.notes ? String(DATA.notes).trim() : ''

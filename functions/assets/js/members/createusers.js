@@ -301,6 +301,58 @@ async function getAllAuthUsersHandler(req, res) {
     }
 }
 
+/**
+ * 
+ * @param { import('express').Request } req 
+ * @param { import('express').Response } res 
+ * @returns 
+ */
+
+async function getAuthUsersByListHandler(req, res) {
+    res.header('Content-Type', 'application/json');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
+    }
+    try {
+        let { type, list } = req.body;
+        if (!type || !list || !Array.isArray(list)) {
+            return res.status(400).json({ message: 'Invalid request body. Missing type or list (array of strings).' });
+        }
+
+        const admin = getFBAdminInstance();
+
+        let identifiers = [];
+        if (type === 'email') {
+            identifiers = list.map(email => ({ email: String(email).trim() }));
+        } else if (type === 'uid') {
+            identifiers = list.map(uid => ({ uid: String(uid).trim() }));
+        } else {
+            return res.status(400).json({ message: 'Invalid type. Must be email or uid.' });
+        }
+
+        const chunkSize = 100;
+        let allUsers = [];
+        let notFound = [];
+
+        for (let i = 0; i < identifiers.length; i += chunkSize) {
+            const chunk = identifiers.slice(i, i + chunkSize);
+            const userRecords = await admin.auth().getUsers(chunk);
+
+            // Map to JSON to retrieve the maximum amount of information properly serialized
+            allUsers.push(...userRecords.users.map(u => u.toJSON()));
+            notFound.push(...userRecords.notFound);
+        }
+
+        return res.status(200).json({ users: allUsers, notFound });
+
+    } catch (e) {
+        console.error('Error capturado', e);
+        return res.status(500).json(e);
+    }
+}
+
 async function listAllUsers(pageToken) {
     try {
         const admin = getFBAdminInstance();
@@ -461,4 +513,4 @@ function mapRawUserDoc(e) {
     return { id: ID, ...DATA };
 }
 
-module.exports = { getValidatedUsersHandler, getAllAuthUsersHandler };
+module.exports = { getValidatedUsersHandler, getAllAuthUsersHandler, getAuthUsersByListHandler };
