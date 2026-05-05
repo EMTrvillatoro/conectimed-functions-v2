@@ -24,6 +24,7 @@ const { chatTriggerHandler } = require('./assets/js/triggers/chats');
 const { readFileHandler } = require('./assets/js/chat/readFile');
 const { sectionsHandler } = require('./assets/js/chat/sections');
 const { chatBatchRequestHandler } = require('./assets/js/chat/chatBatch');
+const { generateCodeHandlerRequest, getUserByEmailHandlerRequest } = require('./assets/js/user/get-user-account');
 
 /*
 firebase emulators:start --import exports
@@ -119,6 +120,12 @@ exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async 
 
 /* DESC: INIT THE #CHAT BATCH OPERATION | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.chatBatch = onRequest(runtimeOpts, async (req, res) => await chatBatchRequestHandler(req, res));
+
+/* DESC: SEND CODE TO RESET PASSWORD | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.generateCode = onRequest(runtimeOpts, async (req, res) => await generateCodeHandlerRequest(req, res));
+
+/* DESC: GET USER ACCOUNT | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.getAuthUserByEmailRequest = onRequest(runtimeOpts, async (req, res) => await getUserByEmailHandlerRequest(req, res));
 
 /* functions CALLABLES */
 
