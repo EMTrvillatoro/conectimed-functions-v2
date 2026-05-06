@@ -37,6 +37,14 @@ firebase deploy --only functions:onChatsWrite
 firebase deploy --only functions:onCreateChatBatch
 firebase deploy --only functions:onUpdateChatBatchItem
 
+
+//ZOHO
+
+firebase deploy --only functions:zohoExportRequest
+firebase deploy --only functions:zohoExportmarkAllUsersPendingRequest
+firebase deploy --only functions:zohoExportSingleRequest
+firebase deploy --only functions:zohoExportPaginationTrigger
+firebase deploy --only functions:zohoExportScheduled
 */
 /* functions HTTP REQUEST */
 
