@@ -145,7 +145,7 @@ async function processUsersToZohoHandler() {
  * @returns 
  */
 
-async function _onRequest(req, res) {
+async function zoho_onRequest(req, res) {
     res.header('Content-Type', 'application/json');
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -168,7 +168,7 @@ async function _onRequest(req, res) {
  * @returns 
  */
 
-async function _onRequest_setStatus(req, res) {
+async function zoho_onRequest_setStatus(req, res) {
     res.header('Content-Type', 'application/json');
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -205,7 +205,7 @@ async function _onRequest_setStatus(req, res) {
  * @returns {Promise<boolean|Error>}
  */
 
-async function _onDocumentWritten(event) {
+async function zoho_onDocumentWritten(event) {
     try {
         const beforeData = event.data?.before?.data() || null;
         const afterData = event.data?.after?.data() || null;
@@ -250,7 +250,7 @@ async function saveToZoho(results) {
  * @param {import("firebase-functions/v2/scheduler").ScheduledEvent} event
  */
 
-async function _onSchedule(event) {
+async function zoho_onSchedule(event) {
     console.log(event && event.jobName ? event.jobName : 'processUsersToZohoHandler_onSchedule')
     return await processUsersToZohoHandler();
 }
@@ -290,7 +290,7 @@ async function setZohoStatusForAllUsers(action) {
  * @param { import('express').Response } res 
  * @returns 
  */
-async function _onRequest_single(req, res) {
+async function zoho_onRequest_single(req, res) {
     res.header('Content-Type', 'application/json');
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -469,9 +469,9 @@ function formatUserForZoho(ID, DATA) {
 }
 
 module.exports = {
-    _onRequest,
-    _onRequest_setStatus,
-    _onDocumentWritten,
-    _onSchedule,
-    _onRequest_single
+    zoho_onRequest,
+    zoho_onRequest_setStatus,
+    zoho_onDocumentWritten,
+    zoho_onSchedule,
+    zoho_onRequest_single
 };

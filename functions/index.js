@@ -19,7 +19,7 @@ const { handler_onRequest } = require('./assets/js/conectimed_landing/landing');
 const { onWriteDoctorsHandler } = require('./assets/js/triggers/doctors');
 const { getVirtualSessionsAttendanceConfirmation } = require('./assets/js/testing/testing');
 const { handleAssistanceCreated, handleAssistanceUpdated, handleAssistanceDeleted, virtualSessionsAttendanceConfirmationCountFix/*, exportAssistanceToBigQuery */ } = require('./assets/js/triggers/virtualSessions');
-const { _onRequest, _onDocumentWritten, _onSchedule, _onRequest_setStatus, _onRequest_single } = require('./assets/js/zoho/zoho');
+const { zoho_onRequest, zoho_onDocumentWritten, zoho_onSchedule, zoho_onRequest_setStatus, zoho_onRequest_single } = require('./assets/js/zoho/zoho');
 const { chatTriggerHandler } = require('./assets/js/triggers/chats');
 const { readFileHandler } = require('./assets/js/chat/readFile');
 const { sectionsHandler } = require('./assets/js/chat/sections');
@@ -107,13 +107,13 @@ exports.virtualSessionsAttendanceConfirmationCountFix = onRequest(runtimeOpts, a
 // exports.exportAssistanceToBigQuery = onRequest(runtimeOpts, async (req, res) => await exportAssistanceToBigQuery(req, res));
 
 /* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
-exports.zohoExportRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest(req, res));
+exports.zohoExportRequest = onRequest(runtimeOpts, async (req, res) => await zoho_onRequest(req, res));
 
 /* DESC: EXPORT TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
-exports.zohoExportmarkAllUsersPendingRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_setStatus(req, res));
+exports.zohoExportmarkAllUsersPendingRequest = onRequest(runtimeOpts, async (req, res) => await zoho_onRequest_setStatus(req, res));
 
 /* DESC: EXPORT SINGLE USER TO ZOHO (REQUEST) | AUTHOR: Rolando | TYPE: HTTP REQUEST */
-exports.zohoExportSingleRequest = onRequest(runtimeOpts, async (req, res) => await _onRequest_single(req, res));
+exports.zohoExportSingleRequest = onRequest(runtimeOpts, async (req, res) => await zoho_onRequest_single(req, res));
 
 /* DESC: OBTAINING CONFIRMATION OF ATTENDANCE AT VIRTUAL SESSIONS | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getVirtualSessionsAttendanceConfirmation = onRequest(runtimeOpts, async (req, res) => await getVirtualSessionsAttendanceConfirmation(req, res));
@@ -173,7 +173,7 @@ exports.zohoExportPaginationTrigger = onDocumentWritten({
     memory: "1GiB",
     timeoutSeconds: 540,
     document: "validated-user-data-pivot/{pivotId}"
-}, async (event) => await _onDocumentWritten(event));
+}, async (event) => await zoho_onDocumentWritten(event));
 
 /* DESC: SEND MASIVE #CHATS | AUTHOR: Rolando | TYPE: ON WRITE */
 exports.onChatsWrite = onDocumentWritten({
@@ -205,7 +205,7 @@ exports.zohoExportScheduled = onSchedule({
     memory: "1GiB",
     timeoutSeconds: 540,
     retryCount: 3,
-}, async (event) => await _onSchedule(event));
+}, async (event) => await zoho_onSchedule(event));
 
 
 /** ONLY TEST */
