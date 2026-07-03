@@ -8,6 +8,7 @@ const { infoDBFHandler } = require('./assets/js/experimental/experimental');
 const { getValidatedUsersHandler, getAllAuthUsersHandler, getAuthUsersByListHandler } = require('./assets/js/members/createusers');
 const { handler } = require('./assets/js/members/lastForoPost');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
+const { handlerApiClickMeeting, handlerBQClickMeeting, requestFileClickMeeting, handlerGetBQClickMeetingAttendees } = require('./assets/js/click-meeting/click-meeting2');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
 const { generatePDFHandler } = require('./assets/js/pdf/pdf');
 const { generateHtmlCertificateHandler } = require('./assets/js/pdf/html');
@@ -134,6 +135,18 @@ exports.generateCode = onRequest(runtimeOpts, async (req, res) => await generate
 
 /* DESC: GET USER ACCOUNT | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getAuthUserByEmailRequest = onRequest(runtimeOpts, async (req, res) => await getUserByEmailHandlerRequest(req, res));
+
+/* DESC: CLICK MEETING TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+//exports.clickMeetingV2 = onRequest(runtimeOpts, async (req, res) => await handlerApiClickMeeting(req, res));
+
+/* DESC: CLICK MEETING TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+//exports.clickMeetingToBQ = onRequest(runtimeOpts, async (req, res) => await handlerBQClickMeeting(req, res));
+
+/* DESC: CLICK MEETING TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+//exports.fetchFile = onRequest(runtimeOpts, async (req, res) => await requestFileClickMeeting(req, res));
+
+/* DESC: GET ATTENDEES FROM BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
+exports.getClickMeetingAttendees = onRequest(runtimeOpts, async (req, res) => await handlerGetBQClickMeetingAttendees(req, res));
 
 /* functions CALLABLES */
 
