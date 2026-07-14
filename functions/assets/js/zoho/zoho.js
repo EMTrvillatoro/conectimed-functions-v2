@@ -55,9 +55,25 @@ async function processUsersToZohoHandler() {
     // ============================================================
     // 4. PROCESAR DOCUMENTOS
     // ============================================================
-    const users = snapshot.docs.map((e) => {
-        return formatUserForZoho(e.id, e.data() || {});
+    const users = [];
+    const skippedNoEsMedico = [];
+
+    snapshot.docs.forEach((e) => {
+        const rawData = e.data() || {};
+        const metaTypeLower = rawData._metaType ? String(rawData._metaType).trim().toLocaleLowerCase() : '';
+        const metaTypeRaw = rawData.metaType ? String(rawData.metaType).trim() : '';
+
+        // Filtrar usuarios "no-es-medico": no se envían a Zoho, solo se marca como complete en Firebase
+        if (metaTypeLower === 'no-es-medico' || metaTypeRaw === 'No es médico') {
+            console.log(`Usuario omitido (no-es-medico): ${e.id}`);
+            skippedNoEsMedico.push({ id: e.id, zoho_migration_status: 'complete' });
+        } else {
+            users.push(formatUserForZoho(e.id, rawData));
+        }
     });
+
+    // Agregar los usuarios omitidos al batch de actualización de Firebase
+    userBatch.push(...skippedNoEsMedico);
 
     // ============================================================
     // 5. ENVIAR A ZOHO
@@ -65,7 +81,7 @@ async function processUsersToZohoHandler() {
 
     try {
         users.forEach(u => console.log("Procesado:", u.ID_Usuario));
-        const data = await saveToZoho(users);
+        const data = users.length > 0 ? await saveToZoho(users) : null;
 
         if (data && data.details && data.details.output) {
             try {
