@@ -57,36 +57,202 @@ async function generateCodeHandlerRequest(request, response) {
                         const base641 = Buffer.from(data.email).toString('base64');
                         const base642 = Buffer.from(code).toString('base64');
                         const URL_RESET_PASSWORD = `${APP_URL.value()}/reset-password/${base641}/${base642}`;
-                        const text = `
-          <div style="font-family: Arial, Helvetica, sans-serif; text-align: center;">
-              <table border="0" cellspacing="1" cellpadding="10" align="center">
-                  <tbody>
-                      <tr>
-                          <td>
-                          <h2>Hola ${data.name || ''}</h2>    
+                        const text = `                        
+                            <tr>
+                            <td
+                            align="left" class="gr-mltext-euhkjf gr-mltext-bldveo"
+                                style="font-size:0px;padding:0;word-break:break-word;">
+                                <div
+                                style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1.5;text-align:left;color:#000000;">
 
-                          <p>Le hemos enviado este correo en respuesta a su solicitud de restablecimiento de contraseña en <strong>Conectimed</strong>.</p>
+                                <div style="text-align: justify">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <br>
+                                    </p>
+                                </div>
 
-                          <p>Este es su código de verificación: <strong>${code}</strong>. Por favor, ingréselo en el campo de "Código de
-                              verificación" para poder restablecer su contraseña.</p>
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <span style="font-size:18px;color:#777777;font-family:Open Sans, Arial, sans-serif;">
+                                        Hola ${data.name || ''}
+                                    </span>
+                                    </p>
+                                </div>
 
-                          <p>Para restablecer su contraseña, también puede seguir el siguiente enlace:</p>
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <br>
+                                    </p>
+                                </div>
 
-                          <p><a href="${URL_RESET_PASSWORD}" target="_blank"
-                                  style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #ffffff; background-color: #007bff; text-align: center; text-decoration: none; border-radius: 5px;">Restablecer
-                                  Contraseña</a></p>
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <span style="color:#777777;font-size:16px;font-family:Open Sans, Arial, sans-serif;">
+                                        Le hemos enviado este correo en respuesta a su solicitud de
+                                        restablecimiento de contraseña en
+                                    </span>
+                                    <strong>
+                                        <span style="color:#777777;font-size:16px;font-family:Open Sans, Arial, sans-serif;">
+                                        Conectimed
+                                        </span>
+                                    </strong>
+                                    <span style="color:#777777;font-size:16px;font-family:Open Sans, Arial, sans-serif;">
+                                        .
+                                    </span>
+                                    </p>
+                                </div>
 
-                          <p>Si el enlace no funciona, copie y pegue la siguiente dirección en su navegador:</p>
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <br>
+                                    </p>
+                                </div>
 
-                          <p><a href="${URL_RESET_PASSWORD}" target="_blank">${URL_RESET_PASSWORD}</a></p>
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <span style="color:#777777;font-size:16px;font-family:Open Sans, Arial, sans-serif;">
+                                        Este es su código de verificación:
+                                    </span>
+                                    <strong>
+                                        <span style="color:#2D88DA;font-size:20px;font-family:Open Sans, Arial, sans-serif;">
+                                        ${code}
+                                        </span>
+                                    </strong>
+                                    </p>
+                                </div>
 
-                          <p>Por favor, ignore este correo si no solicitó un cambio de contraseña.</p>
-                          </td>
-                      </tr>
-                   
-                  </tbody>
-              </table>
-          </div>`;
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <br>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <span style="color:#777777;font-size:14px;font-family:Open Sans, Arial, sans-serif;">
+                                        Ingrese este código en el campo de
+                                        &quot;Código de verificación&quot; para poder restablecer su contraseña.
+                                    </span>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <br>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <span style="color:#777777;font-size:14px;font-family:Open Sans, Arial, sans-serif;">
+                                        También puede restablecer su contraseña utilizando el siguiente enlace:
+                                    </span>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:15px;margin-bottom:15px;font-weight:normal;">
+                                    <a href="${URL_RESET_PASSWORD}" target="_blank"
+                                        style="display:inline-block;padding:10px 20px;font-family:Open Sans, Arial, sans-serif;font-size:16px;color:#ffffff;background-color:#2D88DA;text-align:center;text-decoration:none;border-radius:5px;">
+                                        Restablecer Contraseña
+                                    </a>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <br>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <span style="color:#777777;font-size:14px;font-family:Open Sans, Arial, sans-serif;">
+                                        Si el enlace no funciona, copie y pegue la siguiente dirección en su navegador:
+                                    </span>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:10px;margin-bottom:0px;font-weight:normal;">
+                                    <a href="${URL_RESET_PASSWORD}" target="_blank"
+                                        style="font-family:Open Sans, Arial, sans-serif;font-size:14px;color:#2D88DA;text-decoration:underline;word-break:break-all;">
+                                        ${URL_RESET_PASSWORD}
+                                    </a>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <br>
+                                    </p>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <p
+                                    style="font-family:Arial;font-size:14px;margin-top:0px;margin-bottom:0px;font-weight:normal;color:#000000;">
+                                    <span style="color:#777777;font-size:14px;font-family:Open Sans, Arial, sans-serif;">
+                                        Por favor, ignore este correo si no solicitó un cambio de contraseña.
+                                    </span>
+                                    </p>
+                                </div>
+
+                                </div>
+                            </td>
+                            </tr>
+
+                            <tr>
+                            <td align="center" style="font-size:0px;padding:24px;word-break:break-word;">
+                                <p style="border-top:solid 2px #777777;font-size:1px;margin:0px auto;width:80%;"></p>
+                            </td>
+                            </tr>
+
+                            <tr>
+                            <td align="center" class="gr-mlimage-jfxauj gr-mlimage-hvqglm"
+                                style="font-size:0px;padding:0;word-break:break-word;">
+                                <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                style="border-collapse:collapse;border-spacing:0px;">
+                                <tbody>
+                                    <tr>
+                                    <td style="width:534px;">
+                                        <img alt=""
+                                        src="https://us-ms.gr-cdn.com/getresponse-yGxOr/photos/6784516a-e420-43a7-b364-735fc854b00c.jpg"
+                                        style="border:0;border-radius:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
+                                        width="534" height="auto">
+                                    </td>
+                                    </tr>
+
+                                    <tr>
+                                    <td>
+                                        &nbsp;
+                                        <br />
+                                    </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                            </td>
+                            </tr>
+
+                            <tr>
+                            <td align="center" style="font-size:0px;padding:24px;word-break:break-word;">
+                                <p style="border-top:solid 0px #ffffff;font-size:1px;margin:0px auto;width:80%;"></p>
+                            </td>
+                            </tr>`;
 
                         await sendEmail({
                             recipient: data.email,
