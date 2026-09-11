@@ -480,7 +480,8 @@ function formatUserForZoho(ID, DATA) {
         "Tipo_de_Contacto": "Usuario plataformas",
         "Fecha_de_registro": DATA && DATA.dateOfCreation ? new Date(DATA.dateOfCreation.toDate()).toISOString() : '',
         // METADATA / OTROS
-        "Description": DATA && DATA.notes ? String(DATA.notes).trim() : ''
+        "Description": DATA && DATA.notes ? String(DATA.notes).trim() : '',
+        "Title": DATA && DATA.title ? String(DATA.title).trim() : ''
     };
 }
 
