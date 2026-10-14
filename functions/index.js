@@ -22,6 +22,9 @@ const { generateTokenZoomHandler } = require('./assets/js/utils/generateTokenZoo
 const { tokensHandler } = require('./assets/js/utils/tokens');
 const { listCardsHandler } = require('./assets/js/payments/listCards');
 const { setPointsHandler } = require('./assets/js/payments/setPoints');
+const { updateUserHandler: aUserUpdateHandler, deleteUserHandler: aUserDeleteHandler } = require('./assets/js/bigquery/users');
+const { admin_messaging_onRequest, admin_messaging_movil_onRequest, admin_messaging_onUpdate } = require('./assets/js/messaging/pushNotifications');
+const { bq_onCreate_pagination, bq_onRequest_activities, bq_onRequest_campaigns, bq_onRequest_contacts, bq_onRequest_createTable } = require('./assets/js/bigquery/queries');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { handlerApiClickMeeting, handlerBQClickMeeting, requestFileClickMeeting, handlerGetBQClickMeetingAttendees } = require('./assets/js/click-meeting/click-meeting2');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
@@ -200,6 +203,54 @@ exports.setPoints = onCall(runtimeOpts, async (request) => await setPointsHandle
 
 /* DESC: CREATE AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
 exports.createAuthUser = onCall(runtimeOpts, async (request) => await createAuthUserCallable(request));
+
+/* DESC: ADMIN MESSAGING HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.admin_messaging = onRequest(runtimeOpts, async (req, res) => await admin_messaging_onRequest(req, res));
+
+/* DESC: ADMIN MESSAGING MOVIL HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.admin_messaging_movil = onRequest(runtimeOpts, async (req, res) => await admin_messaging_movil_onRequest(req, res));
+
+/* DESC: BQ ACTIVITIES HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_activities = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_activities(req, res));
+
+/* DESC: BQ CAMPAIGNS HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_campaigns = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_campaigns(req, res));
+
+/* DESC: BQ CONTACTS HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_contacts = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_contacts(req, res));
+
+/* DESC: BQ CREATE TABLE HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_createTable = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_createTable(req, res));
+
+/* FIRESTORE TRIGGERS MIGRATED */
+
+/* DESC: A USER UPDATE BIGQUERY | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.aUserUpdate = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "users/{userId}"
+}, async (event) => await aUserUpdateHandler(event));
+
+/* DESC: A USER DELETE BIGQUERY | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT DELETED */
+exports.aUserDelete = onDocumentDeleted({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "users/{userId}"
+}, async (event) => await aUserDeleteHandler(event));
+
+/* DESC: ADMIN MESSAGING PAGINATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.admin_messaging_paginate = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "notifications-batch/{id_batch}/pages/{page}"
+}, async (event) => await admin_messaging_onUpdate(event));
+
+/* DESC: BQ ON CREATE PAGINATION | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT CREATED */
+exports.bq_onCreate_pagination = onDocumentCreated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "bq_pagination/{table}/pagination/{page}"
+}, async (event) => await bq_onCreate_pagination(event));
 
 /* DESC: CLICK MEETING TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 //exports.clickMeetingV2 = onRequest(runtimeOpts, async (req, res) => await handlerApiClickMeeting(req, res));
