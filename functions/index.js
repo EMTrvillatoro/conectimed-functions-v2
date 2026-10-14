@@ -24,7 +24,12 @@ const { listCardsHandler } = require('./assets/js/payments/listCards');
 const { setPointsHandler } = require('./assets/js/payments/setPoints');
 const { updateUserHandler: aUserUpdateHandler, deleteUserHandler: aUserDeleteHandler } = require('./assets/js/bigquery/users');
 const { admin_messaging_onRequest, admin_messaging_movil_onRequest, admin_messaging_onUpdate } = require('./assets/js/messaging/pushNotifications');
-const { bq_onCreate_pagination, bq_onRequest_activities, bq_onRequest_campaigns, bq_onRequest_contacts, bq_onRequest_createTable } = require('./assets/js/bigquery/queries');
+const { bq_onCreate_pagination, bq_onRequest_activities, bq_onRequest_campaigns, bq_onRequest_contacts, bq_onRequest_createTable, bq_onRequest_getResponseWebhook, bq_onRequest_newsletters, bq_onRequest_newsletters_update, bq_onRun_campaigns, bq_onRun_contacts, bq_onRun_newsletters, bq_onRun_newsletters_update } = require('./assets/js/bigquery/queries');
+const { certificadosBatchHandler } = require('./assets/js/certificados/certificadosBatch');
+const { changePasswordHandlerRequest } = require('./assets/js/user/changePassword');
+const { checkCodeHandlerRequest } = require('./assets/js/user/checkCode');
+const { checkRepresentantiveCallable } = require('./assets/js/triggers/plans');
+const { clickMeetingBQHandler } = require('./assets/js/click-meeting/clickMeetingBQ');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { handlerApiClickMeeting, handlerBQClickMeeting, requestFileClickMeeting, handlerGetBQClickMeetingAttendees } = require('./assets/js/click-meeting/click-meeting2');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
@@ -203,6 +208,64 @@ exports.setPoints = onCall(runtimeOpts, async (request) => await setPointsHandle
 
 /* DESC: CREATE AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
 exports.createAuthUser = onCall(runtimeOpts, async (request) => await createAuthUserCallable(request));
+
+/* DESC: CHECK REPRESENTANTIVE | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.checkRepresentantive = onCall(runtimeOpts, async (request) => await checkRepresentantiveCallable(request));
+
+/* DESC: CERTIFICADOS BATCH | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.certificadosBatch = onRequest(runtimeOpts, async (req, res) => await certificadosBatchHandler(req, res));
+
+/* DESC: CHANGE PASSWORD | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.changePassword = onRequest(runtimeOpts, async (req, res) => await changePasswordHandlerRequest(req, res));
+
+/* DESC: CHECK CODE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.checkCode = onRequest(runtimeOpts, async (req, res) => await checkCodeHandlerRequest(req, res));
+
+/* DESC: CLICK MEETING TO BQ | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.clickMeetingToBQ = onRequest(runtimeOpts, async (req, res) => await clickMeetingBQHandler(req, res));
+
+/* DESC: BQ GET RESPONSE WEBHOOK | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_getResponseWebhook = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_getResponseWebhook(req, res));
+
+/* DESC: BQ NEWSLETTERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_newsletters = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_newsletters(req, res));
+
+/* DESC: BQ NEWSLETTERS UPDATE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_newsletters_update = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_newsletters_update(req, res));
+
+/* SCHEDULED FUNCTIONS MIGRATED */
+
+/* DESC: BQ ON RUN CAMPAIGNS | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_campaigns = onSchedule({
+    schedule: "00 00 * * 1",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_campaigns(event));
+
+/* DESC: BQ ON RUN CONTACTS | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_contacts = onSchedule({
+    schedule: "00 16 * * 1",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_contacts(event));
+
+/* DESC: BQ ON RUN NEWSLETTERS | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_newsletters = onSchedule({
+    schedule: "03 00 * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_newsletters(event));
+
+/* DESC: BQ ON RUN NEWSLETTERS UPDATE | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_newsletters_update = onSchedule({
+    schedule: "30 01 * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_newsletters_update(event));
 
 /* DESC: ADMIN MESSAGING HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
 exports.admin_messaging = onRequest(runtimeOpts, async (req, res) => await admin_messaging_onRequest(req, res));
