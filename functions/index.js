@@ -10,8 +10,18 @@ const { handler } = require('./assets/js/members/lastForoPost');
 const { contactsHandler } = require('./assets/js/members/contacts');
 const { filtersHandler } = require('./assets/js/members/filters');
 const { existInFireAuthHandler } = require('./assets/js/members/existInFireAuth');
+const { createUsersHandler, createAuthUserCallable } = require('./assets/js/members/createUsersHandler');
+const { deleteUsersHandler } = require('./assets/js/members/deleteUsersHandler');
 const { searchHandler } = require('./assets/js/preregistro/search');
 const { updateHandler: preregistroUpdateHandler } = require('./assets/js/preregistro/update');
+const { isFullMigratedWPHandler } = require('./assets/js/user/isFullMigratedWP');
+const { changePasswordWPFBHandler } = require('./assets/js/user/changePasswordWPFB');
+const { getFbTokenHandlerRequest } = require('./assets/js/user/getFbToken');
+const { generateTokenWPHandler } = require('./assets/js/utils/generateTokenWP');
+const { generateTokenZoomHandler } = require('./assets/js/utils/generateTokenZoom');
+const { tokensHandler } = require('./assets/js/utils/tokens');
+const { listCardsHandler } = require('./assets/js/payments/listCards');
+const { setPointsHandler } = require('./assets/js/payments/setPoints');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { handlerApiClickMeeting, handlerBQClickMeeting, requestFileClickMeeting, handlerGetBQClickMeetingAttendees } = require('./assets/js/click-meeting/click-meeting2');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
@@ -155,6 +165,41 @@ exports.filters = onRequest(runtimeOpts, async (req, res) => await filtersHandle
 
 /* DESC: EXIST IN FIRE AUTH | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
 exports.existInFireAuth = onRequest(runtimeOpts, async (req, res) => await existInFireAuthHandler(req, res));
+
+/* DESC: CREATE USERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.createUsers = onRequest(runtimeOpts, async (req, res) => await createUsersHandler(req, res));
+
+/* DESC: DELETE USERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.deleteUsers = onRequest(runtimeOpts, async (req, res) => await deleteUsersHandler(req, res));
+
+/* DESC: TOKENS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.tokens = onRequest(runtimeOpts, async (req, res) => await tokensHandler(req, res));
+
+/* DESC: GET FB TOKEN | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.getFbToken = onRequest(runtimeOpts, async (req, res) => await getFbTokenHandlerRequest(req, res));
+
+/* CALLABLES MIGRATED */
+
+/* DESC: IS FULL MIGRATED WP | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.isFullMigratedWP = onCall(runtimeOpts, async (request) => await isFullMigratedWPHandler(request));
+
+/* DESC: CHANGE PASSWORD WP FB | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.changePasswordWPFB = onCall(runtimeOpts, async (request) => await changePasswordWPFBHandler(request));
+
+/* DESC: GENERATE TOKEN WP | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.generateTokenWP = onCall(runtimeOpts, async (request) => await generateTokenWPHandler(request));
+
+/* DESC: GENERATE TOKEN ZOOM | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.generateTokenZoom = onCall(runtimeOpts, async (request) => await generateTokenZoomHandler(request));
+
+/* DESC: LIST CARDS | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.listCards = onCall(runtimeOpts, async (request) => await listCardsHandler(request));
+
+/* DESC: SET POINTS | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.setPoints = onCall(runtimeOpts, async (request) => await setPointsHandler(request));
+
+/* DESC: CREATE AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.createAuthUser = onCall(runtimeOpts, async (request) => await createAuthUserCallable(request));
 
 /* DESC: CLICK MEETING TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 //exports.clickMeetingV2 = onRequest(runtimeOpts, async (req, res) => await handlerApiClickMeeting(req, res));
