@@ -30,6 +30,10 @@ const { changePasswordHandlerRequest } = require('./assets/js/user/changePasswor
 const { checkCodeHandlerRequest } = require('./assets/js/user/checkCode');
 const { checkRepresentantiveCallable } = require('./assets/js/triggers/plans');
 const { clickMeetingBQHandler } = require('./assets/js/click-meeting/clickMeetingBQ');
+const { clickMeetingV2Handler } = require('./assets/js/click-meeting/clickMeetingV2');
+const { fetchFileHandler } = require('./assets/js/click-meeting/fetchFile');
+const { deleteAuthUserCallable } = require('./assets/js/user/deleteAuthUser');
+const { emailVerificationAuthUserCallable } = require('./assets/js/user/emailVerificationAuthUser');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { handlerApiClickMeeting, handlerBQClickMeeting, requestFileClickMeeting, handlerGetBQClickMeetingAttendees } = require('./assets/js/click-meeting/click-meeting2');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
@@ -223,6 +227,18 @@ exports.checkCode = onRequest(runtimeOpts, async (req, res) => await checkCodeHa
 
 /* DESC: CLICK MEETING TO BQ | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
 exports.clickMeetingToBQ = onRequest(runtimeOpts, async (req, res) => await clickMeetingBQHandler(req, res));
+
+/* DESC: CLICK MEETING V2 | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.clickMeetingV2 = onRequest(runtimeOpts, async (req, res) => await clickMeetingV2Handler(req, res));
+
+/* DESC: FETCH FILE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.fetchFile = onRequest(runtimeOpts, async (req, res) => await fetchFileHandler(req, res));
+
+/* DESC: DELETE AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.deleteAuthUser = onCall(runtimeOpts, async (request) => await deleteAuthUserCallable(request));
+
+/* DESC: EMAIL VERIFICATION AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.emailVerificationAuthUser = onCall(runtimeOpts, async (request) => await emailVerificationAuthUserCallable(request));
 
 /* DESC: BQ GET RESPONSE WEBHOOK | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
 exports.bq_onRequest_getResponseWebhook = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_getResponseWebhook(req, res));
