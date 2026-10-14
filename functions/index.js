@@ -7,6 +7,11 @@ const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomer
 const { infoDBFHandler } = require('./assets/js/experimental/experimental');
 const { getValidatedUsersHandler, getAllAuthUsersHandler, getAuthUsersByListHandler } = require('./assets/js/members/createusers');
 const { handler } = require('./assets/js/members/lastForoPost');
+const { contactsHandler } = require('./assets/js/members/contacts');
+const { filtersHandler } = require('./assets/js/members/filters');
+const { existInFireAuthHandler } = require('./assets/js/members/existInFireAuth');
+const { searchHandler } = require('./assets/js/preregistro/search');
+const { updateHandler: preregistroUpdateHandler } = require('./assets/js/preregistro/update');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { handlerApiClickMeeting, handlerBQClickMeeting, requestFileClickMeeting, handlerGetBQClickMeetingAttendees } = require('./assets/js/click-meeting/click-meeting2');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
@@ -135,6 +140,21 @@ exports.generateCode = onRequest(runtimeOpts, async (req, res) => await generate
 
 /* DESC: GET USER ACCOUNT | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getAuthUserByEmailRequest = onRequest(runtimeOpts, async (req, res) => await getUserByEmailHandlerRequest(req, res));
+
+/* DESC: PREREGISTRO SEARCH | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.search = onRequest(runtimeOpts, async (req, res) => await searchHandler(req, res));
+
+/* DESC: PREREGISTRO UPDATE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.update = onRequest(runtimeOpts, async (req, res) => await preregistroUpdateHandler(req, res));
+
+/* DESC: MEMBER CONTACTS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.contacts = onRequest(runtimeOpts, async (req, res) => await contactsHandler(req, res));
+
+/* DESC: MEMBER FILTERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.filters = onRequest(runtimeOpts, async (req, res) => await filtersHandler(req, res));
+
+/* DESC: EXIST IN FIRE AUTH | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.existInFireAuth = onRequest(runtimeOpts, async (req, res) => await existInFireAuthHandler(req, res));
 
 /* DESC: CLICK MEETING TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 //exports.clickMeetingV2 = onRequest(runtimeOpts, async (req, res) => await handlerApiClickMeeting(req, res));
