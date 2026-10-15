@@ -7,6 +7,46 @@ const { stripeCustomerCreateHandler, stripeCustomerDeleteHandler, stripeCustomer
 const { infoDBFHandler } = require('./assets/js/experimental/experimental');
 const { getValidatedUsersHandler, getAllAuthUsersHandler, getAuthUsersByListHandler } = require('./assets/js/members/createusers');
 const { handler } = require('./assets/js/members/lastForoPost');
+const { contactsHandler } = require('./assets/js/members/contacts');
+const { filtersHandler } = require('./assets/js/members/filters');
+const { existInFireAuthHandler } = require('./assets/js/members/existInFireAuth');
+const { createUsersHandler, createAuthUserCallable } = require('./assets/js/members/createUsersHandler');
+const { deleteUsersHandler } = require('./assets/js/members/deleteUsersHandler');
+const { searchHandler } = require('./assets/js/preregistro/search');
+const { updateHandler: preregistroUpdateHandler } = require('./assets/js/preregistro/update');
+const { isFullMigratedWPHandler } = require('./assets/js/user/isFullMigratedWP');
+const { changePasswordWPFBHandler } = require('./assets/js/user/changePasswordWPFB');
+const { getFbTokenHandlerRequest } = require('./assets/js/user/getFbToken');
+const { generateTokenWPHandler } = require('./assets/js/utils/generateTokenWP');
+const { generateTokenZoomHandler } = require('./assets/js/utils/generateTokenZoom');
+const { tokensHandler } = require('./assets/js/utils/tokens');
+const { listCardsHandler } = require('./assets/js/payments/listCards');
+const { setPointsHandler } = require('./assets/js/payments/setPoints');
+const { updateUserHandler: aUserUpdateHandler, deleteUserHandler: aUserDeleteHandler } = require('./assets/js/bigquery/users');
+const { admin_messaging_onRequest, admin_messaging_movil_onRequest, admin_messaging_onUpdate } = require('./assets/js/messaging/pushNotifications');
+const { bq_onCreate_pagination, bq_onRequest_activities, bq_onRequest_campaigns, bq_onRequest_contacts, bq_onRequest_createTable, bq_onRequest_getResponseWebhook, bq_onRequest_newsletters, bq_onRequest_newsletters_update, bq_onRun_campaigns, bq_onRun_contacts, bq_onRun_newsletters, bq_onRun_newsletters_update } = require('./assets/js/bigquery/queries');
+const { certificadosBatchHandler } = require('./assets/js/certificados/certificadosBatch');
+const { changePasswordHandlerRequest } = require('./assets/js/user/changePassword');
+const { checkCodeHandlerRequest } = require('./assets/js/user/checkCode');
+const { checkRepresentantiveCallable } = require('./assets/js/triggers/plans');
+const { clickMeetingBQHandler } = require('./assets/js/click-meeting/clickMeetingBQ');
+const { clickMeetingV2Handler } = require('./assets/js/click-meeting/clickMeetingV2');
+const { fetchFileHandler } = require('./assets/js/click-meeting/fetchFile');
+const { deleteAuthUserCallable } = require('./assets/js/user/deleteAuthUser');
+const { emailVerificationAuthUserCallable } = require('./assets/js/user/emailVerificationAuthUser');
+const { fire_onRun_scheduled_posts, fire_onRun_delete_curses_and_congresses, fire_onRequest_scheduled_posts } = require('./assets/js/posts/scheduledPosts');
+const { getAllUsersAuthUserHandler, getAuthUserCallable, getAuthUserByEmailCallable, resetPasswordAuthUserCallable, updateAuthUserCallable } = require('./assets/js/user/accountManagement');
+const { getSearchArrayHandlerRequest, updateSeachUserObjectCallable, onUsersTasksHandler } = require('./assets/js/user/updateSearchTasks');
+const { onCreateCertificatesBatchHandler, onUpdateCertificatesBatchItemHandler } = require('./assets/js/certificados/certificatesBatchTriggers');
+const { onAddCreateHandler } = require('./assets/js/triggers/advertising');
+const { onClickBannerCreateHandler, onClickBannerDeleteHandler } = require('./assets/js/triggers/banners');
+const { onGroupsCreateHandler } = require('./assets/js/triggers/groups');
+const { onUsersCreateHandler, onUsersUpdateHandler, onUsersDeleteHandler, onUserUpdateHandler } = require('./assets/js/triggers/users');
+const { updatePostsSearchCallable, onPostsTasksHandler, updateProductsSearchCallable, onProductsTasksHandler, onWriteBannersHandler, onWriteCategoriesHandler, onWriteCategoriesVideosHandler, onWriteForoHandler, onWriteProductsHandler, onWriteSpecialtiesHandler, onWriteTagsHandler } = require('./assets/js/content/contentHandlers');
+const { paymentsCallable } = require('./assets/js/payments/payments');
+const { sendNotificationHandlerRequest, sendNotificationCallCallable, subscribeToTopicCallable, unsubscribeFromTopicCallable } = require('./assets/js/messaging/topicsAndNotifications');
+const { zoomSignatureHandler, zoomGetMeetingInfoHandler } = require('./assets/js/zoom/zoom');
+const { getTokenCallable, fire_onRun_usersInValidation, uploadFilesToFstorageHandler } = require('./assets/js/utils/storageAndValidation');
 const { clickMeetingHandler } = require('./assets/js/click-meeting/click-meeting');
 const { handlerApiClickMeeting, handlerBQClickMeeting, requestFileClickMeeting, handlerGetBQClickMeetingAttendees } = require('./assets/js/click-meeting/click-meeting2');
 const { registerHandler, updateHandler } = require('./assets/js/user/register');
@@ -135,6 +175,361 @@ exports.generateCode = onRequest(runtimeOpts, async (req, res) => await generate
 
 /* DESC: GET USER ACCOUNT | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 exports.getAuthUserByEmailRequest = onRequest(runtimeOpts, async (req, res) => await getUserByEmailHandlerRequest(req, res));
+
+/* DESC: PREREGISTRO SEARCH | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.search = onRequest(runtimeOpts, async (req, res) => await searchHandler(req, res));
+
+/* DESC: PREREGISTRO UPDATE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.update = onRequest(runtimeOpts, async (req, res) => await preregistroUpdateHandler(req, res));
+
+/* DESC: MEMBER CONTACTS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.contacts = onRequest(runtimeOpts, async (req, res) => await contactsHandler(req, res));
+
+/* DESC: MEMBER FILTERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.filters = onRequest(runtimeOpts, async (req, res) => await filtersHandler(req, res));
+
+/* DESC: EXIST IN FIRE AUTH | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.existInFireAuth = onRequest(runtimeOpts, async (req, res) => await existInFireAuthHandler(req, res));
+
+/* DESC: CREATE USERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.createUsers = onRequest(runtimeOpts, async (req, res) => await createUsersHandler(req, res));
+
+/* DESC: DELETE USERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.deleteUsers = onRequest(runtimeOpts, async (req, res) => await deleteUsersHandler(req, res));
+
+/* DESC: TOKENS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.tokens = onRequest(runtimeOpts, async (req, res) => await tokensHandler(req, res));
+
+/* DESC: GET FB TOKEN | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.getFbToken = onRequest(runtimeOpts, async (req, res) => await getFbTokenHandlerRequest(req, res));
+
+/* CALLABLES MIGRATED */
+
+/* DESC: IS FULL MIGRATED WP | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.isFullMigratedWP = onCall(runtimeOpts, async (request) => await isFullMigratedWPHandler(request));
+
+/* DESC: CHANGE PASSWORD WP FB | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.changePasswordWPFB = onCall(runtimeOpts, async (request) => await changePasswordWPFBHandler(request));
+
+/* DESC: GENERATE TOKEN WP | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.generateTokenWP = onCall(runtimeOpts, async (request) => await generateTokenWPHandler(request));
+
+/* DESC: GENERATE TOKEN ZOOM | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.generateTokenZoom = onCall(runtimeOpts, async (request) => await generateTokenZoomHandler(request));
+
+/* DESC: LIST CARDS | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.listCards = onCall(runtimeOpts, async (request) => await listCardsHandler(request));
+
+/* DESC: SET POINTS | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.setPoints = onCall(runtimeOpts, async (request) => await setPointsHandler(request));
+
+/* DESC: CREATE AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.createAuthUser = onCall(runtimeOpts, async (request) => await createAuthUserCallable(request));
+
+/* DESC: CHECK REPRESENTANTIVE | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.checkRepresentantive = onCall(runtimeOpts, async (request) => await checkRepresentantiveCallable(request));
+
+/* DESC: CERTIFICADOS BATCH | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.certificadosBatch = onRequest(runtimeOpts, async (req, res) => await certificadosBatchHandler(req, res));
+
+/* DESC: CHANGE PASSWORD | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.changePassword = onRequest(runtimeOpts, async (req, res) => await changePasswordHandlerRequest(req, res));
+
+/* DESC: CHECK CODE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.checkCode = onRequest(runtimeOpts, async (req, res) => await checkCodeHandlerRequest(req, res));
+
+/* DESC: CLICK MEETING TO BQ | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.clickMeetingToBQ = onRequest(runtimeOpts, async (req, res) => await clickMeetingBQHandler(req, res));
+
+/* DESC: CLICK MEETING V2 | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.clickMeetingV2 = onRequest(runtimeOpts, async (req, res) => await clickMeetingV2Handler(req, res));
+
+/* DESC: FETCH FILE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.fetchFile = onRequest(runtimeOpts, async (req, res) => await fetchFileHandler(req, res));
+
+/* DESC: DELETE AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.deleteAuthUser = onCall(runtimeOpts, async (request) => await deleteAuthUserCallable(request));
+
+/* DESC: EMAIL VERIFICATION AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.emailVerificationAuthUser = onCall(runtimeOpts, async (request) => await emailVerificationAuthUserCallable(request));
+
+/* DESC: GET AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.getAuthUser = onCall(runtimeOpts, async (request) => await getAuthUserCallable(request));
+
+/* DESC: GET AUTH USER BY EMAIL | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.getAuthUserByEmail = onCall(runtimeOpts, async (request) => await getAuthUserByEmailCallable(request));
+
+/* DESC: RESET PASSWORD AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.resetPasswordAuthUser = onCall(runtimeOpts, async (request) => await resetPasswordAuthUserCallable(request));
+
+/* DESC: UPDATE AUTH USER | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.updateAuthUser = onCall(runtimeOpts, async (request) => await updateAuthUserCallable(request));
+
+/* DESC: UPDATE SEARCH USER OBJECT | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.updateSeachUserObject = onCall(runtimeOpts, async (request) => await updateSeachUserObjectCallable(request));
+
+/* DESC: UPDATE POSTS SEARCH | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.updatePostsSearch = onCall(runtimeOpts, async (request) => await updatePostsSearchCallable(request));
+
+/* DESC: UPDATE PRODUCTS SEARCH | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.updateProductsSearch = onCall(runtimeOpts, async (request) => await updateProductsSearchCallable(request));
+
+/* DESC: PAYMENTS | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.payments = onCall(runtimeOpts, async (request) => await paymentsCallable(request));
+
+/* DESC: SEND NOTIFICATION CALL | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.sendNotificationCall = onCall(runtimeOpts, async (request) => await sendNotificationCallCallable(request));
+
+/* DESC: SUBSCRIBE TO TOPIC | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.subscribeToTopic = onCall(runtimeOpts, async (request) => await subscribeToTopicCallable(request));
+
+/* DESC: UNSUBSCRIBE FROM TOPIC | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.unsubscribeFromTopic = onCall(runtimeOpts, async (request) => await unsubscribeFromTopicCallable(request));
+
+/* DESC: GET TOKEN | AUTHOR: Migrated v2 | TYPE: CALLABLE */
+exports.getToken = onCall(runtimeOpts, async (request) => await getTokenCallable(request));
+
+/* MORE HTTP ENDPOINTS MIGRATED */
+
+/* DESC: GET ALL USERS AUTH USER | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.getAllUsersAuthUser = onRequest(runtimeOpts, async (req, res) => await getAllUsersAuthUserHandler(req, res));
+
+/* DESC: GET SEARCH ARRAY | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.getSearchArray = onRequest(runtimeOpts, async (req, res) => await getSearchArrayHandlerRequest(req, res));
+
+/* DESC: FIRE ONREQUEST SCHEDULED POSTS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.fire_onRequest_scheduled_posts = onRequest(runtimeOpts, async (req, res) => await fire_onRequest_scheduled_posts(req, res));
+
+/* DESC: SEND NOTIFICATION | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.sendNotification = onRequest(runtimeOpts, async (req, res) => await sendNotificationHandlerRequest(req, res));
+
+/* DESC: UPLOAD FILES TO FSTORAGE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.uploadFilesToFstorage = onRequest(runtimeOpts, async (req, res) => await uploadFilesToFstorageHandler(req, res));
+
+/* DESC: ZOOM SIGNATURE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.zoomSignature = onRequest(runtimeOpts, async (req, res) => await zoomSignatureHandler(req, res));
+
+/* DESC: ZOOM GET MEETING INFO | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.zoomGetMeetingInfo = onRequest(runtimeOpts, async (req, res) => await zoomGetMeetingInfoHandler(req, res));
+
+/* MORE SCHEDULED FUNCTIONS MIGRATED */
+
+/* DESC: FIRE ONRUN SCHEDULED POSTS | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.fire_onRun_scheduled_posts = onSchedule({
+    schedule: "*/10 * * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await fire_onRun_scheduled_posts(event));
+
+/* DESC: FIRE ONRUN DELETE CURSES AND CONGRESSES | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.fire_onRun_delete_curses_and_congresses = onSchedule({
+    schedule: "00 00 * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await fire_onRun_delete_curses_and_congresses(event));
+
+/* DESC: FIRE ONRUN USERS IN VALIDATION | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.fire_onRun_usersInValidation = onSchedule({
+    schedule: "*/10 * * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await fire_onRun_usersInValidation(event));
+
+/* MORE FIRESTORE TRIGGERS MIGRATED */
+
+/* DESC: ON ADD CREATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT CREATED */
+exports.onAddCreate = onDocumentCreated({
+    document: "advertising/{id}"
+}, async (event) => await onAddCreateHandler(event));
+
+/* DESC: ON CLICK BANNER CREATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT CREATED */
+exports.onClickBannerCreate = onDocumentCreated({
+    document: "advertising/{advertisingId}/clicks/{dateId}/users/{userId}"
+}, async (event) => await onClickBannerCreateHandler(event));
+
+/* DESC: ON CLICK BANNER DELETE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT DELETED */
+exports.onClickBannerDelete = onDocumentDeleted({
+    document: "advertising/{advertisingId}/clicks/{dateId}/users/{userId}"
+}, async (event) => await onClickBannerDeleteHandler(event));
+
+/* DESC: ON CREATE CERTIFICATES BATCH | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT CREATED */
+exports.onCreateCertificatesBatch = onDocumentCreated({
+    document: "certificates-batch/{id}"
+}, async (event) => await onCreateCertificatesBatchHandler(event));
+
+/* DESC: ON UPDATE CERTIFICATES BATCH ITEM | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.onUpdateCertificatesBatchItem = onDocumentUpdated({
+    document: "certificates-batch/{id_batch}/sections/{id}"
+}, async (event) => await onUpdateCertificatesBatchItemHandler(event));
+
+/* DESC: ON GROUPS CREATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT CREATED */
+exports.onGroupsCreate = onDocumentCreated({
+    document: "broadcast-list/{uid}"
+}, async (event) => await onGroupsCreateHandler(event));
+
+/* DESC: ON USERS CREATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT CREATED */
+exports.onUsersCreate = onDocumentCreated({
+    document: "users/{userId}"
+}, async (event) => await onUsersCreateHandler(event));
+
+/* DESC: ON USERS UPDATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.onUsersUpdate = onDocumentUpdated({
+    document: "users/{userId}"
+}, async (event) => await onUsersUpdateHandler(event));
+
+/* DESC: ON USERS DELETE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT DELETED */
+exports.onUsersDelete = onDocumentDeleted({
+    document: "users/{userId}"
+}, async (event) => await onUsersDeleteHandler(event));
+
+/* DESC: ON USER UPDATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.onUserUpdate = onDocumentUpdated({
+    document: "users/{userId}"
+}, async (event) => await onUserUpdateHandler(event));
+
+/* DESC: ON USERS TASKS | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.onUsersTasks = onDocumentUpdated({
+    document: "users-tasks/{id}"
+}, async (event) => await onUsersTasksHandler(event));
+
+/* DESC: ON POSTS TASKS | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.onPostsTasks = onDocumentUpdated({
+    document: "posts-tasks/{id}"
+}, async (event) => await onPostsTasksHandler(event));
+
+/* DESC: ON PRODUCTS TASKS | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.onProductsTasks = onDocumentUpdated({
+    document: "products-tasks/{id}"
+}, async (event) => await onProductsTasksHandler(event));
+
+/* DESC: ON WRITE BANNERS | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT WRITTEN */
+exports.onWriteBanners = onDocumentWritten({
+    document: "banners/{id}"
+}, async (event) => await onWriteBannersHandler(event));
+
+/* DESC: ON WRITE CATEGORIES | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT WRITTEN */
+exports.onWriteCategories = onDocumentWritten({
+    document: "categories/{id}"
+}, async (event) => await onWriteCategoriesHandler(event));
+
+/* DESC: ON WRITE CATEGORIES VIDEOS | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT WRITTEN */
+exports.onWriteCategoriesVideos = onDocumentWritten({
+    document: "categories_video/{id}"
+}, async (event) => await onWriteCategoriesVideosHandler(event));
+
+/* DESC: ON WRITE FORO | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT WRITTEN */
+exports.onWriteForo = onDocumentWritten({
+    document: "foro/{id}"
+}, async (event) => await onWriteForoHandler(event));
+
+/* DESC: ON WRITE PRODUCTS | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT WRITTEN */
+exports.onWriteProducts = onDocumentWritten({
+    document: "products/{id}"
+}, async (event) => await onWriteProductsHandler(event));
+
+/* DESC: ON WRITE SPECIALTIES | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT WRITTEN */
+exports.onWriteSpecialties = onDocumentWritten({
+    document: "specialties/{id}"
+}, async (event) => await onWriteSpecialtiesHandler(event));
+
+/* DESC: ON WRITE TAGS | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT WRITTEN */
+exports.onWriteTags = onDocumentWritten({
+    document: "tags/{id}"
+}, async (event) => await onWriteTagsHandler(event));
+
+/* DESC: BQ GET RESPONSE WEBHOOK | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_getResponseWebhook = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_getResponseWebhook(req, res));
+
+/* DESC: BQ NEWSLETTERS | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_newsletters = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_newsletters(req, res));
+
+/* DESC: BQ NEWSLETTERS UPDATE | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_newsletters_update = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_newsletters_update(req, res));
+
+/* SCHEDULED FUNCTIONS MIGRATED */
+
+/* DESC: BQ ON RUN CAMPAIGNS | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_campaigns = onSchedule({
+    schedule: "00 00 * * 1",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_campaigns(event));
+
+/* DESC: BQ ON RUN CONTACTS | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_contacts = onSchedule({
+    schedule: "00 16 * * 1",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_contacts(event));
+
+/* DESC: BQ ON RUN NEWSLETTERS | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_newsletters = onSchedule({
+    schedule: "03 00 * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_newsletters(event));
+
+/* DESC: BQ ON RUN NEWSLETTERS UPDATE | AUTHOR: Migrated v2 | TYPE: SCHEDULED */
+exports.bq_onRun_newsletters_update = onSchedule({
+    schedule: "30 01 * * *",
+    timeZone: "America/Mexico_City",
+    memory: "1GiB",
+    timeoutSeconds: 540
+}, async (event) => await bq_onRun_newsletters_update(event));
+
+/* DESC: ADMIN MESSAGING HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.admin_messaging = onRequest(runtimeOpts, async (req, res) => await admin_messaging_onRequest(req, res));
+
+/* DESC: ADMIN MESSAGING MOVIL HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.admin_messaging_movil = onRequest(runtimeOpts, async (req, res) => await admin_messaging_movil_onRequest(req, res));
+
+/* DESC: BQ ACTIVITIES HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_activities = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_activities(req, res));
+
+/* DESC: BQ CAMPAIGNS HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_campaigns = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_campaigns(req, res));
+
+/* DESC: BQ CONTACTS HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_contacts = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_contacts(req, res));
+
+/* DESC: BQ CREATE TABLE HTTP | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
+exports.bq_onRequest_createTable = onRequest(runtimeOpts, async (req, res) => await bq_onRequest_createTable(req, res));
+
+/* FIRESTORE TRIGGERS MIGRATED */
+
+/* DESC: A USER UPDATE BIGQUERY | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.aUserUpdate = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "users/{userId}"
+}, async (event) => await aUserUpdateHandler(event));
+
+/* DESC: A USER DELETE BIGQUERY | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT DELETED */
+exports.aUserDelete = onDocumentDeleted({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "users/{userId}"
+}, async (event) => await aUserDeleteHandler(event));
+
+/* DESC: ADMIN MESSAGING PAGINATE | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT UPDATED */
+exports.admin_messaging_paginate = onDocumentUpdated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "notifications-batch/{id_batch}/pages/{page}"
+}, async (event) => await admin_messaging_onUpdate(event));
+
+/* DESC: BQ ON CREATE PAGINATION | AUTHOR: Migrated v2 | TYPE: ON DOCUMENT CREATED */
+exports.bq_onCreate_pagination = onDocumentCreated({
+    memory: "1GiB",
+    timeoutSeconds: 540,
+    document: "bq_pagination/{table}/pagination/{page}"
+}, async (event) => await bq_onCreate_pagination(event));
 
 /* DESC: CLICK MEETING TO BIGQUERY | AUTHOR: Rolando | TYPE: HTTP REQUEST */
 //exports.clickMeetingV2 = onRequest(runtimeOpts, async (req, res) => await handlerApiClickMeeting(req, res));
