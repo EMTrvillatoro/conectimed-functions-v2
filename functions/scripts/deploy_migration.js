@@ -8,6 +8,7 @@ const xlsx = require('xlsx');
 // Parse CLI arguments
 const args = process.argv.slice(2);
 const isDryRun = args.includes('--dry-run');
+const isForce = args.includes('--force') || args.includes('-f');
 
 let excelPathArg = null;
 const excelIdx = args.findIndex(a => a === '--excel' || a === '-e');
@@ -74,6 +75,11 @@ appendLog(`📌 Using Excel file: ${excelPath}`);
 if (isDryRun) {
   appendLog('🧪 DRY RUN MODE ENABLED - No Firebase CLI commands will be executed.');
 }
+if (isForce) {
+  appendLog('⚡ FORCE MODE ENABLED - Will re-process functions even if already marked as MIGRADO / 2nd gen.');
+} else {
+  appendLog('🔄 AUTO-RESUME ENABLED - Functions already marked as MIGRADO / 2nd gen will be skipped.');
+}
 
 // Read Excel file
 const workbook = xlsx.readFile(excelPath);
@@ -83,6 +89,7 @@ const data = xlsx.utils.sheet_to_json(worksheet);
 
 let successCount = 0;
 let failCount = 0;
+let skippedCount = 0;
 let totalProcessed = 0;
 
 appendLog(`\n🚀 Starting Firebase Functions v1 -> v2 Migration Deployment (${data.length} functions)\n`);
@@ -96,7 +103,15 @@ for (let i = 0; i < data.length; i++) {
   }
 
   totalProcessed++;
-  const nowStr = new Date().toISOString();
+
+  // Check if already migrated
+  const isAlreadyMigrated = (row.STATUS === 'MIGRADO' || row.ENVIRONMENT === '2nd gen');
+  if (isAlreadyMigrated && !isForce) {
+    appendLog(`[${totalProcessed}/${data.length}] ⏭️ Skipping function: ${functionName} (Already marked as ${row.STATUS || row.ENVIRONMENT})`);
+    skippedCount++;
+    continue;
+  }
+
   appendLog(`--------------------------------------------------`);
   appendLog(`[${totalProcessed}/${data.length}] Processing function: ${functionName}`);
 
@@ -193,8 +208,9 @@ for (let i = 0; i < data.length; i++) {
 appendLog(`\n==================================================`);
 appendLog(`🎉 Migration Deployment Complete!`);
 appendLog(`📊 Summary:`);
-appendLog(`   - Total processed: ${totalProcessed}`);
-appendLog(`   - Successfully migrated (2nd gen): ${successCount}`);
+appendLog(`   - Total functions evaluated: ${totalProcessed}`);
+appendLog(`   - Skipped (already migrated): ${skippedCount}`);
+appendLog(`   - Successfully migrated this run: ${successCount}`);
 appendLog(`   - Errors: ${failCount}`);
 appendLog(`   - History Log: ${historyLogPath}`);
 appendLog(`   - History JSON: ${historyJsonPath}`);
