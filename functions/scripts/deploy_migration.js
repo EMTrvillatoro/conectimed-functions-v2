@@ -37,9 +37,42 @@ if (!excelPath || !fs.existsSync(excelPath)) {
   process.exit(1);
 }
 
-console.log(`📌 Using Excel file: ${excelPath}`);
+const dirName = path.dirname(excelPath);
+const historyLogPath = path.join(dirName, 'migration_history.log');
+const historyJsonPath = path.join(dirName, 'migration_history.json');
+
+function appendLog(message) {
+  const timestamp = new Date().toISOString();
+  const logLine = `[${timestamp}] ${message}\n`;
+  console.log(message);
+  try {
+    fs.appendFileSync(historyLogPath, logLine, 'utf8');
+  } catch (err) {
+    console.error('Failed writing to log file:', err);
+  }
+}
+
+function saveHistoryJson(entry) {
+  let history = [];
+  try {
+    if (fs.existsSync(historyJsonPath)) {
+      const content = fs.readFileSync(historyJsonPath, 'utf8');
+      history = JSON.parse(content);
+    }
+  } catch (e) {
+    history = [];
+  }
+  history.push(entry);
+  try {
+    fs.writeFileSync(historyJsonPath, JSON.stringify(history, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Failed saving history JSON:', e);
+  }
+}
+
+appendLog(`📌 Using Excel file: ${excelPath}`);
 if (isDryRun) {
-  console.log('🧪 DRY RUN MODE ENABLED - No Firebase CLI commands will be executed.');
+  appendLog('🧪 DRY RUN MODE ENABLED - No Firebase CLI commands will be executed.');
 }
 
 // Read Excel file
@@ -52,7 +85,7 @@ let successCount = 0;
 let failCount = 0;
 let totalProcessed = 0;
 
-console.log(`\n🚀 Starting Firebase Functions v1 -> v2 Migration Deployment (${data.length} functions)\n`);
+appendLog(`\n🚀 Starting Firebase Functions v1 -> v2 Migration Deployment (${data.length} functions)\n`);
 
 for (let i = 0; i < data.length; i++) {
   const row = data[i];
@@ -63,16 +96,18 @@ for (let i = 0; i < data.length; i++) {
   }
 
   totalProcessed++;
-  console.log(`--------------------------------------------------`);
-  console.log(`[${totalProcessed}/${data.length}] Processing function: ${functionName}`);
+  const nowStr = new Date().toISOString();
+  appendLog(`--------------------------------------------------`);
+  appendLog(`[${totalProcessed}/${data.length}] Processing function: ${functionName}`);
 
   let deleteSuccess = false;
   let deploySuccess = false;
+  let errorDetail = null;
 
   // 1. Delete v1 function
-  console.log(`  └─ 1. Deleting v1 function: ${functionName}...`);
+  appendLog(`  └─ 1. Deleting v1 function: ${functionName}...`);
   if (isDryRun) {
-    console.log(`     [DRY RUN] Executed: firebase functions:delete ${functionName} --force`);
+    appendLog(`     [DRY RUN] Executed: firebase functions:delete ${functionName} --force`);
     deleteSuccess = true;
   } else {
     try {
@@ -81,17 +116,17 @@ for (let i = 0; i < data.length; i++) {
         encoding: 'utf8'
       });
       deleteSuccess = true;
-      console.log(`  ✅ Successfully deleted v1 function: ${functionName}`);
+      appendLog(`  ✅ Successfully deleted v1 function: ${functionName}`);
     } catch (err) {
-      console.warn(`  ⚠️ Warning: Failed to delete function ${functionName} (it may not exist or CLI failed):`, err.message || err);
-      // Continue to deploy step even if delete fails
+      errorDetail = err.message || String(err);
+      appendLog(`  ⚠️ Warning: Failed to delete function ${functionName} (it may not exist or CLI failed): ${errorDetail}`);
     }
   }
 
   // 2. Deploy v2 function
-  console.log(`  └─ 2. Deploying v2 function: ${functionName}...`);
+  appendLog(`  └─ 2. Deploying v2 function: ${functionName}...`);
   if (isDryRun) {
-    console.log(`     [DRY RUN] Executed: firebase deploy --only functions:${functionName}`);
+    appendLog(`     [DRY RUN] Executed: firebase deploy --only functions:${functionName}`);
     deploySuccess = true;
   } else {
     try {
@@ -100,35 +135,67 @@ for (let i = 0; i < data.length; i++) {
         encoding: 'utf8'
       });
       deploySuccess = true;
-      console.log(`  ✅ Successfully deployed v2 function: ${functionName}`);
+      appendLog(`  ✅ Successfully deployed v2 function: ${functionName}`);
     } catch (err) {
-      console.error(`  ❌ Error deploying v2 function ${functionName}:`, err.message || err);
+      errorDetail = err.message || String(err);
+      appendLog(`  ❌ Error deploying v2 function ${functionName}: ${errorDetail}`);
+      row.STATUS = 'ERROR';
+      row.ENVIRONMENT = row.ENVIRONMENT || '1st gen';
+      row.LAST_DEPLOYED_AT = new Date().toISOString();
       failCount++;
-      // Continue to next function
+
+      saveHistoryJson({
+        timestamp: new Date().toISOString(),
+        function: functionName,
+        status: 'ERROR',
+        deleteSuccess,
+        deploySuccess: false,
+        error: errorDetail
+      });
+
+      try {
+        const updatedSheet = xlsx.utils.json_to_sheet(data);
+        workbook.Sheets[sheetName] = updatedSheet;
+        xlsx.writeFile(workbook, excelPath);
+      } catch (e) {}
+
       continue;
     }
   }
 
-  // 3. Update Excel file column ENVIRONMENT to '2nd gen' upon successful deployment
+  // 3. Update Excel file on success
   if (deploySuccess) {
     row.ENVIRONMENT = '2nd gen';
+    row.STATUS = 'MIGRADO';
+    row.LAST_DEPLOYED_AT = new Date().toISOString();
     successCount++;
+
+    saveHistoryJson({
+      timestamp: new Date().toISOString(),
+      function: functionName,
+      status: 'MIGRADO',
+      deleteSuccess,
+      deploySuccess: true,
+      error: null
+    });
 
     try {
       const updatedSheet = xlsx.utils.json_to_sheet(data);
       workbook.Sheets[sheetName] = updatedSheet;
       xlsx.writeFile(workbook, excelPath);
-      console.log(`  📝 Excel updated: ${functionName} ENVIRONMENT set to '2nd gen'`);
+      appendLog(`  📝 Excel updated: ${functionName} STATUS set to 'MIGRADO' & ENVIRONMENT set to '2nd gen'`);
     } catch (excelErr) {
-      console.error(`  ⚠️ Warning: Failed to save updated Excel file:`, excelErr.message || excelErr);
+      appendLog(`  ⚠️ Warning: Failed to save updated Excel file: ${excelErr.message || excelErr}`);
     }
   }
 }
 
-console.log(`\n==================================================`);
-console.log(`🎉 Migration Deployment Complete!`);
-console.log(`📊 Summary:`);
-console.log(`   - Total processed: ${totalProcessed}`);
-console.log(`   - Successfully updated to 2nd gen: ${successCount}`);
-console.log(`   - Failed: ${failCount}`);
-console.log(`==================================================\n`);
+appendLog(`\n==================================================`);
+appendLog(`🎉 Migration Deployment Complete!`);
+appendLog(`📊 Summary:`);
+appendLog(`   - Total processed: ${totalProcessed}`);
+appendLog(`   - Successfully migrated (2nd gen): ${successCount}`);
+appendLog(`   - Errors: ${failCount}`);
+appendLog(`   - History Log: ${historyLogPath}`);
+appendLog(`   - History JSON: ${historyJsonPath}`);
+appendLog(`==================================================\n`);
