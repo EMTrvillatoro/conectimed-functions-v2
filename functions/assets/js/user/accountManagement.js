@@ -53,54 +53,86 @@ async function getAllUsersAuthUserHandler(req, res) {
 
 async function getAuthUserCallable(request) {
   if (!request.auth || !request.auth.uid) {
-    throw new HttpsError('unauthenticated', 'The function must be called while authenticated');
+    throw new HttpsError(
+      'unauthenticated',
+      'The function must be called while authenticated'
+    );
   }
 
   const data = request.data || {};
-  if (!data.uid) {
-    throw new HttpsError('invalid-argument', 'missing parameters (uid)');
+
+  if (!data.uid || typeof data.uid !== 'string') {
+    return null;
   }
 
   const admin = Tools.getFBAdminInstance();
+
   try {
-    return await admin.auth().getUser(data.uid);
+    return await admin.auth().getUser(data.uid.trim());
   } catch (error) {
+    if (error.code === 'auth/user-not-found') {
+      return null;
+    }
+
     console.error('Error in getAuthUserCallable:', error);
-    throw new HttpsError('internal', error.message || 'Error getting auth user');
+
+    throw new HttpsError(
+      'internal',
+      'Error getting Firebase Auth user'
+    );
   }
 }
 
 async function getAuthUserByEmailCallable(request) {
   if (!request.auth || !request.auth.uid) {
-    throw new HttpsError('unauthenticated', 'The function must be called while authenticated');
+    throw new HttpsError(
+      'unauthenticated',
+      'The function must be called while authenticated'
+    );
   }
 
   const data = request.data || {};
-  if (!data.email) {
-    throw new HttpsError('invalid-argument', 'missing parameters (email)');
+
+  if (!data.email || typeof data.email !== 'string') {
+    return null;
   }
 
   const admin = Tools.getFBAdminInstance();
   const db = admin.firestore();
 
   try {
-    const userAuth = await admin.auth().getUserByEmail(data.email);
+    const userAuth = await admin.auth().getUserByEmail(data.email.trim());
+
     if (userAuth && userAuth.uid && data.info === true) {
       const resp = await db.doc(`users/${userAuth.uid}`).get();
+
       let information = {};
-      if (resp && resp.exists) {
-        information = resp.data();
+
+      if (resp.exists) {
+        information = resp.data() || {};
       }
+
       return {
         authInformation: userAuth,
         userInformation: information
       };
-    } else {
-      return userAuth;
     }
+
+    return userAuth;
   } catch (error) {
+    if (
+      error.code === 'auth/user-not-found' ||
+      error.code === 'auth/invalid-email'
+    ) {
+      return null;
+    }
+
     console.error('Error in getAuthUserByEmailCallable:', error);
-    throw new HttpsError('internal', error.message || 'Error getting user by email');
+
+    throw new HttpsError(
+      'internal',
+      'Error getting user by email'
+    );
   }
 }
 
