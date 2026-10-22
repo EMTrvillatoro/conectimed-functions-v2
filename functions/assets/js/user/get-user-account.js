@@ -318,7 +318,11 @@ async function getUserByEmailHandlerRequest(request, response) {
             try {
                 if (request && request.body && request.body.email) {
                     let uid = undefined;
-                    let data = await getUserByEmail(request.body.email, request.body.info);
+                    let data = await getUserByEmail(
+                        request.body.email,
+                        request.body.info,
+                        request.body.getValidationStatus
+                    );
                     if (data && data.uid) {
                         uid = data.uid;
                     }
@@ -356,17 +360,26 @@ async function getUserByEmailHandlerRequest(request, response) {
     }
 };
 
-async function getUserByEmail(email, info) {
+async function getUserByEmail(email, info, getValidationStatus) {
     const admin = getFBAdminInstance();
     const db = admin.firestore();
     try {
         let userAuth = await admin.auth().getUserByEmail(email);
-        if (userAuth && userAuth.uid && info && info === true) {
+        if (userAuth && userAuth.uid && (info === true || getValidationStatus === true)) {
             const resp = await db.doc(`users/${userAuth.uid}`).get();
             let information = {};
             if (resp && resp.exists === true) {
                 information = resp.data();
             }
+
+            if (getValidationStatus === true && info !== true) {
+                information = {
+                    validatedFileRequestStatus: information.validatedFileRequestStatus ?? null,
+                    validatedStatus: information.validatedStatus ?? null,
+                    verificationFileUrl: information.verificationFileUrl ?? null
+                };
+            }
+
             return {
                 authInformation: userAuth,
                 userInformation: information

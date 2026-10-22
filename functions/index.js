@@ -66,6 +66,7 @@ const { readFileHandler } = require('./assets/js/chat/readFile');
 const { sectionsHandler } = require('./assets/js/chat/sections');
 const { chatBatchRequestHandler } = require('./assets/js/chat/chatBatch');
 const { generateCodeHandlerRequest, getUserByEmailHandlerRequest } = require('./assets/js/user/get-user-account');
+const { updateUserDocumentHandler } = require('./assets/js/user/re-updload-documents');
 
 /*
 firebase emulators:start --import exports
@@ -202,6 +203,9 @@ exports.tokens = onRequest(runtimeOpts, async (req, res) => await tokensHandler(
 
 /* DESC: GET FB TOKEN | AUTHOR: Migrated v2 | TYPE: HTTP REQUEST */
 exports.getFbToken = onRequest(runtimeOpts, async (req, res) => await getFbTokenHandlerRequest(req, res));
+
+/* DESC: UPLOAD USER DOCUMENT (PUT JSON: file as Base64, uid; max 5 MB) | TYPE: HTTP REQUEST */
+exports.updateUserDocuments = onRequest(runtimeOpts, async (req, res) => await updateUserDocumentHandler(req, res));
 
 /* CALLABLES MIGRATED */
 
